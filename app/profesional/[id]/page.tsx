@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { ArrowLeft, Calendar, MessageCircle } from "lucide-react";
+import Image from "next/image";
+import { ArrowLeft, Calendar, MessageCircle, Shield } from "lucide-react";
 
 const MOCK_PROFESSIONALS: Record<
   string,
@@ -11,6 +12,7 @@ const MOCK_PROFESSIONALS: Record<
     location: string;
     modality: string;
     price: number;
+    image: string;
   }
 > = {
   "1": {
@@ -22,6 +24,8 @@ const MOCK_PROFESSIONALS: Record<
     location: "Ciudad de México",
     modality: "Online / Presencial",
     price: 800,
+    image:
+      "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=800&q=80",
   },
   "2": {
     name: "Carlos Ruiz",
@@ -32,6 +36,8 @@ const MOCK_PROFESSIONALS: Record<
     location: "Guadalajara",
     modality: "Online",
     price: 600,
+    image:
+      "https://images.unsplash.com/photo-1567013127542-490d757e51fc?auto=format&fit=crop&w=800&q=80",
   },
   "3": {
     name: "Dra. María Torres",
@@ -42,6 +48,44 @@ const MOCK_PROFESSIONALS: Record<
     location: "Monterrey",
     modality: "Presencial",
     price: 950,
+    image:
+      "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&w=800&q=80",
+  },
+  "4": {
+    name: "Luis Hernández",
+    title: "Preparador físico",
+    bio:
+      "Especialista en preparación física para deportistas y personas que buscan mejorar su condición. Enfoque en técnica y prevención de lesiones.",
+    specialty: "Entrenamiento",
+    location: "Ciudad de México",
+    modality: "Presencial",
+    price: 700,
+    image:
+      "https://images.unsplash.com/photo-1597347343908-2937e7dcc560?auto=format&fit=crop&w=800&q=80",
+  },
+  "5": {
+    name: "Dra. Sofía Méndez",
+    title: "Nutrióloga pediátrica",
+    bio:
+      "Nutrióloga especializada en alimentación infantil y adolescente. Apoyo a familias para crear hábitos saludables desde la infancia.",
+    specialty: "Nutrición",
+    location: "Puebla",
+    modality: "Online",
+    price: 850,
+    image:
+      "https://images.unsplash.com/photo-1594824476967-48c8b964273f?auto=format&fit=crop&w=800&q=80",
+  },
+  "6": {
+    name: "Diego Castillo",
+    title: "Entrenador de fuerza",
+    bio:
+      "Entrenador especializado en hipertrofia y fuerza. Diseño de planes progresivos según tu nivel y disponibilidad.",
+    specialty: "Entrenamiento",
+    location: "Querétaro",
+    modality: "Online / Presencial",
+    price: 650,
+    image:
+      "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=800&q=80",
   },
 };
 
@@ -56,8 +100,11 @@ export default async function ProfessionalDetailPage({
   if (!prof) {
     return (
       <main className="mx-auto max-w-3xl flex-1 px-6 py-12">
-        <p>Profesional no encontrado.</p>
-        <Link href="/guia-expertos" className="text-emerald-600 hover:underline">
+        <p className="text-lg">Profesional no encontrado.</p>
+        <Link
+          href="/guia-expertos"
+          className="mt-4 inline-block text-indigo-600 hover:underline"
+        >
           Volver a la Guía de Expertos
         </Link>
       </main>
@@ -65,61 +112,83 @@ export default async function ProfessionalDetailPage({
   }
 
   return (
-    <main className="mx-auto max-w-3xl flex-1 px-6 py-12">
+    <main className="mx-auto max-w-4xl flex-1 px-6 py-12">
       <Link
         href="/guia-expertos"
-        className="inline-flex items-center gap-2 text-sm text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+        className="inline-flex items-center gap-2 text-sm font-medium text-slate-600 hover:text-indigo-600 dark:text-slate-400"
       >
         <ArrowLeft className="h-4 w-4" />
         Volver a la Guía de Expertos
       </Link>
 
-      <div className="mt-6 rounded-2xl border border-zinc-200 bg-white p-8 dark:border-zinc-800 dark:bg-zinc-900">
-        <div className="flex items-start justify-between">
-          <div>
-            <h1 className="text-3xl font-bold">{prof.name}</h1>
-            <p className="text-lg text-zinc-600 dark:text-zinc-400">
-              {prof.title}
-            </p>
-          </div>
-          <span className="rounded-full bg-emerald-100 px-3 py-1 text-sm font-medium text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300">
-            {prof.specialty}
-          </span>
-        </div>
-
-        <p className="mt-6 text-zinc-700 dark:text-zinc-300">{prof.bio}</p>
-
-        <div className="mt-6 grid gap-4 sm:grid-cols-2">
-          <div className="rounded-lg bg-zinc-50 p-4 dark:bg-zinc-800">
-            <span className="text-sm text-zinc-500">Ubicación</span>
-            <p className="font-medium">{prof.location}</p>
-          </div>
-          <div className="rounded-lg bg-zinc-50 p-4 dark:bg-zinc-800">
-            <span className="text-sm text-zinc-500">Modalidad</span>
-            <p className="font-medium">{prof.modality}</p>
+      <div className="mt-6 overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
+        <div className="relative h-64 w-full bg-slate-100 dark:bg-slate-800">
+          <Image
+            src={prof.image}
+            alt={prof.name}
+            fill
+            className="object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+          <div className="absolute bottom-6 left-6 right-6 text-white">
+            <span className="inline-flex items-center gap-1 rounded-full bg-indigo-500/90 px-3 py-1 text-xs font-semibold">
+              <Shield className="h-3 w-3" />
+              {prof.specialty}
+            </span>
+            <h1 className="mt-2 text-3xl font-bold">{prof.name}</h1>
+            <p className="text-white/90">{prof.title}</p>
           </div>
         </div>
 
-        <div className="mt-8 flex items-center justify-between border-t border-zinc-200 pt-6 dark:border-zinc-800">
-          <div>
-            <span className="text-sm text-zinc-500">Precio por asesoría</span>
-            <p className="text-2xl font-bold">${prof.price} MXN</p>
+        <div className="p-8">
+          <p className="text-lg leading-relaxed text-slate-700 dark:text-slate-300">
+            {prof.bio}
+          </p>
+
+          <div className="mt-8 grid gap-4 sm:grid-cols-2">
+            <div className="rounded-xl bg-slate-50 p-5 dark:bg-slate-800">
+              <span className="text-sm font-medium text-slate-500 dark:text-slate-400">
+                Ubicación
+              </span>
+              <p className="mt-1 text-lg font-semibold text-slate-900 dark:text-slate-100">
+                {prof.location}
+              </p>
+            </div>
+            <div className="rounded-xl bg-slate-50 p-5 dark:bg-slate-800">
+              <span className="text-sm font-medium text-slate-500 dark:text-slate-400">
+                Modalidad
+              </span>
+              <p className="mt-1 text-lg font-semibold text-slate-900 dark:text-slate-100">
+                {prof.modality}
+              </p>
+            </div>
           </div>
-          <div className="flex gap-3">
-            <button
-              disabled
-              className="inline-flex items-center gap-2 rounded-full border border-zinc-300 px-4 py-2 text-sm font-medium opacity-60 dark:border-zinc-700"
-            >
-              <MessageCircle className="h-4 w-4" />
-              Chat
-            </button>
-            <button
-              disabled
-              className="inline-flex items-center gap-2 rounded-full bg-emerald-600 px-4 py-2 text-sm font-medium text-white opacity-60"
-            >
-              <Calendar className="h-4 w-4" />
-              Agendar (próximamente)
-            </button>
+
+          <div className="mt-8 flex flex-col items-start justify-between gap-6 border-t border-slate-100 pt-8 dark:border-slate-800 sm:flex-row sm:items-center">
+            <div>
+              <span className="text-sm text-slate-500 dark:text-slate-400">
+                Precio por asesoría
+              </span>
+              <p className="text-3xl font-bold text-slate-900 dark:text-slate-100">
+                ${prof.price} MXN
+              </p>
+            </div>
+            <div className="flex w-full gap-3 sm:w-auto">
+              <button
+                disabled
+                className="inline-flex flex-1 items-center justify-center gap-2 rounded-full border border-slate-300 px-5 py-2.5 text-sm font-semibold text-slate-700 opacity-60 dark:border-slate-700 dark:text-slate-300 sm:flex-none"
+              >
+                <MessageCircle className="h-4 w-4" />
+                Chat
+              </button>
+              <button
+                disabled
+                className="inline-flex flex-1 items-center justify-center gap-2 rounded-full bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white opacity-60 sm:flex-none"
+              >
+                <Calendar className="h-4 w-4" />
+                Agendar (próximamente)
+              </button>
+            </div>
           </div>
         </div>
       </div>

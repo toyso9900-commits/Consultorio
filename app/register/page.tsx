@@ -3,14 +3,15 @@ import { RegisterForm } from "./register-form";
 
 function RegisterFormSkeleton() {
   return (
-    <div className="w-full max-w-md rounded-2xl border border-zinc-200 bg-white p-8 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
-      <div className="h-8 w-48 animate-pulse rounded bg-zinc-200 dark:bg-zinc-700" />
-      <div className="mt-2 h-4 w-full animate-pulse rounded bg-zinc-200 dark:bg-zinc-700" />
-      <div className="mt-8 space-y-4">
-        <div className="h-10 animate-pulse rounded bg-zinc-200 dark:bg-zinc-700" />
-        <div className="h-10 animate-pulse rounded bg-zinc-200 dark:bg-zinc-700" />
-        <div className="h-10 animate-pulse rounded bg-zinc-200 dark:bg-zinc-700" />
-        <div className="h-10 animate-pulse rounded bg-zinc-200 dark:bg-zinc-700" />
+    <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-8 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+      <div className="mx-auto mb-4 h-12 w-12 animate-pulse rounded-full bg-slate-200 dark:bg-slate-700" />
+      <div className="mx-auto mb-2 h-8 w-48 animate-pulse rounded bg-slate-200 dark:bg-slate-700" />
+      <div className="mx-auto mb-6 h-4 w-full animate-pulse rounded bg-slate-200 dark:bg-slate-700" />
+      <div className="space-y-4">
+        <div className="h-11 animate-pulse rounded-lg bg-slate-200 dark:bg-slate-700" />
+        <div className="h-11 animate-pulse rounded-lg bg-slate-200 dark:bg-slate-700" />
+        <div className="h-11 animate-pulse rounded-lg bg-slate-200 dark:bg-slate-700" />
+        <div className="h-11 animate-pulse rounded-lg bg-slate-200 dark:bg-slate-700" />
       </div>
     </div>
   );
@@ -18,7 +19,7 @@ function RegisterFormSkeleton() {
 
 export default function RegisterPage() {
   return (
-    <main className="flex flex-1 items-center justify-center px-6 py-20">
+    <main className="flex flex-1 items-center justify-center bg-slate-50 px-6 py-20 dark:bg-slate-950">
       <Suspense fallback={<RegisterFormSkeleton />}>
         <RegisterForm />
       </Suspense>
