@@ -3,10 +3,9 @@
 import { useState } from "react";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
 export function LoginForm() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const registered = searchParams.get("registered") === "true";
 
@@ -33,8 +32,10 @@ export function LoginForm() {
       return;
     }
 
-    router.push("/paciente/dashboard");
-    router.refresh();
+    // Navigate to a server-side redirect page that reads the fresh session
+    // and routes the user to the correct dashboard. This avoids race conditions
+    // with getSession() on the client.
+    window.location.href = "/login/redirect";
   }
 
   return (
@@ -59,7 +60,7 @@ export function LoginForm() {
           Iniciar sesión
         </h1>
         <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
-          Ingresá a tu cuenta de paciente.
+          Ingresá a tu cuenta.
         </p>
       </div>
 
@@ -89,7 +90,7 @@ export function LoginForm() {
             type="email"
             required
             className="mt-1 block w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
-            placeholder="juan@ejemplo.com"
+            placeholder="correo@ejemplo.com"
           />
         </div>
         <div>

@@ -8,6 +8,8 @@ const adapter = new PrismaPg(pool);
 
 const prisma = new PrismaClient({ adapter });
 
+const DEFAULT_ADMIN_PASSWORD = "Admin123!";
+
 async function main() {
   const adminEmail = "admin@consultorio.local";
 
@@ -20,7 +22,18 @@ async function main() {
     return;
   }
 
-  const hashedPassword = await bcrypt.hash("Admin123!", 12);
+  const adminPassword = process.env["ADMIN_PASSWORD"] ?? DEFAULT_ADMIN_PASSWORD;
+
+  if (adminPassword === DEFAULT_ADMIN_PASSWORD) {
+    console.warn(
+      "\n⚠️  WARNING: You are using the default admin password."
+    );
+    console.warn(
+      "Set ADMIN_PASSWORD in your .env file before deploying to production.\n"
+    );
+  }
+
+  const hashedPassword = await bcrypt.hash(adminPassword, 12);
 
   await prisma.user.create({
     data: {
@@ -32,8 +45,10 @@ async function main() {
   });
 
   console.log("Super admin created successfully.");
-  console.log("Email: admin@consultorio.local");
-  console.log("Password: Admin123!");
+  console.log(`Email: ${adminEmail}`);
+  console.log(
+    "Password: [hidden] (set via ADMIN_PASSWORD environment variable)"
+  );
 }
 
 main()

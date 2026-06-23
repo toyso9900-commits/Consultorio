@@ -88,6 +88,7 @@ model PatientProfile {
 
   weight       Float?
   height       Float?
+  gender       String?
   bloodType    String?
   birthDate    DateTime?
   allergies    String?  @db.Text
@@ -106,14 +107,15 @@ model ProfessionalProfile {
   userId      String   @unique
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  specialty   Specialty @default(NUTRITION)
-  title       String?
-  bio         String?   @db.Text
-  location    String?
-  modality    Modality  @default(ONLINE)
-  price       Float?
-  isPremium   Boolean   @default(false)
-  isValidated Boolean   @default(false)
+  specialty      Specialty @default(NUTRITION)
+  title          String?
+  bio            String?   @db.Text
+  licenseNumber  String?
+  location       String?
+  modality       Modality  @default(ONLINE)
+  price          Float?
+  isPremium      Boolean   @default(false)
+  isValidated    Boolean   @default(false)
 
   validations ProfessionalValidation[]
 

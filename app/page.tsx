@@ -1,8 +1,53 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Search, Calendar, MessageCircle, Shield, Users, Heart } from "lucide-react";
+import {
+  Heart,
+  Users,
+  ArrowRight,
+  Search,
+  Calendar,
+  MessageCircle,
+  Shield,
+  FileText,
+} from "lucide-react";
+import { MOCK_PROFESSIONALS } from "@/lib/professionals";
 
 export default function Home() {
+  const topExperts = MOCK_PROFESSIONALS.filter((p) => p.isPremium).slice(0, 10);
+
+  const features = [
+    {
+      icon: Search,
+      title: "Encontrá expertos",
+      description:
+        "Buscá nutriólogos y entrenadores certificados por especialidad, ubicación o modalidad.",
+    },
+    {
+      icon: Calendar,
+      title: "Agendá citas",
+      description:
+        "Reservá consultas online o presenciales y recibí recordatorios automáticos.",
+    },
+    {
+      icon: FileText,
+      title: "Unificá tu expediente",
+      description:
+        "Guardá tu historial clínico, físico, estudios y avances en un solo lugar.",
+    },
+    {
+      icon: MessageCircle,
+      title: "Comunicate con tu experto",
+      description:
+        "Mantené contacto directo con tu nutriólogo o entrenador durante tu plan.",
+    },
+    {
+      icon: Shield,
+      title: "Profesionales verificados",
+      description:
+        "Todos los especialistas pasan por un proceso de validación de credenciales.",
+    },
+  ];
+
   return (
     <main className="flex flex-1 flex-col">
       <section className="relative overflow-hidden bg-white dark:bg-slate-950">
@@ -18,23 +63,21 @@ export default function Home() {
                 Tu salud, nutrición y entrenamiento en un solo lugar
               </h1>
               <p className="mt-6 text-lg leading-8 text-slate-600 dark:text-slate-400">
-                Unifica tu expediente clínico y físico. Encontrá nutriólogos y
-                entrenadores certificados en nuestra{" "}
-                <strong className="text-indigo-600 dark:text-indigo-400">Guía de Expertos</strong>{" "}
-                y recibí planes personalizados.
+                Unificá tu expediente clínico y físico. Conectá con nutriólogos
+                y entrenadores certificados para recibir planes personalizados.
               </p>
               <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:justify-center lg:justify-start">
                 <Link
                   href="/register"
                   className="inline-flex h-12 items-center justify-center rounded-full bg-indigo-600 px-8 text-base font-semibold text-white shadow-lg shadow-indigo-200 transition-all hover:bg-indigo-700 hover:shadow-indigo-300 dark:shadow-indigo-950"
                 >
-                  Soy Paciente
+                  Registrarse
                 </Link>
                 <Link
-                  href="/register?rol=profesional"
+                  href="/login"
                   className="inline-flex h-12 items-center justify-center rounded-full border border-slate-300 bg-white px-8 text-base font-semibold text-slate-900 transition-all hover:border-indigo-300 hover:bg-indigo-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:border-indigo-800 dark:hover:bg-indigo-950"
                 >
-                  Soy Profesional
+                  Iniciar sesión
                 </Link>
               </div>
             </div>
@@ -71,103 +114,90 @@ export default function Home() {
 
       <section className="bg-slate-50 py-20 dark:bg-slate-900/50">
         <div className="mx-auto max-w-6xl px-6">
-          <div className="text-center">
+          <div className="mb-12 text-center">
             <h2 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
-              ¿Cómo funciona?
+              ¿Qué hace la plataforma?
             </h2>
-            <p className="mx-auto mt-4 max-w-2xl text-slate-600 dark:text-slate-400">
-              Tres pasos simples para empezar a cuidar tu salud con
-              profesionales.
+            <p className="mx-auto mt-4 max-w-2xl text-lg text-slate-600 dark:text-slate-400">
+              Consultorio te conecta con profesionales de la salud y el
+              bienestar para que cuides tu cuerpo y tu mente de forma integral.
             </p>
           </div>
-          <div className="mt-12 grid gap-8 sm:grid-cols-3">
-            <div className="rounded-2xl bg-white p-8 shadow-sm transition-shadow hover:shadow-md dark:bg-slate-900">
-              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-indigo-100 dark:bg-indigo-950">
-                <Search className="h-6 w-6 text-indigo-600" />
+
+          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+            {features.map((feature) => (
+              <div
+                key={feature.title}
+                className="rounded-2xl bg-white p-8 shadow-sm transition-shadow hover:shadow-md dark:bg-slate-900"
+              >
+                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-indigo-100 dark:bg-indigo-950">
+                  <feature.icon className="h-6 w-6 text-indigo-600" />
+                </div>
+                <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
+                  {feature.title}
+                </h3>
+                <p className="mt-2 text-slate-600 dark:text-slate-400">
+                  {feature.description}
+                </p>
               </div>
-              <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
-                1. Explorá
-              </h3>
-              <p className="mt-2 text-slate-600 dark:text-slate-400">
-                Buscá especialistas por ciudad, especialidad o modalidad en la{" "}
-                <strong>Guía de Expertos</strong>.
-              </p>
-            </div>
-            <div className="rounded-2xl bg-white p-8 shadow-sm transition-shadow hover:shadow-md dark:bg-slate-900">
-              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-teal-100 dark:bg-teal-950">
-                <Calendar className="h-6 w-6 text-teal-600" />
-              </div>
-              <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
-                2. Agendá
-              </h3>
-              <p className="mt-2 text-slate-600 dark:text-slate-400">
-                Solicitá una cita y recibí un plan de alimentación o rutina hecho
-                a tu medida.
-              </p>
-            </div>
-            <div className="rounded-2xl bg-white p-8 shadow-sm transition-shadow hover:shadow-md dark:bg-slate-900">
-              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-amber-100 dark:bg-amber-950">
-                <MessageCircle className="h-6 w-6 text-amber-600" />
-              </div>
-              <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
-                3. Seguí tu progreso
-              </h3>
-              <p className="mt-2 text-slate-600 dark:text-slate-400">
-                Comunicate con tu experto y registrá tus avances desde tu panel.
-              </p>
-            </div>
+            ))}
           </div>
         </div>
       </section>
 
       <section className="bg-white py-20 dark:bg-slate-950">
         <div className="mx-auto max-w-6xl px-6">
-          <div className="grid items-center gap-12 lg:grid-cols-2">
-            <div className="order-2 lg:order-1">
-              <div className="relative aspect-[4/3] overflow-hidden rounded-3xl bg-slate-100 dark:bg-slate-900">
-                <Image
-                  src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=800&q=80"
-                  alt="Consulta médica digital"
-                  fill
-                  className="object-cover"
-                />
-              </div>
-            </div>
-            <div className="order-1 lg:order-2">
+          <div className="mb-10 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
+            <div>
               <h2 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
-                Guía de Expertos
+                Top 10 Expertos Destacados
               </h2>
-              <p className="mt-4 text-lg text-slate-600 dark:text-slate-400">
-                Descubrí nutriólogos y entrenadores verificados. Compará
-                perfiles, precios y modalidades antes de contratar.
+              <p className="mt-2 text-slate-600 dark:text-slate-400">
+                Profesionales verificados con las mejores valoraciones.
               </p>
-              <ul className="mt-8 space-y-4">
-                <li className="flex items-start gap-3">
-                  <Shield className="mt-0.5 h-5 w-5 text-indigo-600" />
-                  <span className="text-slate-700 dark:text-slate-300">
-                    Profesionales validados por nuestro equipo.
-                  </span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <Users className="mt-0.5 h-5 w-5 text-indigo-600" />
-                  <span className="text-slate-700 dark:text-slate-300">
-                    Perfiles con especialidad, ubicación y precios claros.
-                  </span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <Calendar className="mt-0.5 h-5 w-5 text-indigo-600" />
-                  <span className="text-slate-700 dark:text-slate-300">
-                    Agenda integrada para online o presencial.
-                  </span>
-                </li>
-              </ul>
-              <Link
-                href="/guia-expertos"
-                className="mt-8 inline-flex h-12 items-center justify-center rounded-full bg-indigo-600 px-8 font-semibold text-white transition-colors hover:bg-indigo-700"
-              >
-                Ver Guía de Expertos
-              </Link>
             </div>
+            <Link
+              href="/register"
+              className="inline-flex items-center gap-1 text-sm font-semibold text-indigo-600 hover:underline dark:text-indigo-400"
+            >
+              Ver todos
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {topExperts.map((prof) => (
+              <div
+                key={prof.id}
+                className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition-all hover:-translate-y-1 hover:shadow-md dark:border-slate-800 dark:bg-slate-900"
+              >
+                <div className="relative h-48 w-full bg-slate-100 dark:bg-slate-800">
+                  <Image
+                    src={prof.image}
+                    alt={prof.name}
+                    fill
+                    className="object-cover"
+                  />
+                  <div className="absolute right-3 top-3 flex items-center gap-1 rounded-full bg-indigo-100 px-2.5 py-1 text-xs font-semibold text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300">
+                    Destacado
+                  </div>
+                </div>
+                <div className="p-5">
+                  <span className="rounded-full bg-indigo-50 px-2 py-1 text-xs font-medium text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300">
+                    {prof.specialty}
+                  </span>
+                  <h3 className="mt-3 text-lg font-bold text-slate-900 dark:text-slate-100">
+                    {prof.name}
+                  </h3>
+                  <p className="text-sm text-slate-600 dark:text-slate-400">
+                    {prof.title}
+                  </p>
+                  <p className="mt-3 text-sm font-semibold text-slate-900 dark:text-slate-100">
+                    ${prof.price} MXN
+                  </p>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>

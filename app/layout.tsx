@@ -3,8 +3,10 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Link from "next/link";
 import { getServerSession } from "next-auth/next";
+import { Toaster } from "sonner";
 import { authOptions } from "@/lib/auth";
 import { LogoutButton } from "@/components/logout-button";
+import { Providers } from "./providers";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -35,7 +37,8 @@ export default async function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100">
-        <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/80 backdrop-blur dark:border-slate-800 dark:bg-slate-950/80">
+        <Providers>
+          <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/80 backdrop-blur dark:border-slate-800 dark:bg-slate-950/80">
           <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
             <Link href="/" className="flex items-center gap-2 text-xl font-bold tracking-tight text-indigo-600 dark:text-indigo-400">
               <svg
@@ -49,17 +52,15 @@ export default async function RootLayout({
               </svg>
               Consultorio
             </Link>
-            <div className="flex items-center gap-6 text-sm font-medium">
-              <Link
-                href="/guia-expertos"
-                className="text-slate-600 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400"
-              >
-                Guía de Expertos
-              </Link>
+            <div className="flex items-center gap-4 text-sm font-medium">
               {session?.user ? (
                 <div className="flex items-center gap-4">
                   <Link
-                    href="/paciente/dashboard"
+                    href={
+                      session.user.role === "PATIENT"
+                        ? "/paciente/dashboard"
+                        : "/profesional/dashboard"
+                    }
                     className="text-slate-600 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400"
                   >
                     Mi panel
@@ -86,6 +87,8 @@ export default async function RootLayout({
           </nav>
         </header>
         {children}
+        </Providers>
+        <Toaster position="top-right" richColors />
         <footer className="mt-auto border-t border-slate-200 bg-white py-10 text-center text-sm text-slate-500 dark:border-slate-800 dark:bg-slate-950">
           <div className="mx-auto max-w-6xl px-6">
             <p>© {new Date().getFullYear()} Consultorio. Versión beta.</p>

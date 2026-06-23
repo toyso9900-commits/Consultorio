@@ -1,93 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
+import { notFound } from "next/navigation";
 import { ArrowLeft, Calendar, MessageCircle, Shield } from "lucide-react";
-
-const MOCK_PROFESSIONALS: Record<
-  string,
-  {
-    name: string;
-    title: string;
-    bio: string;
-    specialty: string;
-    location: string;
-    modality: string;
-    price: number;
-    image: string;
-  }
-> = {
-  "1": {
-    name: "Dra. Ana López",
-    title: "Nutrióloga clínica",
-    bio:
-      "Especialista en nutrición clínica y planes de alimentación personalizados. Más de 10 años de experiencia ayudando a pacientes a alcanzar sus objetivos de salud.",
-    specialty: "Nutrición",
-    location: "Ciudad de México",
-    modality: "Online / Presencial",
-    price: 800,
-    image:
-      "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=800&q=80",
-  },
-  "2": {
-    name: "Carlos Ruiz",
-    title: "Entrenador personal",
-    bio:
-      "Diseño de rutinas de entrenamiento adaptadas a tu somatotipo y objetivos. Certificado en entrenamiento funcional y rehabilitación.",
-    specialty: "Entrenamiento",
-    location: "Guadalajara",
-    modality: "Online",
-    price: 600,
-    image:
-      "https://images.unsplash.com/photo-1567013127542-490d757e51fc?auto=format&fit=crop&w=800&q=80",
-  },
-  "3": {
-    name: "Dra. María Torres",
-    title: "Nutrióloga deportiva",
-    bio:
-      "Nutrióloga enfocada en rendimiento deportivo y composición corporal. Acompañamiento profesional para atletas y aficionados.",
-    specialty: "Nutrición",
-    location: "Monterrey",
-    modality: "Presencial",
-    price: 950,
-    image:
-      "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&w=800&q=80",
-  },
-  "4": {
-    name: "Luis Hernández",
-    title: "Preparador físico",
-    bio:
-      "Especialista en preparación física para deportistas y personas que buscan mejorar su condición. Enfoque en técnica y prevención de lesiones.",
-    specialty: "Entrenamiento",
-    location: "Ciudad de México",
-    modality: "Presencial",
-    price: 700,
-    image:
-      "https://images.unsplash.com/photo-1597347343908-2937e7dcc560?auto=format&fit=crop&w=800&q=80",
-  },
-  "5": {
-    name: "Dra. Sofía Méndez",
-    title: "Nutrióloga pediátrica",
-    bio:
-      "Nutrióloga especializada en alimentación infantil y adolescente. Apoyo a familias para crear hábitos saludables desde la infancia.",
-    specialty: "Nutrición",
-    location: "Puebla",
-    modality: "Online",
-    price: 850,
-    image:
-      "https://images.unsplash.com/photo-1594824476967-48c8b964273f?auto=format&fit=crop&w=800&q=80",
-  },
-  "6": {
-    name: "Diego Castillo",
-    title: "Entrenador de fuerza",
-    bio:
-      "Entrenador especializado en hipertrofia y fuerza. Diseño de planes progresivos según tu nivel y disponibilidad.",
-    specialty: "Entrenamiento",
-    location: "Querétaro",
-    modality: "Online / Presencial",
-    price: 650,
-    image:
-      "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=800&q=80",
-  },
-};
+import { MOCK_PROFESSIONALS } from "@/lib/professionals";
 
 export default async function ProfessionalDetailPage({
   params,
@@ -95,26 +10,16 @@ export default async function ProfessionalDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const prof = MOCK_PROFESSIONALS[id];
+  const prof = MOCK_PROFESSIONALS.find((p) => p.id === id);
 
   if (!prof) {
-    return (
-      <main className="mx-auto max-w-3xl flex-1 px-6 py-12">
-        <p className="text-lg">Profesional no encontrado.</p>
-        <Link
-          href="/guia-expertos"
-          className="mt-4 inline-block text-indigo-600 hover:underline"
-        >
-          Volver a la Guía de Expertos
-        </Link>
-      </main>
-    );
+    notFound();
   }
 
   return (
     <main className="mx-auto max-w-4xl flex-1 px-6 py-12">
       <Link
-        href="/guia-expertos"
+        href="/paciente/dashboard/expertos"
         className="inline-flex items-center gap-2 text-sm font-medium text-slate-600 hover:text-indigo-600 dark:text-slate-400"
       >
         <ArrowLeft className="h-4 w-4" />
