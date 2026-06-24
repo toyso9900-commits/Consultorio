@@ -35,7 +35,7 @@ export default async function PatientDashboardPage() {
     patientProfile.weight == null;
 
   return (
-    <main className="mx-auto max-w-6xl flex-1 px-6 py-12">
+    <div>
       {needsOnboarding && <OnboardingModal userId={userId} />}
 
       <div className="mb-8">
@@ -165,7 +165,7 @@ export default async function PatientDashboardPage() {
           </Link>
         </div>
       </div>
-    </main>
+    </div>
   );
 }
 

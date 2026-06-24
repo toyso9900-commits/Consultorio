@@ -1,8 +1,9 @@
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { ArrowLeft, Calendar, MessageCircle, Shield } from "lucide-react";
-import { MOCK_PROFESSIONALS } from "@/lib/professionals";
+import { ArrowLeft, Calendar, Shield } from "lucide-react";
+import { getApprovedProfessionalById } from "@/lib/professionals-db";
+import { ChatButton } from "@/components/chat/chat-button";
 
 export default async function ProfessionalDetailPage({
   params,
@@ -10,7 +11,7 @@ export default async function ProfessionalDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const prof = MOCK_PROFESSIONALS.find((p) => p.id === id);
+  const prof = await getApprovedProfessionalById(id);
 
   if (!prof) {
     notFound();
@@ -47,7 +48,7 @@ export default async function ProfessionalDetailPage({
 
         <div className="p-8">
           <p className="text-lg leading-relaxed text-slate-700 dark:text-slate-300">
-            {prof.bio}
+            {prof.bio || "Sin biografía disponible."}
           </p>
 
           <div className="mt-8 grid gap-4 sm:grid-cols-2">
@@ -79,13 +80,7 @@ export default async function ProfessionalDetailPage({
               </p>
             </div>
             <div className="flex w-full gap-3 sm:w-auto">
-              <button
-                disabled
-                className="inline-flex flex-1 items-center justify-center gap-2 rounded-full border border-slate-300 px-5 py-2.5 text-sm font-semibold text-slate-700 opacity-60 dark:border-slate-700 dark:text-slate-300 sm:flex-none"
-              >
-                <MessageCircle className="h-4 w-4" />
-                Chat
-              </button>
+              <ChatButton professionalId={prof.id} professionalName={prof.name} />
               <button
                 disabled
                 className="inline-flex flex-1 items-center justify-center gap-2 rounded-full bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white opacity-60 sm:flex-none"
