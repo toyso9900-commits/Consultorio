@@ -1,13 +1,23 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { triggerAdminUpdate } from "@/lib/pusher-server";
+
+async function requireAdmin() {
+  const session = await auth();
+  if (!session?.user || session.user.role !== "ADMIN") {
+    throw new Error("No autorizado");
+  }
+}
 
 export async function validateProfessional(formData: FormData): Promise<{ success: boolean; error?: string }> {
   const profileId = formData.get("profileId") as string;
 
   try {
+    await requireAdmin();
+
     const profile = await prisma.professionalProfile.update({
       where: { id: profileId },
       data: { isValidated: true, rejectedAt: null },
@@ -34,6 +44,8 @@ export async function rejectProfessional(formData: FormData): Promise<{ success:
   const profileId = formData.get("profileId") as string;
 
   try {
+    await requireAdmin();
+
     const profile = await prisma.professionalProfile.update({
       where: { id: profileId },
       data: { isValidated: false, rejectedAt: new Date() },

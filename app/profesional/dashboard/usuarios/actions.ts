@@ -1,14 +1,24 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { triggerAdminUpdate } from "@/lib/pusher-server";
+
+async function requireAdmin() {
+  const session = await auth();
+  if (!session?.user || session.user.role !== "ADMIN") {
+    throw new Error("No autorizado");
+  }
+}
 
 export async function getAllUsers(): Promise<
   | { success: true; users: { id: string; name: string | null; email: string | null; role: string; createdAt: Date; patientProfile: { id: string } | null; professionalProfile: { id: string; isValidated: boolean } | null; subscriptions: { id: string; status: string; plan: string }[] }[] }
   | { success: false; error: string }
 > {
   try {
+    await requireAdmin();
+
     const users = await prisma.user.findMany({
       where: {
         OR: [
@@ -37,6 +47,8 @@ export async function deleteUser(userId: string) {
   }
 
   try {
+    await requireAdmin();
+
     await prisma.user.delete({ where: { id: userId } });
 
     revalidatePath("/profesional/dashboard/usuarios");
@@ -53,6 +65,8 @@ export async function toggleUserValidation(profileId: string, isValidated: boole
   }
 
   try {
+    await requireAdmin();
+
     const profile = await prisma.professionalProfile.update({
       where: { id: profileId },
       data: { isValidated, rejectedAt: isValidated ? null : undefined },

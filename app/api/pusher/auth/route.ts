@@ -21,17 +21,14 @@ export async function POST(request: Request) {
       );
     }
 
-    const userChannelPrefix = "private-user-";
-    if (channelName.startsWith(userChannelPrefix)) {
-      const requestedUserId = channelName.slice(userChannelPrefix.length);
-      if (requestedUserId !== session.user.id) {
-        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-      }
-    } else if (channelName === "private-admin-updates") {
-      if (session.user.role !== "ADMIN") {
-        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-      }
-    } else {
+    const allowedUserChannel = `private-user-${session.user.id}`;
+    const allowedAdminChannel = "private-admin-updates";
+
+    if (channelName !== allowedUserChannel && channelName !== allowedAdminChannel) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
+
+    if (channelName === allowedAdminChannel && session.user.role !== "ADMIN") {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
