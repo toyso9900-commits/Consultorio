@@ -2,18 +2,27 @@
 
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
+import { triggerAdminUpdate } from "@/lib/pusher-server";
 
 export async function validateProfessional(formData: FormData): Promise<{ success: boolean; error?: string }> {
   const profileId = formData.get("profileId") as string;
 
   try {
-    await prisma.professionalProfile.update({
+    const profile = await prisma.professionalProfile.update({
       where: { id: profileId },
-      data: { isValidated: true },
+      data: { isValidated: true, rejectedAt: null },
     });
 
     revalidatePath("/profesional/dashboard");
+    revalidatePath("/profesional/dashboard/usuarios");
     revalidatePath("/paciente/dashboard/expertos");
+
+    triggerAdminUpdate({
+      type: "professional-validated",
+      userId: profile.userId,
+      profileId: profile.id,
+    }).catch((err) => console.error("Pusher trigger error:", err));
+
     return { success: true };
   } catch (error) {
     console.error("Validate professional error:", error);
@@ -25,12 +34,21 @@ export async function rejectProfessional(formData: FormData): Promise<{ success:
   const profileId = formData.get("profileId") as string;
 
   try {
-    await prisma.professionalProfile.delete({
+    const profile = await prisma.professionalProfile.update({
       where: { id: profileId },
+      data: { isValidated: false, rejectedAt: new Date() },
     });
 
     revalidatePath("/profesional/dashboard");
+    revalidatePath("/profesional/dashboard/usuarios");
     revalidatePath("/paciente/dashboard/expertos");
+
+    triggerAdminUpdate({
+      type: "professional-rejected",
+      userId: profile.userId,
+      profileId: profile.id,
+    }).catch((err) => console.error("Pusher trigger error:", err));
+
     return { success: true };
   } catch (error) {
     console.error("Reject professional error:", error);

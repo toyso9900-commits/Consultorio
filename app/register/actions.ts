@@ -3,6 +3,7 @@
 import bcrypt from "bcryptjs";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
+import { triggerAdminUpdate } from "@/lib/pusher-server";
 import { UserRole } from "@prisma/client";
 
 const baseRegisterSchema = z.object({
@@ -59,7 +60,7 @@ export async function registerUser(data: {
     const hashedPassword = await bcrypt.hash(password, 12);
 
     if (role === "PROFESSIONAL") {
-      await prisma.user.create({
+      const user = await prisma.user.create({
         data: {
           name,
           email: email.toLowerCase(),
@@ -72,6 +73,10 @@ export async function registerUser(data: {
           },
         },
       });
+
+      triggerAdminUpdate({ type: "professional-registered", userId: user.id }).catch(
+        (err) => console.error("Pusher trigger error:", err)
+      );
     } else {
       await prisma.user.create({
         data: {

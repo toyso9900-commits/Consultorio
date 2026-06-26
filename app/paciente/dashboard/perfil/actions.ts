@@ -2,6 +2,17 @@
 
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
+import { z } from "zod";
+
+const updateSchema = z.object({
+  userId: z.string().min(1),
+  name: z.string().min(1, "El nombre es obligatorio."),
+  height: z.coerce.number().positive("La altura debe ser mayor a 0."),
+  weight: z.coerce.number().positive("El peso debe ser mayor a 0."),
+  gender: z.enum(["male", "female", "non-binary", "prefer-not-to-say"], {
+    errorMap: () => ({ message: "Seleccioná un género válido." }),
+  }),
+});
 
 export interface UpdatePatientProfileData {
   userId: string;
@@ -12,11 +23,12 @@ export interface UpdatePatientProfileData {
 }
 
 export async function updatePatientProfile(data: UpdatePatientProfileData) {
-  const { userId, name, height, weight, gender } = data;
-
-  if (!name || !height || !weight || !gender) {
-    return { success: false, error: "Todos los campos son obligatorios." };
+  const parsed = updateSchema.safeParse(data);
+  if (!parsed.success) {
+    return { success: false, error: parsed.error.errors.map((e) => e.message).join(" ") };
   }
+
+  const { userId, name, height, weight, gender } = parsed.data;
 
   try {
     await prisma.$transaction([

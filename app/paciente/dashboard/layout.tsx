@@ -1,6 +1,4 @@
-import { getServerSession } from "next-auth/next";
-import { redirect } from "next/navigation";
-import { authOptions } from "@/lib/auth";
+import { auth } from "@/lib/auth";
 import { DashboardShell } from "@/components/layout/dashboard-shell";
 
 export default async function PatientDashboardLayout({
@@ -8,19 +6,17 @@ export default async function PatientDashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const session = await getServerSession(authOptions);
+  const session = await auth();
 
-  if (!session?.user || session.user.role !== "PATIENT") {
-    redirect("/login");
-  }
-
+  // Middleware guarantees this session exists; fall back to a safe empty shell
+  // if for any reason auth() returns null during a client transition.
   return (
     <DashboardShell
       role="PATIENT"
       title="Panel del Paciente"
       subtitle="Gestioná tu salud y bienestar"
-      name={session.user.name}
-      image={session.user.image}
+      name={session?.user?.name}
+      image={session?.user?.image}
     >
       {children}
     </DashboardShell>

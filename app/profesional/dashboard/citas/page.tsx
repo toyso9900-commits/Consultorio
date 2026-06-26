@@ -1,19 +1,8 @@
-import { getServerSession } from "next-auth/next";
-import { redirect } from "next/navigation";
-import { authOptions } from "@/lib/auth";
+import { auth } from "@/lib/auth";
 import { CalendarDays } from "lucide-react";
 
 export default async function AdminAppointmentsPage() {
-  const session = await getServerSession(authOptions);
-
-  if (!session?.user?.id) {
-    redirect("/login");
-  }
-
-  const role = session.user.role;
-  if (role !== "ADMIN" && role !== "PROFESSIONAL") {
-    redirect("/login");
-  }
+  const session = await auth();
 
   return (
     <div className="space-y-6">

@@ -1,6 +1,4 @@
-import { getServerSession } from "next-auth/next";
-import { redirect } from "next/navigation";
-import { authOptions } from "@/lib/auth";
+import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import {
   BadgeCheck,
@@ -16,29 +14,21 @@ import {
   TrendingUp,
 } from "lucide-react";
 import Link from "next/link";
+import { AdminRealtimeListener } from "@/components/admin/admin-realtime-listener";
 import { AdminStatsChart } from "@/components/admin/admin-stats-chart";
 import { ValidationActions } from "@/components/admin/validation-actions";
 
 export default async function ProfessionalDashboardPage() {
-  const session = await getServerSession(authOptions);
+  const session = await auth();
 
-  if (!session?.user?.id) {
-    redirect("/login");
-  }
-
-  const role = session.user.role;
-
-  if (role !== "ADMIN" && role !== "PROFESSIONAL") {
-    redirect("/");
-  }
-
+  const role = session!.user.role;
   const isAdmin = role === "ADMIN";
 
   const professionalCount = await prisma.user.count({
     where: { role: "PROFESSIONAL" },
   });
   const pendingValidations = await prisma.professionalProfile.count({
-    where: { isValidated: false },
+    where: { isValidated: false, rejectedAt: null },
   });
   const activeSubscriptions = await prisma.subscription.count({
     where: { status: "ACTIVE" },
@@ -47,7 +37,7 @@ export default async function ProfessionalDashboardPage() {
 
   const pendingProfessionals = isAdmin
     ? await prisma.professionalProfile.findMany({
-        where: { isValidated: false },
+        where: { isValidated: false, rejectedAt: null },
         include: { user: { select: { id: true, email: true, name: true } } },
         orderBy: { createdAt: "desc" },
       })
@@ -56,6 +46,7 @@ export default async function ProfessionalDashboardPage() {
   if (isAdmin) {
     return (
       <div className="space-y-8">
+        <AdminRealtimeListener />
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <div className="mb-2 inline-flex items-center gap-2 rounded-full bg-indigo-100 px-3 py-1 text-sm font-semibold text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300">
@@ -233,12 +224,12 @@ export default async function ProfessionalDashboardPage() {
   }
 
   const professional = await prisma.professionalProfile.findUnique({
-    where: { userId: session.user.id },
+    where: { userId: session!.user.id },
   });
 
   const activeSubscription = await prisma.subscription.findFirst({
     where: {
-      userId: session.user.id,
+      userId: session!.user.id,
       status: "ACTIVE",
     },
   });
@@ -248,7 +239,7 @@ export default async function ProfessionalDashboardPage() {
   const latestSubscription = activeSubscription
     ? activeSubscription
     : await prisma.subscription.findFirst({
-        where: { userId: session.user.id },
+        where: { userId: session!.user.id },
         orderBy: { createdAt: "desc" },
         take: 1,
       });
@@ -261,7 +252,7 @@ export default async function ProfessionalDashboardPage() {
           Panel del Profesional
         </div>
         <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100">
-          Bienvenido, {session.user.name || session.user.email}
+          Bienvenido, {session!.user.name || session!.user.email}
         </h1>
         <p className="mt-2 text-slate-600 dark:text-slate-400">
           Acá podés gestionar tu perfil, citas y pacientes.

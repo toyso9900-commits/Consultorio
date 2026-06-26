@@ -1,14 +1,8 @@
-import { getServerSession } from "next-auth/next";
-import { redirect } from "next/navigation";
-import { authOptions } from "@/lib/auth";
+import { auth } from "@/lib/auth";
 import { Crown } from "lucide-react";
 
 export default async function AdminSubscriptionsPage() {
-  const session = await getServerSession(authOptions);
-
-  if (!session?.user || session.user.role !== "ADMIN") {
-    redirect("/login");
-  }
+  const session = await auth();
 
   return (
     <div className="space-y-6">

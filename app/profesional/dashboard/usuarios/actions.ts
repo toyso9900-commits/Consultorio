@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
+import { triggerAdminUpdate } from "@/lib/pusher-server";
 
 export async function getAllUsers(): Promise<
   | { success: true; users: { id: string; name: string | null; email: string | null; role: string; createdAt: Date; patientProfile: { id: string } | null; professionalProfile: { id: string; isValidated: boolean } | null; subscriptions: { id: string; status: string; plan: string }[] }[] }
@@ -9,6 +10,12 @@ export async function getAllUsers(): Promise<
 > {
   try {
     const users = await prisma.user.findMany({
+      where: {
+        OR: [
+          { role: { not: "PROFESSIONAL" } },
+          { professionalProfile: { rejectedAt: null } },
+        ],
+      },
       orderBy: { createdAt: "desc" },
       include: {
         patientProfile: true,
@@ -46,13 +53,22 @@ export async function toggleUserValidation(profileId: string, isValidated: boole
   }
 
   try {
-    await prisma.professionalProfile.update({
+    const profile = await prisma.professionalProfile.update({
       where: { id: profileId },
-      data: { isValidated },
+      data: { isValidated, rejectedAt: isValidated ? null : undefined },
     });
 
     revalidatePath("/profesional/dashboard/usuarios");
+    revalidatePath("/profesional/dashboard");
     revalidatePath("/paciente/dashboard/expertos");
+
+    const eventType = isValidated ? "professional-validated" : "professional-rejected";
+    triggerAdminUpdate({
+      type: eventType,
+      userId: profile.userId,
+      profileId: profile.id,
+    }).catch((err) => console.error("Pusher trigger error:", err));
+
     return { success: true };
   } catch (error) {
     console.error("Toggle validation error:", error);

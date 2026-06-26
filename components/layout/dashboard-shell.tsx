@@ -9,6 +9,7 @@ interface DashboardShellProps {
   subtitle?: string;
   name?: string | null;
   image?: string | null;
+  badge?: number;
 }
 
 export function DashboardShell({
@@ -18,10 +19,11 @@ export function DashboardShell({
   subtitle,
   name,
   image,
+  badge,
 }: DashboardShellProps) {
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 lg:pl-64">
-      <Sidebar role={role} />
+      <Sidebar role={role} badge={badge} />
       <div className="flex min-h-screen flex-col">
         <DashboardHeader title={title} subtitle={subtitle} name={name} image={image} role={role} />
         <main className="flex-1 p-6">{children}</main>

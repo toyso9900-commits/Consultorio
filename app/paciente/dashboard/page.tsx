@@ -1,7 +1,5 @@
-import { getServerSession } from "next-auth/next";
-import { redirect } from "next/navigation";
+import { auth } from "@/lib/auth";
 import Link from "next/link";
-import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import {
   Activity,
@@ -15,13 +13,9 @@ import {
 import { OnboardingModal } from "./onboarding-modal";
 
 export default async function PatientDashboardPage() {
-  const session = await getServerSession(authOptions);
+  const session = await auth();
 
-  if (!session?.user || session.user.role !== "PATIENT") {
-    redirect("/login");
-  }
-
-  const userId = session.user.id!;
+  const userId = session!.user.id!;
 
   const patientProfile = await prisma.patientProfile.findUnique({
     where: { userId },
@@ -29,7 +23,7 @@ export default async function PatientDashboardPage() {
 
   const needsOnboarding =
     !patientProfile ||
-    !session.user.name ||
+    !session!.user.name ||
     patientProfile.gender == null ||
     patientProfile.height == null ||
     patientProfile.weight == null;
@@ -43,7 +37,7 @@ export default async function PatientDashboardPage() {
           Panel del Paciente
         </h1>
         <p className="mt-2 text-slate-600 dark:text-slate-400">
-          Bienvenido, {session.user.name || session.user.email}. Acá podés
+          Bienvenido, {session!.user.name || session!.user.email}. Acá podés
           gestionar tu salud y bienestar.
         </p>
       </div>

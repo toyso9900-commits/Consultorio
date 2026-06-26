@@ -1,9 +1,8 @@
-import { getServerSession } from "next-auth/next";
-import { redirect } from "next/navigation";
-import { authOptions } from "@/lib/auth";
+import { auth } from "@/lib/auth";
 import { Shield } from "lucide-react";
 import { getAllUsers } from "./actions";
 import { UserActions } from "./user-actions";
+import { AdminRealtimeListener } from "@/components/admin/admin-realtime-listener";
 
 function formatDate(date: Date | null | undefined) {
   if (!date) return "No registrada";
@@ -28,17 +27,14 @@ function formatRole(role: string) {
 }
 
 export default async function AdminUsersPage() {
-  const session = await getServerSession(authOptions);
-
-  if (!session?.user?.id || session.user.role !== "ADMIN") {
-    redirect("/login");
-  }
+  const session = await auth();
 
   const result = await getAllUsers();
   const users = result.success && "users" in result ? result.users : [];
 
   return (
     <div className="space-y-6">
+      <AdminRealtimeListener />
       <div className="flex items-center gap-3">
         <div className="flex h-10 w-10 items-center justify-center rounded-full bg-indigo-100 dark:bg-indigo-950">
           <Shield className="h-5 w-5 text-indigo-600" />

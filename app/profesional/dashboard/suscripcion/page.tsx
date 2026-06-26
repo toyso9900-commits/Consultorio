@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
-import { CreditCard, Check, Crown, Sparkles } from "lucide-react";
+import { useEffect, useState } from "react";
+import { CreditCard, Check, Crown, Sparkles, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { activateSubscription } from "../suscripcion/actions";
 
 interface Plan {
@@ -60,8 +61,23 @@ const PLANS: Plan[] = [
 ];
 
 export default function ProfessionalSubscriptionPage() {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
+  const router = useRouter();
   const [isProcessing, setIsProcessing] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (status === "authenticated" && session?.user?.role === "ADMIN") {
+      router.replace("/profesional/dashboard");
+    }
+  }, [status, session, router]);
+
+  if (status === "loading" || session?.user?.role === "ADMIN") {
+    return (
+      <div className="flex h-96 items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-indigo-600" />
+      </div>
+    );
+  }
 
   async function handleSubscribe(planId: string) {
     if (planId === "free" || !session?.user?.id) return;

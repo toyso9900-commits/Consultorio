@@ -1,19 +1,13 @@
-import { getServerSession } from "next-auth/next";
-import { redirect } from "next/navigation";
-import { authOptions } from "@/lib/auth";
+import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { UserCircle, Briefcase } from "lucide-react";
 import { ProfessionalProfileForm } from "./profile-form";
 
 export default async function ProfessionalProfilePage() {
-  const session = await getServerSession(authOptions);
-
-  if (!session?.user || session.user.role !== "PROFESSIONAL") {
-    redirect("/login");
-  }
+  const session = await auth();
 
   const professional = await prisma.professionalProfile.findUnique({
-    where: { userId: session.user.id },
+    where: { userId: session!.user.id },
   });
 
   return (
@@ -44,9 +38,10 @@ export default async function ProfessionalProfilePage() {
           </div>
 
           <ProfessionalProfileForm
-            userId={session.user.id!}
+            userId={session!.user.id!}
+            image={session!.user.image}
             defaultValues={{
-              name: session.user.name || "",
+              name: session!.user.name || "",
               title: professional?.title || "",
               bio: professional?.bio || "",
               location: professional?.location || "",

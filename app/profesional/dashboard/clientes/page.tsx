@@ -1,14 +1,19 @@
-import { getServerSession } from "next-auth/next";
-import { redirect } from "next/navigation";
-import { authOptions } from "@/lib/auth";
+import { auth } from "@/lib/auth";
 import { Users } from "lucide-react";
+import { getUserConversations } from "@/app/messages/actions";
+import { ConversationList } from "@/components/chat/conversation-list";
 
 export default async function ProfessionalClientsPage() {
-  const session = await getServerSession(authOptions);
+  const session = await auth();
+  const userId = session?.user?.id;
 
-  if (!session?.user?.id || session.user.role !== "PROFESSIONAL") {
-    redirect("/login");
-  }
+  const conversationsResult = userId
+    ? await getUserConversations(userId)
+    : { success: true, users: [] };
+  const conversations =
+    conversationsResult.success && "users" in conversationsResult
+      ? conversationsResult.users
+      : [];
 
   return (
     <div className="space-y-6">
@@ -26,11 +31,26 @@ export default async function ProfessionalClientsPage() {
         </div>
       </div>
 
-      <div className="rounded-2xl border border-slate-200 bg-white p-12 text-center shadow-sm dark:border-slate-800 dark:bg-slate-900">
-        <p className="text-slate-600 dark:text-slate-400">
-          No tenés clientes registrados todavía. Cuando un paciente te contacte,
-          aparecerá acá.
-        </p>
+      <div className="rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
+        <div className="border-b border-slate-200 p-4 dark:border-slate-800">
+          <h2 className="font-semibold text-slate-900 dark:text-slate-100">
+            Conversaciones
+          </h2>
+        </div>
+        <div className="max-h-[calc(100vh-16rem)] overflow-y-auto p-2">
+          {userId ? (
+            <ConversationList
+              key={userId}
+              initialConversations={conversations}
+              currentUserId={userId}
+              emptyMessage="No tenés clientes registrados todavía. Cuando un paciente te contacte, aparecerá acá."
+            />
+          ) : (
+            <p className="p-4 text-sm text-slate-500 dark:text-slate-400">
+              No se pudo identificar al usuario.
+            </p>
+          )}
+        </div>
       </div>
     </div>
   );

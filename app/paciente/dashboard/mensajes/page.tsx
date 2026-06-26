@@ -1,9 +1,8 @@
-import { getServerSession } from "next-auth/next";
-import { redirect } from "next/navigation";
-import { authOptions } from "@/lib/auth";
+import { auth } from "@/lib/auth";
 import { MessageSquare } from "lucide-react";
 import { getConversation, getUserConversations } from "@/app/messages/actions";
 import { ChatPanel } from "@/components/chat/chat-panel";
+import { ConversationList } from "@/components/chat/conversation-list";
 import Link from "next/link";
 
 interface PageProps {
@@ -11,15 +10,7 @@ interface PageProps {
 }
 
 export default async function PatientMessagesPage({ searchParams }: PageProps) {
-  const session = await getServerSession(authOptions);
-
-  if (!session?.user?.id) {
-    redirect("/login");
-  }
-
-  if (session.user.role !== "PATIENT") {
-    redirect("/login");
-  }
+  const session = await auth();
 
   const params = await searchParams;
   const professionalId = params.profesional;
@@ -28,7 +19,7 @@ export default async function PatientMessagesPage({ searchParams }: PageProps) {
   let initialMessages: { id: string; senderId: string; receiverId: string; content: string; createdAt: string; sender: { id: string; name: string | null; image: string | null } }[] = [];
 
   if (professionalId) {
-    const result = await getConversation(session.user.id, professionalId);
+    const result = await getConversation(session!.user.id ?? "", professionalId);
     if (result.success) {
       initialMessages = result.messages.map((m) => ({
         ...m,
@@ -37,7 +28,7 @@ export default async function PatientMessagesPage({ searchParams }: PageProps) {
     }
   }
 
-  const conversationsResult = await getUserConversations(session.user.id);
+  const conversationsResult = await getUserConversations(session!.user.id ?? "");
   const conversations =
     conversationsResult.success && "users" in conversationsResult
       ? conversationsResult.users
@@ -55,35 +46,13 @@ export default async function PatientMessagesPage({ searchParams }: PageProps) {
           </div>
         </div>
         <div className="flex-1 overflow-y-auto p-2">
-          {conversations.length === 0 ? (
-            <p className="p-4 text-sm text-slate-500 dark:text-slate-400">
-              No tenés conversaciones todavía.
-            </p>
-          ) : (
-            <ul className="space-y-1">
-              {conversations.map((user) => (
-                <li key={user.id}>
-                  <Link
-                    href={`/paciente/dashboard/mensajes?profesional=${encodeURIComponent(
-                      user.id
-                    )}&nombre=${encodeURIComponent(user.name || "Especialista")}`}
-                    className={`block rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
-                      user.id === professionalId
-                        ? "bg-indigo-50 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300"
-                        : "text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800"
-                    }`}
-                  >
-                    <div className="flex items-center gap-2">
-                      <div className="flex h-7 w-7 items-center justify-center rounded-full bg-indigo-100 text-xs font-semibold text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300">
-                        {(user.name || "U").slice(0, 1).toUpperCase()}
-                      </div>
-                      {user.name || "Especialista"}
-                    </div>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          )}
+          <ConversationList
+            key={professionalId || "none"}
+            initialConversations={conversations}
+            currentUserId={session!.user.id ?? ""}
+            selectedUserId={professionalId}
+            hrefPrefix="/paciente/dashboard/mensajes"
+          />
         </div>
       </div>
 
@@ -93,7 +62,7 @@ export default async function PatientMessagesPage({ searchParams }: PageProps) {
             initialMessages={initialMessages}
             professionalId={professionalId}
             professionalName={professionalName}
-            patientId={session.user.id}
+            patientId={session!.user.id ?? ""}
           />
         ) : (
           <div className="flex h-full flex-col items-center justify-center rounded-2xl border border-slate-200 bg-white p-12 text-center shadow-sm dark:border-slate-800 dark:bg-slate-900">

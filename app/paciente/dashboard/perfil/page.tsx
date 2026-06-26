@@ -1,19 +1,13 @@
-import { getServerSession } from "next-auth/next";
-import { redirect } from "next/navigation";
-import { authOptions } from "@/lib/auth";
+import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { UserCircle } from "lucide-react";
 import { PatientProfileForm } from "./profile-form";
 
 export default async function PatientProfilePage() {
-  const session = await getServerSession(authOptions);
-
-  if (!session?.user || session.user.role !== "PATIENT") {
-    redirect("/login");
-  }
+  const session = await auth();
 
   const profile = await prisma.patientProfile.findUnique({
-    where: { userId: session.user.id },
+    where: { userId: session!.user.id },
   });
 
   return (
@@ -34,9 +28,9 @@ export default async function PatientProfilePage() {
 
       <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
         <PatientProfileForm
-          userId={session.user.id!}
+          userId={session!.user.id!}
           defaultValues={{
-            name: session.user.name || "",
+            name: session!.user.name || "",
             height: profile?.height?.toString() || "",
             weight: profile?.weight?.toString() || "",
             gender: profile?.gender || "male",

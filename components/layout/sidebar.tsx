@@ -20,12 +20,14 @@ export type UserRole = "ADMIN" | "PROFESSIONAL" | "PATIENT";
 
 interface SidebarProps {
   role: UserRole;
+  badge?: number;
 }
 
 interface NavItem {
   label: string;
   href: string;
   icon: React.ElementType;
+  badge?: number;
 }
 
 const navigation: Record<UserRole, NavItem[]> = {
@@ -49,15 +51,15 @@ const navigation: Record<UserRole, NavItem[]> = {
     { label: "Suscripciones", href: "/profesional/dashboard/suscripciones", icon: Crown },
     { label: "Citas", href: "/profesional/dashboard/citas", icon: CalendarDays },
     {
-      label: "Mensajes / Reseñas",
-      href: "/profesional/dashboard/mensajes",
+      label: "Reseñas",
+      href: "/profesional/dashboard/resenas",
       icon: MessageSquare,
     },
   ],
   PROFESSIONAL: [
     { label: "Inicio", href: "/profesional/dashboard", icon: LayoutDashboard },
     { label: "Mi perfil", href: "/profesional/dashboard/perfil", icon: UserCircle },
-    { label: "Clientes", href: "/profesional/dashboard/clientes", icon: Users },
+    { label: "Clientes", href: "/profesional/dashboard/clientes", icon: Users, badge: 0 },
     {
       label: "Suscripción",
       href: "/profesional/dashboard/suscripcion",
@@ -76,12 +78,17 @@ const navigation: Record<UserRole, NavItem[]> = {
     { label: "Citas", href: "/paciente/dashboard/citas", icon: CalendarDays },
     { label: "Mensajes", href: "/paciente/dashboard/mensajes", icon: MessageSquare },
     { label: "Documentos", href: "/paciente/dashboard/documentos", icon: FileText },
+    { label: "Mi perfil", href: "/paciente/dashboard/perfil", icon: UserCircle },
   ],
 };
 
-export function Sidebar({ role }: SidebarProps) {
+export function Sidebar({ role, badge }: SidebarProps) {
   const pathname = usePathname();
-  const items = navigation[role];
+  const items = navigation[role].map((item) =>
+    item.badge !== undefined && badge !== undefined && badge > 0
+      ? { ...item, badge }
+      : item
+  );
 
   return (
     <aside className="fixed left-0 top-0 z-30 hidden h-screen w-64 flex-col border-r border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-950 lg:flex">
@@ -108,14 +115,21 @@ export function Sidebar({ role }: SidebarProps) {
               <li key={item.href}>
                 <Link
                   href={item.href}
-                  className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
+                  className={`flex items-center justify-between rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
                     isActive
                       ? "bg-indigo-50 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300"
                       : "text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-900 dark:hover:text-slate-100"
                   }`}
                 >
-                  <item.icon className="h-5 w-5" />
-                  {item.label}
+                  <span className="flex items-center gap-3">
+                    <item.icon className="h-5 w-5" />
+                    {item.label}
+                  </span>
+                  {item.badge ? (
+                    <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-rose-500 px-1.5 text-[10px] font-bold text-white">
+                      {item.badge > 99 ? "99+" : item.badge}
+                    </span>
+                  ) : null}
                 </Link>
               </li>
             );

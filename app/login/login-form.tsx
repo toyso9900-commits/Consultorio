@@ -8,35 +8,29 @@ import { useSearchParams } from "next/navigation";
 export function LoginForm() {
   const searchParams = useSearchParams();
   const registered = searchParams.get("registered") === "true";
+  const authError = searchParams.get("error");
 
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setError("");
     setLoading(true);
 
     const formData = new FormData(event.currentTarget);
 
-    const result = await signIn("credentials", {
+    await signIn("credentials", {
       email: formData.get("email") as string,
       password: formData.get("password") as string,
-      redirect: false,
+      callbackUrl: "/login/redirect",
     });
-
-    setLoading(false);
-
-    if (result?.error) {
-      setError("Correo o contraseña incorrectos.");
-      return;
-    }
-
-    // Navigate to a server-side redirect page that reads the fresh session
-    // and routes the user to the correct dashboard. This avoids race conditions
-    // with getSession() on the client.
-    window.location.href = "/login/redirect";
   }
+
+  const errorMessage =
+    authError === "CredentialsSignin"
+      ? "Correo o contraseña incorrectos."
+      : authError
+      ? "No se pudo iniciar sesión. Intentá de nuevo."
+      : "";
 
   return (
     <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-8 shadow-sm dark:border-slate-800 dark:bg-slate-900">
@@ -70,9 +64,9 @@ export function LoginForm() {
         </div>
       )}
 
-      {error && (
+      {errorMessage && (
         <div className="mb-4 rounded-lg bg-red-50 p-3 text-sm text-red-700 dark:bg-red-950 dark:text-red-300">
-          {error}
+          {errorMessage}
         </div>
       )}
 

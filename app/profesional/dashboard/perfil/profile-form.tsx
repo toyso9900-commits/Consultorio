@@ -1,14 +1,18 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useRef, useState, useTransition } from "react";
+import Image from "next/image";
 import {
   updateProfessionalProfile,
   UpdateProfessionalProfileData,
 } from "./actions";
+import { uploadProfessionalAvatar } from "./upload-actions";
 import { toast } from "sonner";
+import { Camera, Loader2 } from "lucide-react";
 
 interface ProfessionalProfileFormProps {
   userId: string;
+  image?: string | null;
   defaultValues: {
     name: string;
     title: string;
@@ -23,15 +27,39 @@ interface ProfessionalProfileFormProps {
 
 export function ProfessionalProfileForm({
   userId,
+  image,
   defaultValues,
 }: ProfessionalProfileFormProps) {
   const [isPending, startTransition] = useTransition();
+  const [isUploading, setIsUploading] = useState(false);
+  const [preview, setPreview] = useState(image || "");
   const [form, setForm] = useState(defaultValues);
+  const fileRef = useRef<HTMLInputElement>(null);
 
   function handleChange(
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  }
+
+  async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsUploading(true);
+    const data = new FormData();
+    data.append("userId", userId);
+    data.append("avatar", file);
+
+    const result = await uploadProfessionalAvatar(data);
+    setIsUploading(false);
+
+    if (result.success && result.imageUrl) {
+      setPreview(result.imageUrl);
+      toast.success("Foto de perfil actualizada");
+    } else {
+      toast.error(result.error || "No se pudo subir la imagen");
+    }
   }
 
   function handleSubmit(e: React.FormEvent) {
@@ -60,7 +88,53 @@ export function ProfessionalProfileForm({
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-6">
+      <div className="flex items-center gap-4">
+        <div className="relative">
+          <div className="flex h-20 w-20 items-center justify-center overflow-hidden rounded-full bg-indigo-100 dark:bg-indigo-950">
+            {preview ? (
+              <Image
+                src={preview}
+                alt="Foto de perfil"
+                width={80}
+                height={80}
+                className="h-full w-full object-cover"
+              />
+            ) : (
+              <Camera className="h-8 w-8 text-indigo-600" />
+            )}
+          </div>
+          <button
+            type="button"
+            onClick={() => fileRef.current?.click()}
+            disabled={isUploading}
+            className="absolute -bottom-1 -right-1 flex h-8 w-8 items-center justify-center rounded-full bg-indigo-600 text-white shadow-sm hover:bg-indigo-700 disabled:opacity-60"
+          >
+            {isUploading ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <Camera className="h-4 w-4" />
+            )}
+          </button>
+          <input
+            ref={fileRef}
+            type="file"
+            name="avatar"
+            accept="image/jpeg,image/png,image/webp"
+            onChange={handleFileChange}
+            className="hidden"
+          />
+        </div>
+        <div>
+          <p className="text-sm font-medium text-slate-900 dark:text-slate-100">
+            Foto de perfil
+          </p>
+          <p className="text-xs text-slate-500 dark:text-slate-400">
+            JPG, PNG o WebP. Máximo 2 MB.
+          </p>
+        </div>
+      </div>
+
       <div>
         <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
           Nombre completo

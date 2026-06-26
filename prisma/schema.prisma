@@ -116,11 +116,14 @@ model ProfessionalProfile {
   price          Float?
   isPremium      Boolean   @default(false)
   isValidated    Boolean   @default(false)
+  rejectedAt     DateTime?
 
   validations ProfessionalValidation[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([isValidated, rejectedAt])
 }
 
 enum Specialty {
@@ -205,6 +208,9 @@ model Message {
   readAt  DateTime?
 
   createdAt DateTime @default(now())
+
+  @@index([receiverId, readAt])
+  @@index([senderId, receiverId])
 }
 
 // Patient calorie tracker (beta: one free entry per day)

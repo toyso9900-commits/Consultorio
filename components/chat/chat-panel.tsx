@@ -3,8 +3,14 @@
 import { useEffect, useRef, useState } from "react";
 import Pusher from "pusher-js";
 import { useSession } from "next-auth/react";
-import { Send, User } from "lucide-react";
+import { Send, User, Loader2 } from "lucide-react";
+import { toast } from "sonner";
 import { sendMessage, markMessagesAsRead } from "@/app/messages/actions";
+import {
+  getPusherClientConfig,
+  isPusherClientConfigured,
+} from "@/lib/pusher-client";
+import { userChannel } from "@/lib/pusher-shared";
 
 interface ChatMessage {
   id: string;
@@ -26,12 +32,41 @@ interface ChatPanelProps {
   patientId: string;
 }
 
-export function ChatPanel({
+export function ChatPanel(props: ChatPanelProps) {
+  const { data: session, status: sessionStatus } = useSession();
+
+  if (sessionStatus === "loading") {
+    return (
+      <div className="flex h-[calc(100vh-12rem)] items-center justify-center rounded-2xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
+        <Loader2 className="h-8 w-8 animate-spin text-indigo-600" />
+      </div>
+    );
+  }
+
+  const userId = session?.user?.id ?? props.patientId;
+  if (!userId) {
+    return (
+      <div className="flex h-[calc(100vh-12rem)] items-center justify-center rounded-2xl border border-slate-200 bg-white p-6 text-center dark:border-slate-800 dark:bg-slate-900">
+        <p className="text-slate-600 dark:text-slate-400">
+          No se pudo identificar al usuario. Iniciá sesión nuevamente.
+        </p>
+      </div>
+    );
+  }
+
+  return <ChatPanelInner {...props} userId={userId} />;
+}
+
+interface ChatPanelInnerProps extends ChatPanelProps {
+  userId: string;
+}
+
+function ChatPanelInner({
   initialMessages,
   professionalId,
   professionalName,
-  patientId,
-}: ChatPanelProps) {
+  userId,
+}: ChatPanelInnerProps) {
   const { data: session } = useSession();
   const [messages, setMessages] = useState<ChatMessage[]>(initialMessages);
   const [input, setInput] = useState("");
@@ -39,8 +74,8 @@ export function ChatPanel({
   const bottomRef = useRef<HTMLDivElement>(null);
   const channelRef = useRef<ReturnType<Pusher["subscribe"]> | null>(null);
 
-  const userId = session?.user?.id ?? patientId;
   const otherId = professionalId;
+
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
@@ -50,25 +85,47 @@ export function ChatPanel({
   }, [userId, otherId]);
 
   useEffect(() => {
-    if (!process.env.NEXT_PUBLIC_PUSHER_KEY) return;
+    if (!isPusherClientConfigured()) {
+      console.warn("Pusher client not configured; chat live updates disabled.");
+      return;
+    }
 
-    const pusherClient = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY, {
-      cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER || "",
+    const { key, cluster } = getPusherClientConfig();
+    const pusherClient = new Pusher(key, {
+      cluster,
+      authEndpoint: "/api/pusher/auth",
+      authTransport: "ajax",
     });
 
-    const channelName = `chat-${[userId, otherId].sort().join("-")}`;
+    const channelName = userChannel(userId);
     const channel = pusherClient.subscribe(channelName);
     channelRef.current = channel;
 
     channel.bind("new-message", (message: ChatMessage) => {
+      const isCurrentConversation =
+        message.senderId === otherId || message.receiverId === otherId;
+
+      if (!isCurrentConversation) return;
+
       setMessages((prev) => {
         if (prev.some((m) => m.id === message.id)) return prev;
         return [...prev, message];
       });
+
       if (message.senderId !== userId) {
         markMessagesAsRead(userId, otherId);
       }
     });
+
+    channel.bind(
+      "conversation-read",
+      ({ senderId }: { senderId: string }) => {
+        if (senderId !== otherId) return;
+        // Messages in the current conversation were marked as read by the viewer.
+        // The chat panel does not currently render per-message read receipts,
+        // so no local state update is required here.
+      }
+    );
 
     return () => {
       channel.unbind_all();
@@ -78,32 +135,57 @@ export function ChatPanel({
 
   async function handleSend(e: React.FormEvent) {
     e.preventDefault();
-    if (!input.trim() || isSending) return;
+    const text = input.trim();
+    if (!text || isSending) return;
 
-    setIsSending(true);
-    const result = await sendMessage({
+    const tempId = `temp-${Date.now()}`;
+    const optimisticMessage: ChatMessage = {
+      id: tempId,
       senderId: userId,
       receiverId: otherId,
-      content: input.trim(),
-    });
+      content: text,
+      createdAt: new Date().toISOString(),
+      sender: {
+        id: userId,
+        name: session?.user?.name ?? null,
+        image: session?.user?.image ?? null,
+      },
+    };
 
-    setIsSending(false);
+    setMessages((prev) => [...prev, optimisticMessage]);
+    setInput("");
+    setIsSending(true);
 
-    if (result.success && result.message) {
-      setInput("");
-      const newMessage: ChatMessage = {
-        ...result.message,
-        createdAt: result.message.createdAt.toISOString(),
-        sender: {
-          id: result.message.sender.id,
-          name: result.message.sender.name,
-          image: result.message.sender.image,
-        },
-      };
-      setMessages((prev) => {
-        if (prev.some((m) => m.id === newMessage.id)) return prev;
-        return [...prev, newMessage];
+    try {
+      const result = await sendMessage({
+        senderId: userId,
+        receiverId: otherId,
+        content: text,
       });
+
+      if (result.success && result.message) {
+        const confirmedMessage: ChatMessage = {
+          ...result.message,
+          createdAt: result.message.createdAt.toISOString(),
+          sender: {
+            id: result.message.sender.id,
+            name: result.message.sender.name,
+            image: result.message.sender.image,
+          },
+        };
+        setMessages((prev) => {
+          return prev.map((m) => (m.id === tempId ? confirmedMessage : m));
+        });
+      } else {
+        setMessages((prev) => prev.filter((m) => m.id !== tempId));
+        toast.error(result.error || "No se pudo enviar el mensaje");
+      }
+    } catch (error) {
+      setMessages((prev) => prev.filter((m) => m.id !== tempId));
+      toast.error("Error de red al enviar el mensaje");
+      console.error(error);
+    } finally {
+      setIsSending(false);
     }
   }
 
