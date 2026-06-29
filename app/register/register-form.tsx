@@ -5,8 +5,13 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { registerUser } from "./actions";
+import type { Dictionary } from "@/lib/i18n/server";
 
-export function RegisterForm() {
+interface RegisterFormProps {
+  dictionary: Dictionary;
+}
+
+export function RegisterForm({ dictionary }: RegisterFormProps) {
   const router = useRouter();
   const [role, setRole] = useState("PATIENT");
   const [error, setError] = useState("");
@@ -42,17 +47,17 @@ export function RegisterForm() {
     setLoading(false);
 
     if (!result.success) {
-      setError(result.error || "Ocurrió un error al registrarte.");
+      setError(result.error || dictionary.auth.genericRegisterError);
       return;
     }
 
     if (payload.role === "PROFESSIONAL") {
       toast.custom(
         () => (
-          <div className="pointer-events-auto flex w-full max-w-sm items-start gap-4 rounded-2xl border border-indigo-100 bg-white p-5 shadow-xl shadow-indigo-100 animate-in fade-in slide-in-from-top-4 dark:border-indigo-900 dark:bg-slate-900 dark:shadow-indigo-950">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-indigo-100 dark:bg-indigo-950">
+          <div className="pointer-events-auto flex w-full max-w-sm items-start gap-4 rounded-2xl border border-border bg-card p-5 shadow-xl animate-in fade-in slide-in-from-top-4">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10">
               <svg
-                className="h-5 w-5 text-indigo-600"
+                className="h-5 w-5 text-primary"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -66,12 +71,11 @@ export function RegisterForm() {
               </svg>
             </div>
             <div>
-              <h3 className="font-semibold text-slate-900 dark:text-slate-100">
-                Registro exitoso
+              <h3 className="font-semibold text-foreground">
+                {dictionary.auth.registerSuccessTitle}
               </h3>
-              <p className="mt-1 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
-                Un supervisor está revisando tu documentación. Recibirás un
-                correo con la aceptación o negación de tu cuenta.
+              <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+                {dictionary.auth.registerSuccessMessage}
               </p>
             </div>
           </div>
@@ -82,7 +86,6 @@ export function RegisterForm() {
         }
       );
 
-      // Give the user time to read the toast before redirecting to login.
       setTimeout(() => {
         router.push("/login?registered=true");
       }, 3500);
@@ -93,11 +96,11 @@ export function RegisterForm() {
   }
 
   return (
-    <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-8 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+    <div className="w-full max-w-md rounded-2xl border border-border bg-card p-8 shadow-sm">
       <div className="mb-6 text-center">
-        <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-indigo-100 dark:bg-indigo-950">
+        <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
           <svg
-            className="h-6 w-6 text-indigo-600"
+            className="h-6 w-6 text-primary"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -110,16 +113,16 @@ export function RegisterForm() {
             />
           </svg>
         </div>
-        <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">
-          Crear cuenta
+        <h1 className="text-2xl font-bold text-foreground">
+          {dictionary.auth.registerTitle}
         </h1>
-        <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
-          Registrate para acceder a la plataforma.
+        <p className="mt-2 text-sm text-muted-foreground">
+          {dictionary.auth.registerSubtitle}
         </p>
       </div>
 
       {error && (
-        <div className="mb-4 rounded-lg bg-red-50 p-3 text-sm text-red-700 dark:bg-red-950 dark:text-red-300">
+        <div className="mb-4 rounded-lg bg-destructive/10 p-3 text-sm text-destructive">
           {error}
         </div>
       )}
@@ -128,31 +131,31 @@ export function RegisterForm() {
         <div>
           <label
             htmlFor="name"
-            className="block text-sm font-medium text-slate-700 dark:text-slate-300"
+            className="block text-sm font-medium text-foreground"
           >
-            Nombre completo
+            {dictionary.auth.name}
           </label>
           <input
             id="name"
             name="name"
             type="text"
             required
-            className="mt-1 block w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
+            className="mt-1 block w-full rounded-lg border border-border bg-background px-4 py-2.5 text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
           />
         </div>
         <div>
           <label
             htmlFor="email"
-            className="block text-sm font-medium text-slate-700 dark:text-slate-300"
+            className="block text-sm font-medium text-foreground"
           >
-            Correo electrónico
+            {dictionary.auth.email}
           </label>
           <input
             id="email"
             name="email"
             type="email"
             required
-            className="mt-1 block w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
+            className="mt-1 block w-full rounded-lg border border-border bg-background px-4 py-2.5 text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
             placeholder={
               isProfessional
                 ? "tu@consultorio-profesional.com"
@@ -163,9 +166,9 @@ export function RegisterForm() {
         <div>
           <label
             htmlFor="password"
-            className="block text-sm font-medium text-slate-700 dark:text-slate-300"
+            className="block text-sm font-medium text-foreground"
           >
-            Contraseña
+            {dictionary.auth.password}
           </label>
           <input
             id="password"
@@ -173,7 +176,7 @@ export function RegisterForm() {
             type="password"
             required
             minLength={8}
-            className="mt-1 block w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
+            className="mt-1 block w-full rounded-lg border border-border bg-background px-4 py-2.5 text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
             placeholder="••••••••"
           />
         </div>
@@ -181,19 +184,19 @@ export function RegisterForm() {
         <div>
           <label
             htmlFor="role"
-            className="block text-sm font-medium text-slate-700 dark:text-slate-300"
+            className="block text-sm font-medium text-foreground"
           >
-            Tipo de cuenta
+            {dictionary.auth.accountType}
           </label>
           <select
             id="role"
             name="role"
             value={role}
             onChange={(e) => setRole(e.target.value)}
-            className="mt-1 block w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 focus:border-indigo-500 focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
+            className="mt-1 block w-full rounded-lg border border-border bg-background px-4 py-2.5 text-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
           >
-            <option value="PATIENT">Paciente</option>
-            <option value="PROFESSIONAL">Profesional</option>
+            <option value="PATIENT">{dictionary.roles.patient}</option>
+            <option value="PROFESSIONAL">{dictionary.roles.professional}</option>
           </select>
         </div>
 
@@ -201,9 +204,9 @@ export function RegisterForm() {
           <div>
             <label
               htmlFor="licenseNumber"
-              className="block text-sm font-medium text-slate-700 dark:text-slate-300"
+              className="block text-sm font-medium text-foreground"
             >
-              Cédula profesional o certificación
+              {dictionary.auth.licenseLabel}
             </label>
             <input
               id="licenseNumber"
@@ -211,8 +214,8 @@ export function RegisterForm() {
               type="text"
               required
               minLength={3}
-              className="mt-1 block w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
-              placeholder="Ej. 12345678"
+              className="mt-1 block w-full rounded-lg border border-border bg-background px-4 py-2.5 text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+              placeholder={dictionary.auth.licensePlaceholder}
             />
           </div>
         )}
@@ -220,15 +223,15 @@ export function RegisterForm() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full rounded-full bg-indigo-600 px-4 py-2.5 font-semibold text-white transition-colors hover:bg-indigo-700 disabled:opacity-60"
+          className="w-full rounded-full bg-primary px-4 py-2.5 font-semibold text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-60"
         >
-          {loading ? "Registrando..." : "Crear cuenta"}
+          {loading ? dictionary.auth.registering : dictionary.auth.registerTitle}
         </button>
       </form>
-      <p className="mt-6 text-center text-sm text-slate-600 dark:text-slate-400">
-        ¿Ya tenés cuenta?{" "}
-        <Link href="/login" className="font-medium text-indigo-600 hover:underline">
-          Iniciar sesión
+      <p className="mt-6 text-center text-sm text-muted-foreground">
+        {dictionary.auth.hasAccountPrompt}{" "}
+        <Link href="/login" className="font-medium text-primary hover:underline">
+          {dictionary.auth.hasAccountLink}
         </Link>
       </p>
     </div>
