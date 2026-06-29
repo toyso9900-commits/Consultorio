@@ -61,6 +61,7 @@ model User {
 
   calorieEntries CalorieEntry[]
   subscriptions  Subscription[]
+  preference     UserPreference?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -251,4 +252,13 @@ enum SubscriptionStatus {
   ACTIVE
   CANCELLED
   EXPIRED
+}
+
+model UserPreference {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  language  String   @default("es")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
