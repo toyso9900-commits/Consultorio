@@ -1,0 +1,151 @@
+export const en = {
+  common: {
+    save: "Save",
+    cancel: "Cancel",
+    loading: "Loading...",
+    error: "Error",
+    success: "Success",
+    close: "Close",
+    back: "Back",
+    next: "Next",
+    search: "Search",
+    filter: "Filter",
+    all: "All",
+    none: "None",
+    confirm: "Confirm",
+    delete: "Delete",
+    edit: "Edit",
+    view: "View",
+    send: "Send",
+    continue: "Continue",
+    welcome: "Welcome",
+  },
+  meta: {
+    title: "Consultorio - Health and Wellness",
+    description:
+      "Unify your clinical and physical health record. Connect with certified nutritionists and trainers.",
+  },
+  header: {
+    dashboard: "My dashboard",
+    login: "Log in",
+    register: "Sign up",
+  },
+  footer: {
+    copyright: "© {year} Consultorio. Beta version.",
+    tagline: "Your health, nutrition, and training in one place.",
+  },
+  userMenu: {
+    profile: "Edit profile",
+    settings: "Settings",
+    logout: "Log out",
+    rolePatient: "Patient",
+    roleProfessional: "Professional",
+    roleAdmin: "Administrator",
+    user: "User",
+  },
+  nav: {
+    home: "Home",
+    experts: "Expert Guide",
+    appointments: "Appointments",
+    messages: "Messages",
+    documents: "Documents",
+    profile: "My profile",
+    clients: "Clients",
+    subscription: "Subscription",
+    users: "Users",
+    professionals: "Registered professionals",
+    validations: "Pending validations",
+    reviews: "Reviews",
+  },
+  settings: {
+    title: "Settings",
+    appearance: "Appearance",
+    language: "Language",
+    theme: {
+      light: "Light",
+      dark: "Dark",
+      system: "System",
+    },
+    themeDescription: "Choose the display mode you prefer.",
+    languageDescription: "Select the interface language.",
+  },
+  dashboard: {
+    patientTitle: "Patient Dashboard",
+    patientSubtitle: "Manage your health and wellness",
+    professionalTitle: "Professional Dashboard",
+    professionalSubtitle: "Manage your profile, appointments, and patients",
+    adminTitle: "Administration Dashboard",
+    adminSubtitle: "Manage professionals, validations, and subscriptions",
+  },
+  roles: {
+    patient: "Patient",
+    professional: "Professional",
+    admin: "Administrator",
+  },
+  landing: {
+    badge: "Beta version",
+    headline: "Your health, nutrition, and training in one place",
+    description:
+      "Unify your clinical and physical health record. Connect with certified nutritionists and trainers to receive personalized plans.",
+    register: "Sign up",
+    login: "Log in",
+    specialists: "+50 specialists",
+    specialistsLabel: "Verified and ready to help you",
+    featuresTitle: "What does the platform do?",
+    featuresDescription:
+      "Consultorio connects you with health and wellness professionals so you can take care of your body and mind holistically.",
+    expertsTitle: "Top 10 Featured Experts",
+    expertsDescription: "Verified professionals with the best ratings.",
+    viewAll: "View all",
+    featured: "Featured",
+    features: {
+      findExperts: {
+        title: "Find experts",
+        description:
+          "Search certified nutritionists and trainers by specialty, location, or modality.",
+      },
+      bookAppointments: {
+        title: "Book appointments",
+        description:
+          "Book online or in-person consultations and receive automatic reminders.",
+      },
+      unifiedRecord: {
+        title: "Unified record",
+        description:
+          "Keep your clinical, physical, studies, and progress history in one place.",
+      },
+      communicate: {
+        title: "Communicate with your expert",
+        description:
+          "Stay in direct contact with your nutritionist or trainer during your plan.",
+      },
+      verified: {
+        title: "Verified professionals",
+        description:
+          "All specialists go through a credential validation process.",
+      },
+    },
+  },
+  auth: {
+    loginTitle: "Log in",
+    loginSubtitle: "Enter your credentials to continue",
+    registerTitle: "Create account",
+    registerSubtitle: "Sign up to start using Consultorio",
+    email: "Email",
+    password: "Password",
+    name: "Full name",
+    confirmPassword: "Confirm password",
+    forgotPassword: "Forgot your password?",
+    noAccount: "Don't have an account? Sign up",
+    hasAccount: "Already have an account? Log in",
+    logout: "Log out",
+    loggingIn: "Logging in...",
+    registering: "Signing up...",
+    redirecting: "Redirecting...",
+  },
+  errors: {
+    generic: "Something went wrong. Please try again.",
+    unauthorized: "You don't have permission to access this page.",
+    notFound: "Page not found.",
+  },
+} as const;

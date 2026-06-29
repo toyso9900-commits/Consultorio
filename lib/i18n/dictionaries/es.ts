@@ -1,0 +1,151 @@
+export const es = {
+  common: {
+    save: "Guardar",
+    cancel: "Cancelar",
+    loading: "Cargando...",
+    error: "Error",
+    success: "Éxito",
+    close: "Cerrar",
+    back: "Volver",
+    next: "Siguiente",
+    search: "Buscar",
+    filter: "Filtrar",
+    all: "Todas",
+    none: "Ninguna",
+    confirm: "Confirmar",
+    delete: "Eliminar",
+    edit: "Editar",
+    view: "Ver",
+    send: "Enviar",
+    continue: "Continuar",
+    welcome: "Bienvenido",
+  },
+  meta: {
+    title: "Consultorio - Salud y Bienestar",
+    description:
+      "Unifica tu expediente clínico y físico. Conecta con nutriólogos y entrenadores certificados.",
+  },
+  header: {
+    dashboard: "Mi panel",
+    login: "Iniciar sesión",
+    register: "Registrarse",
+  },
+  footer: {
+    copyright: "© {year} Consultorio. Versión beta.",
+    tagline: "Tu salud, nutrición y entrenamiento en un solo lugar.",
+  },
+  userMenu: {
+    profile: "Editar perfil",
+    settings: "Configuración",
+    logout: "Cerrar sesión",
+    rolePatient: "Paciente",
+    roleProfessional: "Profesional",
+    roleAdmin: "Administrador",
+    user: "Usuario",
+  },
+  nav: {
+    home: "Inicio",
+    experts: "Guía de Expertos",
+    appointments: "Citas",
+    messages: "Mensajes",
+    documents: "Documentos",
+    profile: "Mi perfil",
+    clients: "Clientes",
+    subscription: "Suscripción",
+    users: "Usuarios",
+    professionals: "Profesionales registrados",
+    validations: "Validaciones pendientes",
+    reviews: "Reseñas",
+  },
+  settings: {
+    title: "Configuración",
+    appearance: "Apariencia",
+    language: "Idioma",
+    theme: {
+      light: "Claro",
+      dark: "Oscuro",
+      system: "Sistema",
+    },
+    themeDescription: "Elegí el modo de visualización que prefieras.",
+    languageDescription: "Seleccioná el idioma de la interfaz.",
+  },
+  dashboard: {
+    patientTitle: "Panel del Paciente",
+    patientSubtitle: "Gestioná tu salud y bienestar",
+    professionalTitle: "Panel del Profesional",
+    professionalSubtitle: "Gestioná tu perfil, citas y pacientes",
+    adminTitle: "Panel de Administración",
+    adminSubtitle: "Gestión de profesionales, validaciones y suscripciones",
+  },
+  roles: {
+    patient: "Paciente",
+    professional: "Profesional",
+    admin: "Administrador",
+  },
+  landing: {
+    badge: "Versión beta",
+    headline: "Tu salud, nutrición y entrenamiento en un solo lugar",
+    description:
+      "Unifica tu expediente clínico y físico. Conectá con nutriólogos y entrenadores certificados para recibir planes personalizados.",
+    register: "Registrarse",
+    login: "Iniciar sesión",
+    specialists: "+50 especialistas",
+    specialistsLabel: "Verificados y listos para ayudarte",
+    featuresTitle: "¿Qué hace la plataforma?",
+    featuresDescription:
+      "Consultorio te conecta con profesionales de la salud y el bienestar para que cuides tu cuerpo y tu mente de forma integral.",
+    expertsTitle: "Top 10 Expertos Destacados",
+    expertsDescription: "Profesionales verificados con las mejores valoraciones.",
+    viewAll: "Ver todos",
+    featured: "Destacado",
+    features: {
+      findExperts: {
+        title: "Encontrá expertos",
+        description:
+          "Buscá nutriólogos y entrenadores certificados por especialidad, ubicación o modalidad.",
+      },
+      bookAppointments: {
+        title: "Agendá citas",
+        description:
+          "Reservá consultas online o presenciales y recibí recordatorios automáticos.",
+      },
+      unifiedRecord: {
+        title: "Unificá tu expediente",
+        description:
+          "Guardá tu historial clínico, físico, estudios y avances en un solo lugar.",
+      },
+      communicate: {
+        title: "Comunicate con tu experto",
+        description:
+          "Mantené contacto directo con tu nutriólogo o entrenador durante tu plan.",
+      },
+      verified: {
+        title: "Profesionales verificados",
+        description:
+          "Todos los especialistas pasan por un proceso de validación de credenciales.",
+      },
+    },
+  },
+  auth: {
+    loginTitle: "Iniciar sesión",
+    loginSubtitle: "Ingresá tus credenciales para continuar",
+    registerTitle: "Crear cuenta",
+    registerSubtitle: "Registrate para empezar a usar Consultorio",
+    email: "Correo electrónico",
+    password: "Contraseña",
+    name: "Nombre completo",
+    confirmPassword: "Confirmar contraseña",
+    forgotPassword: "¿Olvidaste tu contraseña?",
+    noAccount: "¿No tenés cuenta? Registrate",
+    hasAccount: "¿Ya tenés cuenta? Iniciar sesión",
+    logout: "Cerrar sesión",
+    loggingIn: "Iniciando sesión...",
+    registering: "Registrando...",
+    redirecting: "Redirigiendo...",
+  },
+  errors: {
+    generic: "Algo salió mal. Volvé a intentarlo.",
+    unauthorized: "No tenés permiso para acceder a esta página.",
+    notFound: "Página no encontrada.",
+  },
+} as const;
