@@ -50,10 +50,10 @@ Chain strategy: pending
 
 ## Phase 4: Settings Page
 
-- [ ] **T15 — `/configuracion` page** (`app/configuracion/page.tsx`, ~60 lines, deps: T9,T10, accept: renders inside shared layout for both roles).
-- [ ] **T16 — `ThemeToggle`** (`components/theme-toggle.tsx`, ~50 lines, deps: T4, accept: segmented light/dark/system applies instantly).
-- [ ] **T17 — `LanguageSelector`** (`components/configuracion/language-selector.tsx`, ~50 lines, deps: T6,T18, accept: persists via server action, shows Sonner toast).
-- [ ] **T18 — Language server actions** (`lib/actions/preferences.ts`, ~60 lines, deps: T2, accept: Zod validation, auth check, revalidates `/configuracion` and dashboards).
+- [x] **T15 — `/configuracion` page** (`app/configuracion/page.tsx`, ~60 lines, deps: T9,T10, accept: renders inside shared layout for both roles).
+- [x] **T16 — `ThemeToggle`** (`components/theme-toggle.tsx`, ~50 lines, deps: T4, accept: segmented light/dark/system applies instantly).
+- [x] **T17 — `LanguageSelector`** (`components/configuracion/language-selector.tsx`, ~50 lines, deps: T6,T18, accept: persists via server action, shows Sonner toast).
+- [x] **T18 — Language server actions** (`lib/actions/preferences.ts`, ~60 lines, deps: T2, accept: Zod validation, auth check, revalidates `/configuracion` and dashboards).
 
 ## Phase 5: Existing Page Translations
 
