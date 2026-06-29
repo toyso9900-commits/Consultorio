@@ -48,7 +48,7 @@ export default async function SettingsPage() {
               {dictionary.settings.languageDescription}
             </p>
           </div>
-          <LanguageSelector userId={userId} currentLocale={locale} />
+          <LanguageSelector userId={userId} />
         </section>
       </div>
     </div>

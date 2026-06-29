@@ -1,11 +1,12 @@
 "use client";
 
-import { createContext, useContext, ReactNode } from "react";
-import type { Locale, Dictionary } from "./dictionaries";
+import { createContext, useContext, useState, useCallback, ReactNode } from "react";
+import { dictionaries, type Locale, type Dictionary } from "./dictionaries";
 
 interface I18nContextValue {
   locale: Locale;
   dictionary: Dictionary;
+  setLocale: (locale: Locale) => void;
 }
 
 const I18nContext = createContext<I18nContextValue | undefined>(undefined);
@@ -17,12 +18,21 @@ interface I18nProviderProps {
 }
 
 export function I18nProvider({
-  locale,
-  dictionary,
+  locale: initialLocale,
+  dictionary: initialDictionary,
   children,
 }: I18nProviderProps) {
+  const [state, setState] = useState({
+    locale: initialLocale,
+    dictionary: initialDictionary,
+  });
+
+  const setLocale = useCallback((nextLocale: Locale) => {
+    setState({ locale: nextLocale, dictionary: dictionaries[nextLocale] });
+  }, []);
+
   return (
-    <I18nContext.Provider value={{ locale, dictionary }}>
+    <I18nContext.Provider value={{ ...state, setLocale }}>
       {children}
     </I18nContext.Provider>
   );

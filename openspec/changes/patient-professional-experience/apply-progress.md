@@ -1,8 +1,20 @@
 # Apply Progress: Theme + Settings (Slice 1)
 
+## Remediation
+
+### Language selector immediate UI update (2026-06-29)
+
+- **Issue**: The verification report warned that changing the language on `/configuracion` persisted the preference but did not refresh the client-side dictionary immediately, leaving the settings page in the old language until reload or navigation.
+- **Fix**: Updated `lib/i18n/client.tsx` to expose `setLocale` from the `I18nProvider` context and updated `components/configuracion/language-selector.tsx` to call `setLocale(next)` immediately after a successful `updateUserLanguage` server action, followed by `router.refresh()` to sync server state without a full page reload.
+- **Files changed**:
+  - `lib/i18n/client.tsx` — added client-side `setLocale` and dictionary swap.
+  - `components/configuracion/language-selector.tsx` — uses controlled `value={locale}`, calls `setLocale` + `router.refresh()` after persistence.
+  - `app/configuracion/page.tsx` — removed the now-redundant `currentLocale` prop.
+- **Verification**: `npm run typecheck`, `npm run lint`, and `npm run build` all pass after the fix.
+
 ## Status
 
-partial_success
+success
 
 ## Executive Summary
 
