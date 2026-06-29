@@ -10,13 +10,14 @@ import {
   Shield,
   FileText,
 } from "lucide-react";
-import { MOCK_PROFESSIONALS } from "@/lib/professionals";
+import { getFeaturedProfessionals } from "@/lib/professionals-db";
+import { StarRating } from "@/components/ui/star-rating";
 import { getLocale, getDictionary } from "@/lib/i18n/server";
 
 export default async function Home() {
   const locale = await getLocale();
   const dictionary = await getDictionary(locale);
-  const topExperts = MOCK_PROFESSIONALS.filter((p) => p.isPremium).slice(0, 10);
+  const topExperts = await getFeaturedProfessionals(10);
 
   const features = [
     {
@@ -148,7 +149,7 @@ export default async function Home() {
               </p>
             </div>
             <Link
-              href="/register"
+              href="/paciente/dashboard/expertos"
               className="inline-flex items-center gap-1 text-sm font-semibold text-primary hover:underline"
             >
               {dictionary.landing.viewAll}
@@ -156,40 +157,61 @@ export default async function Home() {
             </Link>
           </div>
 
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {topExperts.map((prof) => (
-              <div
-                key={prof.id}
-                className="overflow-hidden rounded-2xl border border-border bg-background shadow-sm transition-all hover:-translate-y-1 hover:shadow-md"
-              >
-                <div className="relative h-48 w-full bg-muted">
-                  <Image
-                    src={prof.image}
-                    alt={prof.name}
-                    fill
-                    className="object-cover"
-                  />
-                  <div className="absolute right-3 top-3 flex items-center gap-1 rounded-full bg-primary/10 px-2.5 py-1 text-xs font-semibold text-primary">
-                    {dictionary.landing.featured}
+          {topExperts.length === 0 ? (
+            <div className="rounded-2xl border border-dashed border-border bg-background p-12 text-center">
+              <h3 className="text-lg font-semibold text-foreground">
+                {dictionary.landing.noFeatured}
+              </h3>
+              <p className="mt-2 text-muted-foreground">
+                {dictionary.landing.noFeaturedDescription}
+              </p>
+            </div>
+          ) : (
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              {topExperts.map((prof) => (
+                <div
+                  key={prof.id}
+                  className="overflow-hidden rounded-2xl border border-border bg-background shadow-sm transition-all hover:-translate-y-1 hover:shadow-md"
+                >
+                  <div className="relative h-48 w-full bg-muted">
+                    <Image
+                      src={prof.image}
+                      alt={prof.name}
+                      fill
+                      className="object-cover"
+                    />
+                    <div className="absolute right-3 top-3 flex items-center gap-1 rounded-full bg-accent/10 px-2.5 py-1 text-xs font-semibold text-accent">
+                      {dictionary.landing.featured}
+                    </div>
+                  </div>
+                  <div className="p-5">
+                    <div className="mb-2 flex items-center justify-between gap-2">
+                      <span className="rounded-full bg-primary/10 px-2 py-1 text-xs font-medium text-primary">
+                        {prof.specialty}
+                      </span>
+                      <StarRating
+                        rating={prof.averageRating}
+                        reviewCount={prof.reviewCount}
+                        size="sm"
+                      />
+                    </div>
+                    <h3 className="text-lg font-bold text-foreground">
+                      {prof.name}
+                    </h3>
+                    <p className="text-sm text-muted-foreground">
+                      {prof.title}
+                    </p>
+                    <p className="mt-2 text-sm text-muted-foreground">
+                      {prof.location} • {prof.modality}
+                    </p>
+                    <p className="mt-3 text-sm font-semibold text-foreground">
+                      ${prof.price} MXN
+                    </p>
                   </div>
                 </div>
-                <div className="p-5">
-                  <span className="rounded-full bg-primary/10 px-2 py-1 text-xs font-medium text-primary">
-                    {prof.specialty}
-                  </span>
-                  <h3 className="mt-3 text-lg font-bold text-foreground">
-                    {prof.name}
-                  </h3>
-                  <p className="text-sm text-muted-foreground">
-                    {prof.title}
-                  </p>
-                  <p className="mt-3 text-sm font-semibold text-foreground">
-                    ${prof.price} MXN
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
     </main>
