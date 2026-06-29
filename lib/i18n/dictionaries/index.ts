@@ -41,6 +41,24 @@ export interface Dictionary {
   };
   auth: Record<keyof typeof es.auth, string>;
   errors: Record<keyof typeof es.errors, string>;
+  patientHome: Record<keyof typeof es.patientHome, string>;
+  patientExperts: {
+    backToDashboard: string;
+    title: string;
+    description: string;
+    searchPlaceholder: string;
+    allSpecialties: string;
+    noResults: string;
+    featured: string;
+    viewProfile: string;
+    specialties: Record<keyof typeof es.patientExperts.specialties, string>;
+  };
+  patientDocuments: Record<keyof typeof es.patientDocuments, string>;
+  patientAppointments: Record<keyof typeof es.patientAppointments, string>;
+  patientMessages: Record<keyof typeof es.patientMessages, string>;
+  patientProfile: Record<keyof typeof es.patientProfile, string>;
+  onboarding: Record<keyof typeof es.onboarding, string>;
+  gender: Record<keyof typeof es.gender, string>;
 }
 
 export const dictionaries: Record<Locale, Dictionary> = { es, en };

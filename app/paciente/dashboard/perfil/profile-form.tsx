@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import { updatePatientProfile } from "./actions";
 import { toast } from "sonner";
+import { useI18n } from "@/lib/i18n/client";
 
 interface PatientProfileFormProps {
   userId: string;
@@ -15,6 +16,7 @@ interface PatientProfileFormProps {
 }
 
 export function PatientProfileForm({ userId, defaultValues }: PatientProfileFormProps) {
+  const { dictionary } = useI18n();
   const [isPending, startTransition] = useTransition();
   const [form, setForm] = useState(defaultValues);
 
@@ -36,9 +38,9 @@ export function PatientProfileForm({ userId, defaultValues }: PatientProfileForm
       });
 
       if (result.success) {
-        toast.success("Perfil actualizado");
+        toast.success(dictionary.patientProfile.updated);
       } else {
-        toast.error(result.error || "No se pudo actualizar el perfil");
+        toast.error(result.error || dictionary.patientProfile.updateError);
       }
     });
   }
@@ -47,7 +49,7 @@ export function PatientProfileForm({ userId, defaultValues }: PatientProfileForm
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
         <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
-          Nombre completo
+          {dictionary.patientProfile.fullName}
         </label>
         <input
           type="text"
@@ -62,7 +64,7 @@ export function PatientProfileForm({ userId, defaultValues }: PatientProfileForm
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
           <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
-            Estatura (cm)
+            {dictionary.patientProfile.height}
           </label>
           <input
             type="number"
@@ -77,7 +79,7 @@ export function PatientProfileForm({ userId, defaultValues }: PatientProfileForm
         </div>
         <div>
           <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
-            Peso (kg)
+            {dictionary.patientProfile.weight}
           </label>
           <input
             type="number"
@@ -95,7 +97,7 @@ export function PatientProfileForm({ userId, defaultValues }: PatientProfileForm
 
       <div>
         <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
-          Género
+          {dictionary.patientProfile.gender}
         </label>
         <select
           name="gender"
@@ -104,10 +106,10 @@ export function PatientProfileForm({ userId, defaultValues }: PatientProfileForm
           required
           className="mt-1 block w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
         >
-          <option value="male">Masculino</option>
-          <option value="female">Femenino</option>
-          <option value="non-binary">No binario</option>
-          <option value="prefer-not-to-say">Prefiero no decirlo</option>
+          <option value="male">{dictionary.gender.male}</option>
+          <option value="female">{dictionary.gender.female}</option>
+          <option value="non-binary">{dictionary.gender.nonBinary}</option>
+          <option value="prefer-not-to-say">{dictionary.gender.preferNotToSay}</option>
         </select>
       </div>
 
@@ -116,7 +118,7 @@ export function PatientProfileForm({ userId, defaultValues }: PatientProfileForm
         disabled={isPending}
         className="rounded-full bg-indigo-600 px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-indigo-700 disabled:opacity-60"
       >
-        {isPending ? "Guardando..." : "Guardar cambios"}
+        {isPending ? dictionary.patientProfile.saving : dictionary.patientProfile.save}
       </button>
     </form>
   );

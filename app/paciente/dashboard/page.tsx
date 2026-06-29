@@ -11,9 +11,13 @@ import {
   Search,
 } from "lucide-react";
 import { OnboardingModal } from "./onboarding-modal";
+import { getLocale, getDictionary } from "@/lib/i18n/server";
+import type { Dictionary } from "@/lib/i18n/server";
 
 export default async function PatientDashboardPage() {
   const session = await auth();
+  const locale = await getLocale(session?.user?.id);
+  const dictionary = await getDictionary(locale);
 
   const userId = session!.user.id!;
 
@@ -34,11 +38,13 @@ export default async function PatientDashboardPage() {
 
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100">
-          Panel del Paciente
+          {dictionary.dashboard.patientTitle}
         </h1>
         <p className="mt-2 text-slate-600 dark:text-slate-400">
-          Bienvenido, {session!.user.name || session!.user.email}. Acá podés
-          gestionar tu salud y bienestar.
+          {dictionary.patientHome.welcome.replace(
+            "{name}",
+            session!.user.name || session!.user.email || ""
+          )}
         </p>
       </div>
 
@@ -48,7 +54,7 @@ export default async function PatientDashboardPage() {
             <Activity className="h-5 w-5 text-indigo-600" />
           </div>
           <p className="mt-4 text-sm text-slate-500 dark:text-slate-400">
-            Peso actual
+            {dictionary.patientHome.currentWeight}
           </p>
           <p className="text-2xl font-bold text-slate-900 dark:text-slate-100">
             {patientProfile?.weight ? `${patientProfile.weight} kg` : "-- kg"}
@@ -59,7 +65,7 @@ export default async function PatientDashboardPage() {
             <Apple className="h-5 w-5 text-teal-600" />
           </div>
           <p className="mt-4 text-sm text-slate-500 dark:text-slate-400">
-            Calorías hoy
+            {dictionary.patientHome.caloriesToday}
           </p>
           <p className="text-2xl font-bold text-slate-900 dark:text-slate-100">0 kcal</p>
         </div>
@@ -68,7 +74,7 @@ export default async function PatientDashboardPage() {
             <CalendarDays className="h-5 w-5 text-amber-600" />
           </div>
           <p className="mt-4 text-sm text-slate-500 dark:text-slate-400">
-            Próximas citas
+            {dictionary.patientHome.upcomingAppointments}
           </p>
           <p className="text-2xl font-bold text-slate-900 dark:text-slate-100">0</p>
         </div>
@@ -77,7 +83,7 @@ export default async function PatientDashboardPage() {
             <MessageSquare className="h-5 w-5 text-rose-600" />
           </div>
           <p className="mt-4 text-sm text-slate-500 dark:text-slate-400">
-            Mensajes
+            {dictionary.patientHome.messages}
           </p>
           <p className="text-2xl font-bold text-slate-900 dark:text-slate-100">0</p>
         </div>
@@ -90,24 +96,24 @@ export default async function PatientDashboardPage() {
               <User className="h-5 w-5 text-indigo-600" />
             </div>
             <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
-              Mi expediente
+              {dictionary.patientHome.myRecord}
             </h2>
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="rounded-xl bg-slate-50 p-4 dark:bg-slate-800">
-              <p className="text-sm text-slate-500 dark:text-slate-400">Estatura</p>
+              <p className="text-sm text-slate-500 dark:text-slate-400">{dictionary.patientHome.height}</p>
               <p className="text-lg font-semibold text-slate-900 dark:text-slate-100">
                 {patientProfile?.height
                   ? `${patientProfile.height} cm`
-                  : "No completado"}
+                  : dictionary.patientHome.notCompleted}
               </p>
             </div>
             <div className="rounded-xl bg-slate-50 p-4 dark:bg-slate-800">
-              <p className="text-sm text-slate-500 dark:text-slate-400">Género</p>
+              <p className="text-sm text-slate-500 dark:text-slate-400">{dictionary.patientHome.gender}</p>
               <p className="text-lg font-semibold text-slate-900 dark:text-slate-100 capitalize">
                 {patientProfile?.gender
-                  ? formatGender(patientProfile.gender)
-                  : "No completado"}
+                  ? formatGender(patientProfile.gender, dictionary)
+                  : dictionary.patientHome.notCompleted}
               </p>
             </div>
           </div>
@@ -119,11 +125,11 @@ export default async function PatientDashboardPage() {
                 <FileText className="h-5 w-5 text-teal-600" />
               </div>
               <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
-                Documentos
+                {dictionary.patientHome.documentsTitle}
               </h2>
             </div>
             <p className="text-slate-600 dark:text-slate-400">
-              Subí estudios médicos para compartirlos con tus especialistas.
+              {dictionary.patientHome.documentsDescription}
             </p>
           </div>
           <Link
@@ -136,10 +142,10 @@ export default async function PatientDashboardPage() {
               </div>
               <div>
                 <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
-                  Guía de Expertos
+                  {dictionary.patientHome.expertGuide}
                 </h2>
                 <p className="text-sm text-slate-600 dark:text-slate-400">
-                  Buscá nutriólogos y entrenadores.
+                  {dictionary.patientHome.expertsDescription}
                 </p>
               </div>
             </div>
@@ -163,12 +169,12 @@ export default async function PatientDashboardPage() {
   );
 }
 
-function formatGender(value: string) {
+function formatGender(value: string, dictionary: Dictionary) {
   const map: Record<string, string> = {
-    male: "Masculino",
-    female: "Femenino",
-    "non-binary": "No binario",
-    "prefer-not-to-say": "Prefiero no decirlo",
+    male: dictionary.gender.male,
+    female: dictionary.gender.female,
+    "non-binary": dictionary.gender.nonBinary,
+    "prefer-not-to-say": dictionary.gender.preferNotToSay,
   };
   return map[value] || value;
 }

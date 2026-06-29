@@ -1,8 +1,11 @@
 import { auth } from "@/lib/auth";
 import { FileText } from "lucide-react";
+import { getLocale, getDictionary } from "@/lib/i18n/server";
 
 export default async function PatientDocumentsPage() {
   const session = await auth();
+  const locale = await getLocale(session?.user?.id);
+  const dictionary = await getDictionary(locale);
 
   return (
     <div className="space-y-6">
@@ -12,18 +15,17 @@ export default async function PatientDocumentsPage() {
         </div>
         <div>
           <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">
-            Documentos
+            {dictionary.patientDocuments.title}
           </h1>
           <p className="text-slate-600 dark:text-slate-400">
-            Subí y gestioná tus estudios médicos.
+            {dictionary.patientDocuments.description}
           </p>
         </div>
       </div>
 
       <div className="rounded-2xl border border-slate-200 bg-white p-12 text-center shadow-sm dark:border-slate-800 dark:bg-slate-900">
         <p className="text-slate-600 dark:text-slate-400">
-          No tenés documentos cargados todavía. Pronto podrás subir estudios y
-          compartirlos con tus especialistas.
+          {dictionary.patientDocuments.empty}
         </p>
       </div>
     </div>

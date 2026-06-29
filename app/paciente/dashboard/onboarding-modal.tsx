@@ -2,12 +2,14 @@
 
 import { useState, useTransition } from "react";
 import { savePatientOnboarding, SaveOnboardingResult } from "./actions";
+import { useI18n } from "@/lib/i18n/client";
 
 interface OnboardingModalProps {
   userId: string;
 }
 
 export function OnboardingModal({ userId }: OnboardingModalProps) {
+  const { dictionary } = useI18n();
   const [error, setError] = useState("");
   const [isPending, startTransition] = useTransition();
 
@@ -40,11 +42,10 @@ export function OnboardingModal({ userId }: OnboardingModalProps) {
       <div className="w-full max-w-lg rounded-2xl border border-slate-200 bg-white p-8 shadow-xl dark:border-slate-700 dark:bg-slate-900">
         <div className="mb-6 text-center">
           <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100">
-            Completá tu perfil
+            {dictionary.onboarding.title}
           </h2>
           <p className="mt-2 text-slate-600 dark:text-slate-400">
-            Antes de continuar necesitamos conocer unos datos básicos para
-            personalizar tu experiencia.
+            {dictionary.onboarding.description}
           </p>
         </div>
 
@@ -60,7 +61,7 @@ export function OnboardingModal({ userId }: OnboardingModalProps) {
               htmlFor="onboarding-name"
               className="block text-sm font-medium text-slate-700 dark:text-slate-300"
             >
-              Nombre completo
+              {dictionary.onboarding.fullName}
             </label>
             <input
               id="onboarding-name"
@@ -78,7 +79,7 @@ export function OnboardingModal({ userId }: OnboardingModalProps) {
               htmlFor="onboarding-gender"
               className="block text-sm font-medium text-slate-700 dark:text-slate-300"
             >
-              Sexo / Género
+              {dictionary.onboarding.sexOrGender}
             </label>
             <select
               id="onboarding-gender"
@@ -86,11 +87,11 @@ export function OnboardingModal({ userId }: OnboardingModalProps) {
               required
               className="mt-1 block w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
             >
-              <option value="">Seleccioná una opción</option>
-              <option value="male">Masculino</option>
-              <option value="female">Femenino</option>
-              <option value="non-binary">No binario</option>
-              <option value="prefer-not-to-say">Prefiero no decirlo</option>
+              <option value="">{dictionary.onboarding.selectOption}</option>
+              <option value="male">{dictionary.gender.male}</option>
+              <option value="female">{dictionary.gender.female}</option>
+              <option value="non-binary">{dictionary.gender.nonBinary}</option>
+              <option value="prefer-not-to-say">{dictionary.gender.preferNotToSay}</option>
             </select>
           </div>
 
@@ -100,7 +101,7 @@ export function OnboardingModal({ userId }: OnboardingModalProps) {
                 htmlFor="onboarding-height"
                 className="block text-sm font-medium text-slate-700 dark:text-slate-300"
               >
-                Estatura (cm)
+                {dictionary.onboarding.height}
               </label>
               <input
                 id="onboarding-height"
@@ -118,7 +119,7 @@ export function OnboardingModal({ userId }: OnboardingModalProps) {
                 htmlFor="onboarding-weight"
                 className="block text-sm font-medium text-slate-700 dark:text-slate-300"
               >
-                Peso (kg)
+                {dictionary.onboarding.weight}
               </label>
               <input
                 id="onboarding-weight"
@@ -139,7 +140,7 @@ export function OnboardingModal({ userId }: OnboardingModalProps) {
             disabled={isPending}
             className="w-full rounded-full bg-indigo-600 px-4 py-2.5 font-semibold text-white transition-colors hover:bg-indigo-700 disabled:opacity-60"
           >
-            {isPending ? "Guardando..." : "Guardar y continuar"}
+            {isPending ? dictionary.onboarding.saving : dictionary.onboarding.save}
           </button>
         </form>
       </div>

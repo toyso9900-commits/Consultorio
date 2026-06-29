@@ -2,9 +2,12 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { UserCircle } from "lucide-react";
 import { PatientProfileForm } from "./profile-form";
+import { getLocale, getDictionary } from "@/lib/i18n/server";
 
 export default async function PatientProfilePage() {
   const session = await auth();
+  const locale = await getLocale(session?.user?.id);
+  const dictionary = await getDictionary(locale);
 
   const profile = await prisma.patientProfile.findUnique({
     where: { userId: session!.user.id },
@@ -18,10 +21,10 @@ export default async function PatientProfilePage() {
         </div>
         <div>
           <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">
-            Editar perfil
+            {dictionary.patientProfile.title}
           </h1>
           <p className="text-slate-600 dark:text-slate-400">
-            Actualizá tus datos personales.
+            {dictionary.patientProfile.subtitle}
           </p>
         </div>
       </div>

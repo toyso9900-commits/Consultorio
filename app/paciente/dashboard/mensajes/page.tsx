@@ -4,6 +4,7 @@ import { getConversation, getUserConversations } from "@/app/messages/actions";
 import { ChatPanel } from "@/components/chat/chat-panel";
 import { ConversationList } from "@/components/chat/conversation-list";
 import Link from "next/link";
+import { getLocale, getDictionary } from "@/lib/i18n/server";
 
 interface PageProps {
   searchParams: Promise<{ profesional?: string; nombre?: string }>;
@@ -11,10 +12,12 @@ interface PageProps {
 
 export default async function PatientMessagesPage({ searchParams }: PageProps) {
   const session = await auth();
+  const locale = await getLocale(session?.user?.id);
+  const dictionary = await getDictionary(locale);
 
   const params = await searchParams;
   const professionalId = params.profesional;
-  const professionalName = params.nombre || "Especialista";
+  const professionalName = params.nombre || dictionary.patientMessages.defaultName;
 
   let initialMessages: { id: string; senderId: string; receiverId: string; content: string; createdAt: string; sender: { id: string; name: string | null; image: string | null } }[] = [];
 
@@ -41,7 +44,7 @@ export default async function PatientMessagesPage({ searchParams }: PageProps) {
           <div className="flex items-center gap-2">
             <MessageSquare className="h-5 w-5 text-rose-600" />
             <h2 className="font-semibold text-slate-900 dark:text-slate-100">
-              Conversaciones
+              {dictionary.patientMessages.conversations}
             </h2>
           </div>
         </div>
@@ -68,14 +71,19 @@ export default async function PatientMessagesPage({ searchParams }: PageProps) {
           <div className="flex h-full flex-col items-center justify-center rounded-2xl border border-slate-200 bg-white p-12 text-center shadow-sm dark:border-slate-800 dark:bg-slate-900">
             <MessageSquare className="mx-auto mb-4 h-10 w-10 text-slate-300 dark:text-slate-700" />
             <p className="text-slate-600 dark:text-slate-400">
-              Seleccioná un profesional desde la{" "}
-              <Link
-                href="/paciente/dashboard/expertos"
-                className="text-indigo-600 hover:underline dark:text-indigo-400"
-              >
-                Guía de Expertos
-              </Link>{" "}
-              para iniciar una conversación.
+              {dictionary.patientMessages.empty.split("{link}").map((part, i, arr) => (
+                <span key={i}>
+                  {part}
+                  {i < arr.length - 1 && (
+                    <Link
+                      href="/paciente/dashboard/expertos"
+                      className="text-indigo-600 hover:underline dark:text-indigo-400"
+                    >
+                      {dictionary.patientMessages.emptyLink}
+                    </Link>
+                  )}
+                </span>
+              ))}
             </p>
           </div>
         )}

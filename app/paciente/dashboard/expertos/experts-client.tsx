@@ -5,14 +5,21 @@ import Link from "next/link";
 import Image from "next/image";
 import { MapPin, Video, Star, Search, SlidersHorizontal } from "lucide-react";
 import { Professional } from "@/lib/professionals";
+import { useI18n } from "@/lib/i18n/client";
 
-const SPECIALTIES = ["Todas", "Nutrición", "Entrenamiento", "Nutrición y Entrenamiento"];
+const SPECIALTIES = [
+  { value: "Todas", labelKey: "all" as const },
+  { value: "Nutrición", labelKey: "nutrition" as const },
+  { value: "Entrenamiento", labelKey: "training" as const },
+  { value: "Nutrición y Entrenamiento", labelKey: "both" as const },
+];
 
 interface PatientExpertsPageProps {
   professionals: Professional[];
 }
 
 export function PatientExpertsClient({ professionals }: PatientExpertsPageProps) {
+  const { dictionary } = useI18n();
   const [query, setQuery] = useState("");
   const [specialty, setSpecialty] = useState("Todas");
 
@@ -34,14 +41,13 @@ export function PatientExpertsClient({ professionals }: PatientExpertsPageProps)
           href="/paciente/dashboard"
           className="text-sm font-medium text-indigo-600 hover:underline dark:text-indigo-400"
         >
-          ← Volver al panel
+          {dictionary.patientExperts.backToDashboard}
         </Link>
         <h1 className="mt-4 text-3xl font-bold text-slate-900 dark:text-slate-100">
-          Guía de Expertos
+          {dictionary.patientExperts.title}
         </h1>
         <p className="mt-2 text-slate-600 dark:text-slate-400">
-          Encontrá nutriólogos y entrenadores verificados. Compará perfiles,
-          precios y modalidades antes de contratar.
+          {dictionary.patientExperts.description}
         </p>
       </div>
 
@@ -52,7 +58,7 @@ export function PatientExpertsClient({ professionals }: PatientExpertsPageProps)
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Buscar por nombre..."
+            placeholder={dictionary.patientExperts.searchPlaceholder}
             className="w-full rounded-lg border border-slate-300 bg-white py-2.5 pl-9 pr-4 text-slate-900 placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 sm:w-auto"
           />
         </div>
@@ -64,8 +70,10 @@ export function PatientExpertsClient({ professionals }: PatientExpertsPageProps)
             className="rounded-lg border border-slate-300 bg-white py-2.5 pl-9 pr-8 text-slate-900 focus:border-indigo-500 focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
           >
             {SPECIALTIES.map((s) => (
-              <option key={s} value={s}>
-                {s === "Todas" ? "Todas las especialidades" : s}
+              <option key={s.value} value={s.value}>
+                {s.labelKey === "all"
+                  ? dictionary.patientExperts.allSpecialties
+                  : dictionary.patientExperts.specialties[s.labelKey]}
               </option>
             ))}
           </select>
@@ -74,7 +82,7 @@ export function PatientExpertsClient({ professionals }: PatientExpertsPageProps)
 
       {filtered.length === 0 ? (
         <p className="text-center text-slate-600 dark:text-slate-400">
-          No se encontraron expertos con esos criterios.
+          {dictionary.patientExperts.noResults}
         </p>
       ) : (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -94,7 +102,7 @@ export function PatientExpertsClient({ professionals }: PatientExpertsPageProps)
                 {prof.isPremium && (
                   <div className="absolute right-3 top-3 flex items-center gap-1 rounded-full bg-indigo-100 px-2.5 py-1 text-xs font-semibold text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300">
                     <Star className="h-3 w-3 fill-current" />
-                    Destacado
+                    {dictionary.patientExperts.featured}
                   </div>
                 )}
               </div>
@@ -125,7 +133,7 @@ export function PatientExpertsClient({ professionals }: PatientExpertsPageProps)
                     ${prof.price} MXN
                   </span>
                   <span className="text-sm font-medium text-indigo-600 group-hover:underline dark:text-indigo-400">
-                    Ver perfil
+                    {dictionary.patientExperts.viewProfile}
                   </span>
                 </div>
               </div>
