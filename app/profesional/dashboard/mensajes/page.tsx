@@ -4,6 +4,7 @@ import { getUserConversations, getConversation } from "@/app/messages/actions";
 import { Suspense } from "react";
 import ProfessionalChatPage from "./chat-page";
 import { ConversationList } from "@/components/chat/conversation-list";
+import { getLocale, getDictionary } from "@/lib/i18n/server";
 
 interface PageProps {
   searchParams: Promise<{ paciente?: string; nombre?: string }>;
@@ -11,6 +12,8 @@ interface PageProps {
 
 export default async function ProfessionalMessagesPage({ searchParams }: PageProps) {
   const session = await auth();
+  const locale = await getLocale(session?.user?.id);
+  const dictionary = await getDictionary(locale);
 
   const params = await searchParams;
   const patientId = params.paciente;
@@ -32,7 +35,7 @@ export default async function ProfessionalMessagesPage({ searchParams }: PagePro
           <div className="flex items-center gap-2">
             <MessageSquare className="h-5 w-5 text-rose-600" />
             <h2 className="font-semibold text-slate-900 dark:text-slate-100">
-              Conversaciones
+              {dictionary.professionalMessages.conversations}
             </h2>
           </div>
         </div>
@@ -50,14 +53,16 @@ export default async function ProfessionalMessagesPage({ searchParams }: PagePro
         <Suspense
           fallback={
             <div className="flex h-full items-center justify-center rounded-2xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
-              <p className="text-slate-600 dark:text-slate-400">Cargando...</p>
+              <p className="text-slate-600 dark:text-slate-400">
+                {dictionary.professionalMessages.loading}
+              </p>
             </div>
           }
         >
           <ProfessionalChatPage
             initialMessagesPromise={initialMessagesPromise}
             patientId={patientId ?? ""}
-            patientName={params.nombre || "Paciente"}
+            patientName={params.nombre || dictionary.professionalMessages.defaultName}
           />
         </Suspense>
       </div>

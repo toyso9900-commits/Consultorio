@@ -1,8 +1,11 @@
 import { auth } from "@/lib/auth";
 import { Crown } from "lucide-react";
+import { getLocale, getDictionary } from "@/lib/i18n/server";
 
 export default async function AdminSubscriptionsPage() {
   const session = await auth();
+  const locale = await getLocale(session?.user?.id);
+  const dictionary = await getDictionary(locale);
 
   return (
     <div className="space-y-6">
@@ -12,18 +15,17 @@ export default async function AdminSubscriptionsPage() {
         </div>
         <div>
           <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">
-            Suscripciones
+            {dictionary.adminSubscriptions.title}
           </h1>
           <p className="text-slate-600 dark:text-slate-400">
-            Estado de pagos, planes activos e historial.
+            {dictionary.adminSubscriptions.description}
           </p>
         </div>
       </div>
 
       <div className="rounded-2xl border border-slate-200 bg-white p-12 text-center shadow-sm dark:border-slate-800 dark:bg-slate-900">
         <p className="text-slate-600 dark:text-slate-400">
-          Esta sección está en construcción. Pronto podrás ver el estado de
-          suscripciones y exportar reportes.
+          {dictionary.adminSubscriptions.empty}
         </p>
       </div>
     </div>

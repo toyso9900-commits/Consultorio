@@ -10,6 +10,7 @@ import {
   Area,
   ComposedChart,
 } from "recharts";
+import { useI18n } from "@/lib/i18n/client";
 
 interface ChartDataPoint {
   date: string;
@@ -21,21 +22,25 @@ interface AdminStatsChartProps {
   data?: ChartDataPoint[];
 }
 
-const DEFAULT_DATA: ChartDataPoint[] = [
-  { date: "Lun", registrations: 4, traffic: 24 },
-  { date: "Mar", registrations: 7, traffic: 38 },
-  { date: "Mié", registrations: 5, traffic: 31 },
-  { date: "Jue", registrations: 12, traffic: 56 },
-  { date: "Vie", registrations: 9, traffic: 47 },
-  { date: "Sáb", registrations: 6, traffic: 29 },
-  { date: "Dom", registrations: 3, traffic: 18 },
-];
+export function AdminStatsChart({ data }: AdminStatsChartProps) {
+  const { dictionary } = useI18n();
 
-export function AdminStatsChart({ data = DEFAULT_DATA }: AdminStatsChartProps) {
+  const defaultData: ChartDataPoint[] = [
+    { date: dictionary.chart.mon, registrations: 4, traffic: 24 },
+    { date: dictionary.chart.tue, registrations: 7, traffic: 38 },
+    { date: dictionary.chart.wed, registrations: 5, traffic: 31 },
+    { date: dictionary.chart.thu, registrations: 12, traffic: 56 },
+    { date: dictionary.chart.fri, registrations: 9, traffic: 47 },
+    { date: dictionary.chart.sat, registrations: 6, traffic: 29 },
+    { date: dictionary.chart.sun, registrations: 3, traffic: 18 },
+  ];
+
+  const chartData = data ?? defaultData;
+
   return (
     <div className="h-80 w-full">
       <ResponsiveContainer width="100%" height="100%">
-        <ComposedChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+        <ComposedChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
           <defs>
             <linearGradient id="colorTraffic" x1="0" y1="0" x2="0" y2="1">
               <stop offset="5%" stopColor="#6366f1" stopOpacity={0.2} />
@@ -74,7 +79,7 @@ export function AdminStatsChart({ data = DEFAULT_DATA }: AdminStatsChartProps) {
             strokeWidth={2}
             dot={{ r: 3, fill: "#6366f1" }}
             activeDot={{ r: 5 }}
-            name="Tráfico"
+            name={dictionary.chart.traffic}
           />
           <Line
             type="monotone"
@@ -83,7 +88,7 @@ export function AdminStatsChart({ data = DEFAULT_DATA }: AdminStatsChartProps) {
             strokeWidth={2}
             dot={{ r: 3, fill: "#10b981" }}
             activeDot={{ r: 5 }}
-            name="Registros"
+            name={dictionary.chart.registrations}
           />
         </ComposedChart>
       </ResponsiveContainer>

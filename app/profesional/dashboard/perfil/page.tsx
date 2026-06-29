@@ -2,9 +2,12 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { UserCircle, Briefcase } from "lucide-react";
 import { ProfessionalProfileForm } from "./profile-form";
+import { getLocale, getDictionary } from "@/lib/i18n/server";
 
 export default async function ProfessionalProfilePage() {
   const session = await auth();
+  const locale = await getLocale(session?.user?.id);
+  const dictionary = await getDictionary(locale);
 
   const professional = await prisma.professionalProfile.findUnique({
     where: { userId: session!.user.id },
@@ -18,10 +21,10 @@ export default async function ProfessionalProfilePage() {
         </div>
         <div>
           <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">
-            Mi perfil
+            {dictionary.professionalProfile.title}
           </h1>
           <p className="text-slate-600 dark:text-slate-400">
-            Editá cómo te ven los pacientes.
+            {dictionary.professionalProfile.subtitle}
           </p>
         </div>
       </div>
@@ -33,7 +36,7 @@ export default async function ProfessionalProfilePage() {
               <Briefcase className="h-5 w-5 text-indigo-600" />
             </div>
             <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
-              Información profesional
+              {dictionary.professionalProfile.professionalInfo}
             </h2>
           </div>
 
@@ -55,11 +58,10 @@ export default async function ProfessionalProfilePage() {
 
         <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
           <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
-            Tips
+            {dictionary.professionalProfile.tipsTitle}
           </h2>
           <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
-            Completá tu biografía y especialidad para aparecer mejor posicionado
-            en la Guía de Expertos.
+            {dictionary.professionalProfile.tipsDescription}
           </p>
         </div>
       </div>

@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { activateSubscription } from "../suscripcion/actions";
+import { useI18n } from "@/lib/i18n/client";
 
 interface Plan {
   id: string;
@@ -13,57 +14,47 @@ interface Plan {
   price: number;
   period: string;
   description: string;
-  features: string[];
+  features: readonly string[];
   highlighted?: boolean;
   cta: string;
 }
 
-const PLANS: Plan[] = [
-  {
-    id: "free",
-    name: "Gratis",
-    price: 0,
-    period: "para siempre",
-    description: "Ideal para probar la plataforma.",
-    features: ["Perfil básico visible", "Hasta 2 citas mensuales", "Soporte por email"],
-    cta: "Plan actual",
-  },
-  {
-    id: "premium",
-    name: "Premium",
-    price: 299,
-    period: "por mes",
-    description: "Todo lo que necesitás para crecer.",
-    features: [
-      "Perfil destacado en la Guía",
-      "Citas ilimitadas",
-      "Chat con pacientes",
-      "Reseñas y valoraciones",
-      "Soporte prioritario",
-    ],
-    highlighted: true,
-    cta: "Suscribirme",
-  },
-  {
-    id: "pro",
-    name: "Pro",
-    price: 2499,
-    period: "por año",
-    description: "El mejor valor para profesionales consolidados.",
-    features: [
-      "Todo lo de Premium",
-      "2 meses gratis",
-      "Reportes avanzados",
-      "Atención personalizada",
-    ],
-    cta: "Suscribirme anual",
-  },
-];
-
 export default function ProfessionalSubscriptionPage() {
+  const { dictionary } = useI18n();
   const { data: session, status } = useSession();
   const router = useRouter();
   const [isProcessing, setIsProcessing] = useState<string | null>(null);
+
+  const PLANS: Plan[] = [
+    {
+      id: "free",
+      name: dictionary.subscription.freePlanName,
+      price: 0,
+      period: dictionary.subscription.freePlanPeriod,
+      description: dictionary.subscription.freePlanDescription,
+      features: dictionary.subscription.freeFeatures,
+      cta: dictionary.subscription.freePlanCta,
+    },
+    {
+      id: "premium",
+      name: dictionary.subscription.premiumPlanName,
+      price: 299,
+      period: dictionary.subscription.premiumPlanPeriod,
+      description: dictionary.subscription.premiumPlanDescription,
+      features: dictionary.subscription.premiumFeatures,
+      highlighted: true,
+      cta: dictionary.subscription.premiumPlanCta,
+    },
+    {
+      id: "pro",
+      name: dictionary.subscription.proPlanName,
+      price: 2499,
+      period: dictionary.subscription.proPlanPeriod,
+      description: dictionary.subscription.proPlanDescription,
+      features: dictionary.subscription.proFeatures,
+      cta: dictionary.subscription.proPlanCta,
+    },
+  ];
 
   useEffect(() => {
     if (status === "authenticated" && session?.user?.role === "ADMIN") {
@@ -89,11 +80,14 @@ export default function ProfessionalSubscriptionPage() {
     setIsProcessing(null);
 
     if (result.success) {
-      toast.success("Pago simulado exitoso", {
-        description: `Te suscribiste al plan ${PLANS.find((p) => p.id === planId)?.name}.`,
+      toast.success(dictionary.subscription.paymentSuccess, {
+        description: dictionary.subscription.subscriptionConfirmation.replace(
+          "{plan}",
+          PLANS.find((p) => p.id === planId)?.name ?? ""
+        ),
       });
     } else {
-      toast.error(result.error || "No se pudo procesar el pago.");
+      toast.error(result.error || dictionary.subscription.paymentError);
     }
   }
 
@@ -106,17 +100,17 @@ export default function ProfessionalSubscriptionPage() {
           </div>
           <div>
             <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">
-              Planes y Suscripción
+              {dictionary.subscription.title}
             </h1>
             <p className="text-slate-600 dark:text-slate-400">
-              Elegí el plan que se ajuste a tu práctica.
+              {dictionary.subscription.subtitle}
             </p>
           </div>
         </div>
 
         <div className="inline-flex items-center gap-2 rounded-full bg-amber-50 px-4 py-2 text-sm font-medium text-amber-700 dark:bg-amber-950 dark:text-amber-300">
           <CreditCard className="h-4 w-4" />
-          Modo prueba activo
+          {dictionary.subscription.testMode}
         </div>
       </div>
 
@@ -134,7 +128,7 @@ export default function ProfessionalSubscriptionPage() {
               <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-indigo-600 px-3 py-1 text-xs font-semibold text-white">
                 <div className="flex items-center gap-1">
                   <Sparkles className="h-3 w-3" />
-                  Más popular
+                  {dictionary.subscription.mostPopular}
                 </div>
               </div>
             )}
@@ -177,7 +171,9 @@ export default function ProfessionalSubscriptionPage() {
                   : "border border-slate-300 bg-white text-slate-700 hover:bg-slate-50 disabled:opacity-70 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800"
               }`}
             >
-              {isProcessing === plan.id ? "Procesando..." : plan.cta}
+              {isProcessing === plan.id
+                ? dictionary.subscription.processing
+                : plan.cta}
             </button>
           </div>
         ))}
@@ -185,12 +181,10 @@ export default function ProfessionalSubscriptionPage() {
 
       <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
         <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
-          Simulador de pasarela de pago
+          {dictionary.subscription.paymentSimulatorTitle}
         </h2>
         <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
-          Los botones de arriba simulan un pago exitoso. No se realiza ningún
-          cobro real ni se conecta con Stripe todavía. Esta vista sirve para
-          probar el flujo de conversión antes de integrar la pasarela.
+          {dictionary.subscription.paymentSimulatorDescription}
         </p>
       </div>
     </div>

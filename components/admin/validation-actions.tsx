@@ -7,21 +7,23 @@ import {
   validateProfessional,
   rejectProfessional,
 } from "@/app/profesional/dashboard/actions";
+import { useI18n } from "@/lib/i18n/client";
 
 interface ValidationActionsProps {
   profileId: string;
 }
 
 export function ValidationActions({ profileId }: ValidationActionsProps) {
+  const { dictionary } = useI18n();
   const [isPending, startTransition] = useTransition();
 
   function handleValidate(formData: FormData) {
     startTransition(async () => {
       const result = await validateProfessional(formData);
       if (result.success) {
-        toast.success("Profesional aprobado");
+        toast.success(dictionary.validationActions.approvedToast);
       } else {
-        toast.error(result.error || "No se pudo aprobar al profesional");
+        toast.error(result.error || dictionary.validationActions.approveError);
       }
     });
   }
@@ -30,9 +32,9 @@ export function ValidationActions({ profileId }: ValidationActionsProps) {
     startTransition(async () => {
       const result = await rejectProfessional(formData);
       if (result.success) {
-        toast.success("Profesional rechazado");
+        toast.success(dictionary.validationActions.rejectedToast);
       } else {
-        toast.error(result.error || "No se pudo rechazar al profesional");
+        toast.error(result.error || dictionary.validationActions.rejectError);
       }
     });
   }
@@ -47,7 +49,7 @@ export function ValidationActions({ profileId }: ValidationActionsProps) {
           className="inline-flex items-center gap-1.5 rounded-full bg-emerald-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-emerald-700 disabled:opacity-60"
         >
           <CheckCircle className="h-4 w-4" />
-          Aceptar
+          {dictionary.validationActions.approve}
         </button>
       </form>
       <form action={handleReject}>
@@ -58,7 +60,7 @@ export function ValidationActions({ profileId }: ValidationActionsProps) {
           className="inline-flex items-center gap-1.5 rounded-full bg-rose-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-rose-700 disabled:opacity-60"
         >
           <XCircle className="h-4 w-4" />
-          Rechazar
+          {dictionary.validationActions.reject}
         </button>
       </form>
     </div>

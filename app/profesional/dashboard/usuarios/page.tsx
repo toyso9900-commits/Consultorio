@@ -3,24 +3,26 @@ import { Shield } from "lucide-react";
 import { getAllUsers } from "./actions";
 import { UserActions } from "./user-actions";
 import { AdminRealtimeListener } from "@/components/admin/admin-realtime-listener";
+import { getLocale, getDictionary } from "@/lib/i18n/server";
+import type { Dictionary, Locale } from "@/lib/i18n/server";
 
-function formatDate(date: Date | null | undefined) {
-  if (!date) return "No registrada";
-  return new Date(date).toLocaleDateString("es-ES", {
+function formatDate(date: Date | null | undefined, locale: Locale) {
+  if (!date) return null;
+  return new Date(date).toLocaleDateString(locale === "en" ? "en-US" : "es-ES", {
     year: "numeric",
     month: "short",
     day: "numeric",
   });
 }
 
-function formatRole(role: string) {
+function formatRole(role: string, dictionary: Dictionary) {
   switch (role) {
     case "ADMIN":
-      return "Administrador";
+      return dictionary.roles.admin;
     case "PROFESSIONAL":
-      return "Profesional";
+      return dictionary.roles.professional;
     case "PATIENT":
-      return "Paciente";
+      return dictionary.roles.patient;
     default:
       return role;
   }
@@ -28,6 +30,8 @@ function formatRole(role: string) {
 
 export default async function AdminUsersPage() {
   const session = await auth();
+  const locale = await getLocale(session?.user?.id);
+  const dictionary = await getDictionary(locale);
 
   const result = await getAllUsers();
   const users = result.success && "users" in result ? result.users : [];
@@ -41,11 +45,10 @@ export default async function AdminUsersPage() {
         </div>
         <div>
           <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">
-            Gestión de usuarios
+            {dictionary.adminUsers.title}
           </h1>
           <p className="text-slate-600 dark:text-slate-400">
-            Administrá profesionales y pacientes. Podés validar, desvalidar o
-            eliminar cuentas.
+            {dictionary.adminUsers.description}
           </p>
         </div>
       </div>
@@ -53,7 +56,7 @@ export default async function AdminUsersPage() {
       {users.length === 0 ? (
         <div className="rounded-2xl border border-slate-200 bg-white p-12 text-center shadow-sm dark:border-slate-800 dark:bg-slate-900">
           <p className="text-slate-600 dark:text-slate-400">
-            No hay usuarios registrados.
+            {dictionary.adminUsers.noUsers}
           </p>
         </div>
       ) : (
@@ -63,22 +66,22 @@ export default async function AdminUsersPage() {
               <thead className="border-b border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-950">
                 <tr>
                   <th className="px-4 py-3 font-semibold text-slate-700 dark:text-slate-300">
-                    Nombre
+                    {dictionary.adminUsers.nameHeader}
                   </th>
                   <th className="px-4 py-3 font-semibold text-slate-700 dark:text-slate-300">
-                    Email
+                    {dictionary.adminUsers.emailHeader}
                   </th>
                   <th className="px-4 py-3 font-semibold text-slate-700 dark:text-slate-300">
-                    Rol
+                    {dictionary.adminUsers.roleHeader}
                   </th>
                   <th className="px-4 py-3 font-semibold text-slate-700 dark:text-slate-300">
-                    Estado
+                    {dictionary.adminUsers.statusHeader}
                   </th>
                   <th className="px-4 py-3 font-semibold text-slate-700 dark:text-slate-300">
-                    Registro
+                    {dictionary.adminUsers.registeredHeader}
                   </th>
                   <th className="px-4 py-3 font-semibold text-slate-700 dark:text-slate-300">
-                    Acciones
+                    {dictionary.adminUsers.actionsHeader}
                   </th>
                 </tr>
               </thead>
@@ -91,14 +94,14 @@ export default async function AdminUsersPage() {
                   return (
                     <tr key={user.id} className="hover:bg-slate-50 dark:hover:bg-slate-900">
                       <td className="px-4 py-3 font-medium text-slate-900 dark:text-slate-100">
-                        {user.name || "Sin nombre"}
+                        {user.name || dictionary.adminUsers.noName}
                       </td>
                       <td className="px-4 py-3 text-slate-600 dark:text-slate-400">
-                        {user.email || "Sin email"}
+                        {user.email || dictionary.adminUsers.noEmail}
                       </td>
                       <td className="px-4 py-3">
                         <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-700 dark:bg-slate-800 dark:text-slate-300">
-                          {formatRole(user.role)}
+                          {formatRole(user.role, dictionary)}
                         </span>
                       </td>
                       <td className="px-4 py-3">
@@ -110,16 +113,19 @@ export default async function AdminUsersPage() {
                                 : "bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300"
                             }`}
                           >
-                            {isValidated ? "Aprobado" : "Pendiente"}
+                            {isValidated
+                              ? dictionary.adminUsers.approved
+                              : dictionary.adminUsers.pending}
                           </span>
                         ) : (
                           <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600 dark:bg-slate-800 dark:text-slate-400">
-                            Activo
+                            {dictionary.adminUsers.active}
                           </span>
                         )}
                       </td>
                       <td className="px-4 py-3 text-slate-500 dark:text-slate-400">
-                        {formatDate(user.createdAt)}
+                        {formatDate(user.createdAt, locale) ||
+                          dictionary.adminUsers.dateNotRegistered}
                       </td>
                       <td className="px-4 py-3">
                         <UserActions

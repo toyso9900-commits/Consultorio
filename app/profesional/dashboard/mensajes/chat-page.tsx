@@ -4,6 +4,7 @@ import { useSearchParams } from "next/navigation";
 import { MessageSquare } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { ChatPanel } from "@/components/chat/chat-panel";
+import { useI18n } from "@/lib/i18n/client";
 import { use } from "react";
 
 interface ChatMessage {
@@ -32,8 +33,9 @@ export default function ProfessionalChatPage({
 }: ProfessionalChatPageProps) {
   const searchParams = useSearchParams();
   const { data: session } = useSession();
+  const { dictionary } = useI18n();
   const urlPatientId = searchParams.get("paciente");
-  const urlPatientName = searchParams.get("nombre") || "Paciente";
+  const urlPatientName = searchParams.get("nombre") || dictionary.professionalMessages.defaultName;
 
   const targetPatientId = patientId || urlPatientId || "";
   const targetPatientName = patientName || urlPatientName;
@@ -54,7 +56,7 @@ export default function ProfessionalChatPage({
       <div className="flex h-full flex-col items-center justify-center rounded-2xl border border-slate-200 bg-white p-12 text-center shadow-sm dark:border-slate-800 dark:bg-slate-900">
         <MessageSquare className="mx-auto mb-4 h-10 w-10 text-slate-300 dark:text-slate-700" />
         <p className="text-slate-600 dark:text-slate-400">
-          Seleccioná una conversación para ver los mensajes.
+          {dictionary.professionalMessages.empty}
         </p>
       </div>
     );

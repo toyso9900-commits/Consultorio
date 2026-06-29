@@ -9,6 +9,7 @@ import {
 import { uploadProfessionalAvatar } from "./upload-actions";
 import { toast } from "sonner";
 import { Camera, Loader2 } from "lucide-react";
+import { useI18n } from "@/lib/i18n/client";
 
 interface ProfessionalProfileFormProps {
   userId: string;
@@ -30,6 +31,7 @@ export function ProfessionalProfileForm({
   image,
   defaultValues,
 }: ProfessionalProfileFormProps) {
+  const { dictionary } = useI18n();
   const [isPending, startTransition] = useTransition();
   const [isUploading, setIsUploading] = useState(false);
   const [preview, setPreview] = useState(image || "");
@@ -56,9 +58,9 @@ export function ProfessionalProfileForm({
 
     if (result.success && result.imageUrl) {
       setPreview(result.imageUrl);
-      toast.success("Foto de perfil actualizada");
+      toast.success(dictionary.professionalProfile.photoUpdated);
     } else {
-      toast.error(result.error || "No se pudo subir la imagen");
+      toast.error(result.error || dictionary.professionalProfile.photoError);
     }
   }
 
@@ -80,9 +82,9 @@ export function ProfessionalProfileForm({
       const result = await updateProfessionalProfile(payload);
 
       if (result.success) {
-        toast.success("Perfil actualizado");
+        toast.success(dictionary.professionalProfile.updated);
       } else {
-        toast.error(result.error || "No se pudo actualizar el perfil");
+        toast.error(result.error || dictionary.professionalProfile.updateError);
       }
     });
   }
@@ -95,7 +97,7 @@ export function ProfessionalProfileForm({
             {preview ? (
               <Image
                 src={preview}
-                alt="Foto de perfil"
+                alt={dictionary.professionalProfile.photoTitle}
                 width={80}
                 height={80}
                 className="h-full w-full object-cover"
@@ -127,17 +129,17 @@ export function ProfessionalProfileForm({
         </div>
         <div>
           <p className="text-sm font-medium text-slate-900 dark:text-slate-100">
-            Foto de perfil
+            {dictionary.professionalProfile.photoTitle}
           </p>
           <p className="text-xs text-slate-500 dark:text-slate-400">
-            JPG, PNG o WebP. Máximo 2 MB.
+            {dictionary.professionalProfile.photoHint}
           </p>
         </div>
       </div>
 
       <div>
         <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
-          Nombre completo
+          {dictionary.professionalProfile.fullName}
         </label>
         <input
           type="text"
@@ -152,20 +154,20 @@ export function ProfessionalProfileForm({
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
           <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
-            Título profesional
+            {dictionary.professionalProfile.professionalTitle}
           </label>
           <input
             type="text"
             name="title"
             value={form.title}
             onChange={handleChange}
-            placeholder="Ej: Nutrióloga clínica"
+            placeholder={dictionary.professionalProfile.titlePlaceholder}
             className="mt-1 block w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
           />
         </div>
         <div>
           <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
-            Cédula profesional
+            {dictionary.professionalProfile.licenseNumber}
           </label>
           <input
             type="text"
@@ -180,7 +182,7 @@ export function ProfessionalProfileForm({
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
           <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
-            Especialidad
+            {dictionary.professionalProfile.specialty}
           </label>
           <select
             name="specialty"
@@ -188,14 +190,14 @@ export function ProfessionalProfileForm({
             onChange={handleChange}
             className="mt-1 block w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
           >
-            <option value="NUTRITION">Nutrición</option>
-            <option value="TRAINING">Entrenamiento</option>
-            <option value="BOTH">Ambas</option>
+            <option value="NUTRITION">{dictionary.specialties.nutrition}</option>
+            <option value="TRAINING">{dictionary.specialties.training}</option>
+            <option value="BOTH">{dictionary.specialties.both}</option>
           </select>
         </div>
         <div>
           <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
-            Modalidad
+            {dictionary.professionalProfile.modality}
           </label>
           <select
             name="modality"
@@ -203,9 +205,9 @@ export function ProfessionalProfileForm({
             onChange={handleChange}
             className="mt-1 block w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
           >
-            <option value="ONLINE">Online</option>
-            <option value="IN_PERSON">Presencial</option>
-            <option value="BOTH">Online / Presencial</option>
+            <option value="ONLINE">{dictionary.modalities.online}</option>
+            <option value="IN_PERSON">{dictionary.modalities.inPerson}</option>
+            <option value="BOTH">{dictionary.modalities.both}</option>
           </select>
         </div>
       </div>
@@ -213,20 +215,20 @@ export function ProfessionalProfileForm({
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
           <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
-            Ubicación
+            {dictionary.professionalProfile.location}
           </label>
           <input
             type="text"
             name="location"
             value={form.location}
             onChange={handleChange}
-            placeholder="Ej: Ciudad de México"
+            placeholder={dictionary.professionalProfile.locationPlaceholder}
             className="mt-1 block w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
           />
         </div>
         <div>
           <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
-            Precio por asesoría (MXN)
+            {dictionary.professionalProfile.price}
           </label>
           <input
             type="number"
@@ -242,14 +244,14 @@ export function ProfessionalProfileForm({
 
       <div>
         <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
-          Biografía
+          {dictionary.professionalProfile.bio}
         </label>
         <textarea
           name="bio"
           value={form.bio}
           onChange={handleChange}
           rows={4}
-          placeholder="Contá un poco sobre tu experiencia..."
+          placeholder={dictionary.professionalProfile.bioPlaceholder}
           className="mt-1 block w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
         />
       </div>
@@ -259,7 +261,7 @@ export function ProfessionalProfileForm({
         disabled={isPending}
         className="rounded-full bg-indigo-600 px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-indigo-700 disabled:opacity-60"
       >
-        {isPending ? "Guardando..." : "Guardar cambios"}
+        {isPending ? dictionary.professionalProfile.saving : dictionary.professionalProfile.save}
       </button>
     </form>
   );

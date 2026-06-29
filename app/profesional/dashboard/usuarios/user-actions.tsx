@@ -4,6 +4,7 @@ import { useTransition } from "react";
 import { toast } from "sonner";
 import { Trash2, ShieldCheck, ShieldX } from "lucide-react";
 import { deleteUser, toggleUserValidation } from "./actions";
+import { useI18n } from "@/lib/i18n/client";
 
 interface UserActionsProps {
   userId: string;
@@ -13,19 +14,20 @@ interface UserActionsProps {
 }
 
 export function UserActions({ userId, profileId, isValidated, role }: UserActionsProps) {
+  const { dictionary } = useI18n();
   const [isPending, startTransition] = useTransition();
 
   function handleDelete() {
-    if (!confirm("¿Estás seguro de que querés eliminar este usuario? Esta acción no se puede deshacer.")) {
+    if (!confirm(dictionary.userActions.deleteConfirm)) {
       return;
     }
 
     startTransition(async () => {
       const result = await deleteUser(userId);
       if (result.success) {
-        toast.success("Usuario eliminado");
+        toast.success(dictionary.userActions.userDeleted);
       } else {
-        toast.error(result.error || "No se pudo eliminar el usuario");
+        toast.error(result.error || dictionary.userActions.deleteError);
       }
     });
   }
@@ -36,9 +38,11 @@ export function UserActions({ userId, profileId, isValidated, role }: UserAction
     startTransition(async () => {
       const result = await toggleUserValidation(profileId, !isValidated);
       if (result.success) {
-        toast.success(isValidated ? "Usuario desvalidado" : "Usuario validado");
+        toast.success(
+          isValidated ? dictionary.userActions.invalidated : dictionary.userActions.validated
+        );
       } else {
-        toast.error(result.error || "No se pudo actualizar el estado");
+        toast.error(result.error || dictionary.userActions.statusError);
       }
     });
   }
@@ -59,12 +63,12 @@ export function UserActions({ userId, profileId, isValidated, role }: UserAction
           {isValidated ? (
             <>
               <ShieldX className="h-3.5 w-3.5" />
-              Desvalidar
+              {dictionary.userActions.invalidate}
             </>
           ) : (
             <>
               <ShieldCheck className="h-3.5 w-3.5" />
-              Validar
+              {dictionary.userActions.validate}
             </>
           )}
         </button>
@@ -76,7 +80,7 @@ export function UserActions({ userId, profileId, isValidated, role }: UserAction
         className="inline-flex items-center gap-1.5 rounded-full bg-rose-100 px-3 py-1.5 text-xs font-semibold text-rose-700 transition-colors hover:bg-rose-200 dark:bg-rose-950 dark:text-rose-300"
       >
         <Trash2 className="h-3.5 w-3.5" />
-        Eliminar
+        {dictionary.common.delete}
       </button>
     </div>
   );
