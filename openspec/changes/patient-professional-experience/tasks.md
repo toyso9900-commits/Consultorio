@@ -41,12 +41,12 @@ Chain strategy: pending
 
 ## Phase 3: Shared Chrome Migration
 
-- [ ] **T9 — Root layout** (`app/layout.tsx`, ~50 lines, deps: T3,T5, accept: dynamic `html lang`, no-flash script, semantic body classes).
-- [ ] **T10 — `Providers`** (`app/providers.tsx`, ~25 lines, deps: T4,T6, accept: wraps `I18nProvider` + `ThemeProvider` with locale/dictionary).
-- [ ] **T11 — `DashboardShell` semantic colors** (`components/layout/dashboard-shell.tsx`, ~10 lines, deps: T3, accept: follows theme variables).
-- [ ] **T12 — `DashboardHeader` semantic colors** (`components/layout/dashboard-header.tsx`, ~10 lines, deps: T3, accept: follows theme variables).
-- [ ] **T13 — `Sidebar` i18n + colors** (`components/layout/sidebar.tsx`, ~40 lines, deps: T7,T11, accept: labels switch language, colors follow theme).
-- [ ] **T14 — `UserAvatarMenu` settings link** (`components/user-avatar-menu.tsx`, ~30 lines, deps: T6,T7, accept: settings entry navigates to `/configuracion`).
+- [x] **T9 — Root layout** (`app/layout.tsx`, ~50 lines, deps: T3,T5, accept: dynamic `html lang`, no-flash script, semantic body classes).
+- [x] **T10 — `Providers`** (`app/providers.tsx`, ~25 lines, deps: T4,T6, accept: wraps `I18nProvider` + `ThemeProvider` with locale/dictionary).
+- [x] **T11 — `DashboardShell` semantic colors** (`components/layout/dashboard-shell.tsx`, ~10 lines, deps: T3, accept: follows theme variables).
+- [x] **T12 — `DashboardHeader` semantic colors** (`components/layout/dashboard-header.tsx`, ~10 lines, deps: T3, accept: follows theme variables).
+- [x] **T13 — `Sidebar` i18n + colors** (`components/layout/sidebar.tsx`, ~40 lines, deps: T7,T11, accept: labels switch language, colors follow theme).
+- [x] **T14 — `UserAvatarMenu` settings link** (`components/user-avatar-menu.tsx`, ~30 lines, deps: T6,T7, accept: settings entry navigates to `/configuracion`).
 
 ## Phase 4: Settings Page
 
