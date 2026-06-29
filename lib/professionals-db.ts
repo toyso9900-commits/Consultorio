@@ -68,6 +68,23 @@ function mapProfessional(
   };
 }
 
+async function fetchActivePremiumUserIds(userIds: string[]): Promise<Set<string>> {
+  if (userIds.length === 0) return new Set();
+
+  const subscriptions = await prisma.subscription.findMany({
+    where: {
+      userId: { in: userIds },
+      plan: "PREMIUM",
+      status: "ACTIVE",
+      OR: [{ expiresAt: { gt: new Date() } }, { expiresAt: null }],
+    },
+    select: { userId: true },
+    distinct: ["userId"],
+  });
+
+  return new Set(subscriptions.map((subscription) => subscription.userId));
+}
+
 export async function getApprovedProfessionals(): Promise<Professional[]> {
   const profiles = await prisma.professionalProfile.findMany({
     where: { isValidated: true },
@@ -84,14 +101,15 @@ export async function getApprovedProfessionals(): Promise<Professional[]> {
     orderBy: { createdAt: "desc" },
   });
 
-  const activeStatus = await Promise.all(
-    profiles.map((profile) => hasActiveSubscription(profile.user.id))
+  const activeUserIds = await fetchActivePremiumUserIds(
+    profiles.map((profile) => profile.user.id)
   );
 
-  return profiles.map((profile, index) => {
+  return profiles.map((profile) => {
     const averageRating = computeAverageRating(profile.user.receivedReviews);
     const reviewCount = profile.user.receivedReviews.length;
-    return mapProfessional(profile, averageRating, reviewCount, activeStatus[index]);
+    const isPremiumActive = activeUserIds.has(profile.user.id);
+    return mapProfessional(profile, averageRating, reviewCount, isPremiumActive);
   });
 }
 
@@ -110,19 +128,17 @@ export async function getFeaturedProfessionals(limit = 10): Promise<Professional
     },
   });
 
-  const featured: Professional[] = [];
+  const activeUserIds = await fetchActivePremiumUserIds(
+    profiles.map((profile) => profile.user.id)
+  );
 
-  await Promise.all(
-    profiles.map(async (profile) => {
-      const isPremiumActive = await hasActiveSubscription(profile.user.id);
-      if (!isPremiumActive) return;
-
+  const featured = profiles
+    .filter((profile) => activeUserIds.has(profile.user.id))
+    .map((profile) => {
       const averageRating = computeAverageRating(profile.user.receivedReviews);
       const reviewCount = profile.user.receivedReviews.length;
-
-      featured.push(mapProfessional(profile, averageRating, reviewCount, true));
-    })
-  );
+      return mapProfessional(profile, averageRating, reviewCount, true);
+    });
 
   featured.sort((a, b) => {
     if (b.averageRating !== a.averageRating) {

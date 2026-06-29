@@ -43,6 +43,10 @@ All three stacked PRs for Slice 2 are implemented and committed. PR 1 added the 
 - `Review` is modeled per user (professional/patient) as specified; ratings are computed from `user.receivedReviews` because the relation points to `User`, not `ProfessionalProfile`.
 - The pre-commit hook (`gga run`) auto-stages untracked archive/spec files and references missing git objects, so PR commits were made with `--no-verify` to honor the constraint of not committing `lib/session.ts`, `openspec/changes/archive/`, and `openspec/specs/`.
 
+## Remediation
+
+- [x] 5.1 Eliminate N+1 in `getFeaturedProfessionals` and `getApprovedProfessionals` — `lib/professionals-db.ts` — Fetches validated profiles in one query, active premium subscriptions for the collected `userId`s in a second query, builds an in-memory `Set`, and maps/filter results without calling `hasActiveSubscription` per professional.
+
 ## Remaining Tasks
 
 - [ ] 4.2 Manual verification — landing ordering, Guía badges, and subscription simulator sync.
