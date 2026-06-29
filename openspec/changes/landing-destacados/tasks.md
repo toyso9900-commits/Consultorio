@@ -40,11 +40,11 @@ Chain strategy: stacked-to-main
 
 ## Phase 3: Guía de Expertos + Subscription Sync
 
-- [ ] 3.1 Enrich Guía professionals — `app/paciente/dashboard/expertos/page.tsx` (+10) — Depends: 1.4 — Accept: passes `averageRating`, `reviewCount`, and `isPremiumActive` to the client.
-- [ ] 3.2 Render badge and `StarRating` in Guía cards — `app/paciente/dashboard/expertos/experts-client.tsx` (+40) — Depends: 2.1, 3.1 — Accept: active subscribers show the Destacado badge and stars; non-subscribers show neither.
-- [ ] 3.3 Sync `ProfessionalProfile.isPremium` on simulated activation — `app/profesional/dashboard/suscripcion/actions.ts` (+20) — Depends: 1.2 — Accept: sets `expiresAt`, updates `isPremium = true`, and revalidates `/` and `/profesional/dashboard`.
+- [x] 3.1 Enrich Guía professionals — `app/paciente/dashboard/expertos/page.tsx` (+10) — Depends: 1.4 — Accept: passes `averageRating`, `reviewCount`, and `isPremiumActive` to the client.
+- [x] 3.2 Render badge and `StarRating` in Guía cards — `app/paciente/dashboard/expertos/experts-client.tsx` (+40) — Depends: 2.1, 3.1 — Accept: active subscribers show the Destacado badge and stars; non-subscribers show neither.
+- [x] 3.3 Sync `ProfessionalProfile.isPremium` on simulated activation — `app/profesional/dashboard/suscripcion/actions.ts` (+20) — Depends: 1.2 — Accept: sets `expiresAt`, updates `isPremium = true`, and revalidates `/` and `/profesional/dashboard`.
 
 ## Phase 4: Verification
 
-- [ ] 4.1 Run quality gates — n/a (0 lines) — Depends: 2.3, 3.2, 3.3 — Accept: `npm run typecheck`, `npm run lint`, and `npm run build` pass.
+- [x] 4.1 Run quality gates — n/a (0 lines) — Depends: 2.3, 3.2, 3.3 — Accept: `npm run typecheck`, `npm run lint`, and `npm run build` pass.
 - [ ] 4.2 Manual verification — n/a (0 lines) — Depends: 4.1 — Accept: landing ordering matches subscription > rating > review count; Guía badges only for active subscribers; simulator syncs `isPremium`.
