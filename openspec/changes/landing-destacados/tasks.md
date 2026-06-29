@@ -26,11 +26,11 @@ Chain strategy: stacked-to-main
 
 ## Phase 1: Foundation
 
-- [ ] 1.1 Add `Review` model and `User` relations — `prisma/schema.prisma` (+30) — Accept: `npx prisma migrate dev --name add_review_model` and `npx prisma generate` succeed.
-- [ ] 1.2 Create `hasActiveSubscription(userId)` helper — `lib/subscription.ts` (+40) — Accept: returns `true` only for `PREMIUM`/`ACTIVE`/non-expired subscriptions.
-- [ ] 1.3 Extend `Professional` type — `lib/professionals.ts` (+10) — Accept: includes `averageRating`, `reviewCount`, and `isPremiumActive`; mock still type-checks.
-- [ ] 1.4 Add `getFeaturedProfessionals` and enrich `getApprovedProfessionals` — `lib/professionals-db.ts` (+80) — Depends: 1.1, 1.3 — Accept: returns validated, active-premium profiles sorted by rating then review count.
-- [ ] 1.5 Add i18n keys and interfaces — `lib/i18n/dictionaries/es.ts`, `lib/i18n/dictionaries/en.ts`, `lib/i18n/dictionaries/index.ts` (+30) — Accept: `landing.expertsTitle` updated to "Destacados"/"Featured"; empty-state keys added.
+- [x] 1.1 Add `Review` model and `User` relations — `prisma/schema.prisma` (+30) — Accept: `npx prisma migrate dev --name add_review_model` and `npx prisma generate` succeed.
+- [x] 1.2 Create `hasActiveSubscription(userId)` helper — `lib/subscription.ts` (+40) — Accept: returns `true` only for `PREMIUM`/`ACTIVE`/non-expired subscriptions.
+- [x] 1.3 Extend `Professional` type — `lib/professionals.ts` (+10) — Accept: includes `averageRating`, `reviewCount`, and `isPremiumActive`; mock still type-checks.
+- [x] 1.4 Add `getFeaturedProfessionals` and enrich `getApprovedProfessionals` — `lib/professionals-db.ts` (+80) — Depends: 1.1, 1.3 — Accept: returns validated, active-premium profiles sorted by rating then review count.
+- [x] 1.5 Add i18n keys and interfaces — `lib/i18n/dictionaries/es.ts`, `lib/i18n/dictionaries/en.ts`, `lib/i18n/dictionaries/index.ts` (+30) — Accept: `landing.expertsTitle` updated to "Destacados"/"Featured"; empty-state keys added.
 
 ## Phase 2: Landing Destacados
 
