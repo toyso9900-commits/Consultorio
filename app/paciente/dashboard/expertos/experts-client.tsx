@@ -3,8 +3,9 @@
 import { useState, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { MapPin, Video, Star, Search, SlidersHorizontal } from "lucide-react";
+import { MapPin, Video, Search, SlidersHorizontal } from "lucide-react";
 import { Professional } from "@/lib/professionals";
+import { StarRating } from "@/components/ui/star-rating";
 import { useI18n } from "@/lib/i18n/client";
 
 const SPECIALTIES = [
@@ -99,9 +100,8 @@ export function PatientExpertsClient({ professionals }: PatientExpertsPageProps)
                   fill
                   className="object-cover transition-transform group-hover:scale-105"
                 />
-                {prof.isPremium && (
-                  <div className="absolute right-3 top-3 flex items-center gap-1 rounded-full bg-indigo-100 px-2.5 py-1 text-xs font-semibold text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300">
-                    <Star className="h-3 w-3 fill-current" />
+                {prof.isPremiumActive && (
+                  <div className="absolute right-3 top-3 flex items-center gap-1 rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-semibold text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300">
                     {dictionary.patientExperts.featured}
                   </div>
                 )}
@@ -118,6 +118,15 @@ export function PatientExpertsClient({ professionals }: PatientExpertsPageProps)
                 <p className="text-sm text-slate-600 dark:text-slate-400">
                   {prof.title}
                 </p>
+                {prof.isPremiumActive && (
+                  <div className="mt-2">
+                    <StarRating
+                      rating={prof.averageRating}
+                      reviewCount={prof.reviewCount}
+                      size="sm"
+                    />
+                  </div>
+                )}
                 <div className="mt-4 space-y-1.5 text-sm text-slate-600 dark:text-slate-400">
                   <div className="flex items-center gap-2">
                     <MapPin className="h-4 w-4" />

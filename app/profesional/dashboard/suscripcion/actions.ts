@@ -11,24 +11,43 @@ export async function activateSubscription(userId: string, planId: string) {
   try {
     const plan = planId === "pro" ? "PREMIUM" : planId.toUpperCase();
 
-    await prisma.subscription.upsert({
-      where: {
-        userId_plan: {
+    if (plan !== "FREE" && plan !== "PREMIUM") {
+      return { success: false, error: "Plan no válido." };
+    }
+
+    const isPaid = plan === "PREMIUM";
+    const expiresAt = isPaid
+      ? new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
+      : null;
+
+    await prisma.$transaction(async (tx) => {
+      await tx.subscription.upsert({
+        where: {
+          userId_plan: {
+            userId,
+            plan: plan as "FREE" | "PREMIUM",
+          },
+        },
+        create: {
           userId,
           plan: plan as "FREE" | "PREMIUM",
+          status: "ACTIVE",
+          expiresAt,
         },
-      },
-      create: {
-        userId,
-        plan: plan as "FREE" | "PREMIUM",
-        status: "ACTIVE",
-      },
-      update: {
-        status: "ACTIVE",
-      },
+        update: {
+          status: "ACTIVE",
+          expiresAt,
+        },
+      });
+
+      await tx.professionalProfile.updateMany({
+        where: { userId },
+        data: { isPremium: isPaid },
+      });
     });
 
     revalidatePath("/profesional/dashboard");
+    revalidatePath("/");
     return { success: true };
   } catch (error) {
     console.error("Activate subscription error:", error);
