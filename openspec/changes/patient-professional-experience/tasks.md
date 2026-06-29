@@ -57,7 +57,7 @@ Chain strategy: pending
 
 ## Phase 5: Existing Page Translations
 
-- [ ] **T19 — Translate static pages** (`app/page.tsx`, `app/login/**/*.tsx`, `app/register/**/*.tsx`, `app/login/redirect/**/*.tsx`, ~200 lines, deps: T7,T8,T9, accept: literals come from dictionary).
+- [x] **T19 — Translate static pages** (`app/page.tsx`, `app/login/**/*.tsx`, `app/register/**/*.tsx`, `app/login/redirect/**/*.tsx`, ~200 lines, deps: T7,T8,T9, accept: literals come from dictionary).
 - [ ] **T20 — Translate patient pages** (`app/paciente/dashboard/**/*.tsx`, ~250 lines, deps: T7,T8,T13, accept: literals come from dictionary).
 - [ ] **T21 — Translate professional/admin pages** (`app/profesional/dashboard/**/*.tsx`, `components/admin/**/*.tsx`, ~300 lines, deps: T7,T8,T13, accept: literals come from dictionary).
 
