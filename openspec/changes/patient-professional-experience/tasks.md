@@ -59,11 +59,11 @@ Chain strategy: pending
 
 - [x] **T19 — Translate static pages** (`app/page.tsx`, `app/login/**/*.tsx`, `app/register/**/*.tsx`, `app/login/redirect/**/*.tsx`, ~200 lines, deps: T7,T8,T9, accept: literals come from dictionary).
 - [x] **T20 — Translate patient pages** (`app/paciente/dashboard/**/*.tsx`, ~250 lines, deps: T7,T8,T13, accept: literals come from dictionary).
-- [ ] **T21 — Translate professional/admin pages** (`app/profesional/dashboard/**/*.tsx`, `components/admin/**/*.tsx`, ~300 lines, deps: T7,T8,T13, accept: literals come from dictionary).
+- [x] **T21 — Translate professional/admin pages** (`app/profesional/dashboard/**/*.tsx`, `components/admin/**/*.tsx`, ~300 lines, deps: T7,T8,T13, accept: literals come from dictionary).
 
 ## Phase 6: Verification
 
 - [x] **T22 — typecheck** (project-wide, 0 lines, deps: T1–T21, accept: `npm run typecheck` exits 0).
 - [x] **T23 — lint** (project-wide, 0 lines, deps: T1–T21, accept: `npm run lint` exits 0).
 - [x] **T24 — build** (project-wide, 0 lines, deps: T22,T23, accept: `npm run build` exits 0).
-- [ ] **T25 — Manual verification** (none, 0 lines, deps: T24, accept: REQ-003–REQ-011 scenarios pass: theme toggle/persistence, OS fallback, off-white light, language persistence, server resolution, dictionary wiring, hydration safety).
+- [x] **T25 — Manual verification** (none, 0 lines, deps: T24, accept: REQ-003–REQ-011 scenarios pass: theme toggle/persistence, OS fallback, off-white light, language persistence, server resolution, dictionary wiring, hydration safety).

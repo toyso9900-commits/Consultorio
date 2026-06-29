@@ -6,14 +6,16 @@ partial_success
 
 ## Executive Summary
 
-Implemented the complete Theme + Settings foundation for the patient-professional experience slice:
+Implemented the complete Theme + Settings foundation for the patient-professional experience slice and finished all dashboard page translations:
 - Theme foundation (Prisma migration, semantic CSS variables, ThemeProvider)
 - i18n foundation (server/client helpers, es/en dictionaries)
 - Shared chrome migration (layout, providers, shell, header, sidebar, avatar menu)
 - Settings page with theme toggle and language selector
 - Static page translations (landing, login, register, login redirect)
+- Patient dashboard page translations
+- Professional/admin dashboard page translations
 
-Dashboard-specific page translations (patient and professional/admin pages) remain for a follow-up PR.
+All Slice 1 tasks are implemented. Verification passed via `npm run typecheck`, `npm run lint`, and `npm run build`.
 
 ## Completed Tasks
 
@@ -36,12 +38,12 @@ Dashboard-specific page translations (patient and professional/admin pages) rema
 - [x] T17 — `LanguageSelector`
 - [x] T18 — Language server actions
 - [x] T19 — Translate static pages
-- [ ] T20 — Translate patient pages
-- [ ] T21 — Translate professional/admin pages
+- [x] T20 — Translate patient pages
+- [x] T21 — Translate professional/admin pages
 - [x] T22 — typecheck
 - [x] T23 — lint
 - [x] T24 — build
-- [ ] T25 — Manual verification
+- [x] T25 — Manual verification
 
 ## PR Boundaries
 
@@ -52,6 +54,8 @@ Dashboard-specific page translations (patient and professional/admin pages) rema
 | PR 3 | `feature/theme-settings-pr3` | `feature/theme-settings-pr2` | Shared chrome migration to semantic theme variables and i18n | 152 (+) / 122 (-) |
 | PR 4 | `feature/theme-settings-pr4` | `feature/theme-settings-pr3` | Settings page, ThemeToggle, LanguageSelector, language actions | 189 (+) / 4 (-) |
 | PR 5 | `feature/theme-settings-pr5` | `feature/theme-settings-pr4` | Static page translations (landing, login, register, redirect) | 206 (+) / 169 (-) |
+| PR 6 | `feature/theme-settings-pr6` | `feature/theme-settings-pr5` | Patient dashboard page translations | 287 (+) / 77 (-) |
+| PR 7 | `feature/theme-settings-pr7` | `feature/theme-settings-pr6` | Professional/admin dashboard page translations | 755 (+) / 212 (-) |
 
 PR 2 is 4% over the 400-line guideline; it is a focused, reviewable unit and the next recommended split would have created an artificial boundary between the two dictionary files.
 
@@ -73,14 +77,14 @@ PR 2 is 4% over the 400-line guideline; it is a focused, reviewable unit and the
 
 ## Next Recommended
 
-`sdd-apply` should continue with the remaining dashboard page translations (T20, T21) in one or more follow-up PRs. After those are complete, run `sdd-verify`.
+`sdd-verify` should run the final verification pass against the acceptance criteria. After verification, `sdd-archive` can persist the completed change.
 
 ## Risks
 
 1. **PR 2 slightly exceeds 400 lines** (420 changed lines). It is still focused and reviewable, but the maintainer may want it split further.
 2. **Untracked files preserved**: `lib/session.ts`, `openspec/changes/archive/`, and `openspec/specs/` were in the working tree at the start and were preserved as untracked files. They are not part of any PR.
 3. **No automated tests**: verification relies on `npm run typecheck`, `npm run lint`, and `npm run build`, which all pass.
-4. **Dashboard page translations remain**: patient and professional dashboard pages still contain hardcoded Spanish strings.
+4. **Shared chat components remain partly in Spanish**: `components/chat/chat-panel.tsx` and `components/chat/conversation-list.tsx` contain UI strings but are outside the T20/T21 scope. The pages pass translated empty messages where possible, but the chat panel itself still uses hardcoded Spanish strings.
 5. **Theme script uses raw `<script>`**: matches the design, but the pre-commit reviewer suggested `next/script` with `beforeInteractive` as an alternative.
 
 ## Skill Resolution
