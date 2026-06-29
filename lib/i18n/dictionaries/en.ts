@@ -94,10 +94,13 @@ export const en = {
     featuresTitle: "What does the platform do?",
     featuresDescription:
       "Consultorio connects you with health and wellness professionals so you can take care of your body and mind holistically.",
-    expertsTitle: "Top 10 Featured Experts",
-    expertsDescription: "Verified professionals with the best ratings.",
+    expertsTitle: "Featured",
+    expertsDescription:
+      "Verified professionals with active premium subscriptions and the best ratings.",
     viewAll: "View all",
     featured: "Featured",
+    noFeatured: "No featured professionals available right now.",
+    noFeaturedDescription: "Check back soon for new specialists.",
     features: {
       findExperts: {
         title: "Find experts",
@@ -187,6 +190,7 @@ export const en = {
     allSpecialties: "All specialties",
     noResults: "No experts found with those criteria.",
     featured: "Featured",
+    ratingCount: "{count} reviews",
     viewProfile: "View profile",
     specialties: {
       nutrition: "Nutrition",

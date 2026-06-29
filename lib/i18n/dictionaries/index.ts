@@ -34,6 +34,8 @@ export interface Dictionary {
     expertsDescription: string;
     viewAll: string;
     featured: string;
+    noFeatured: string;
+    noFeaturedDescription: string;
     features: Record<
       keyof typeof es.landing.features,
       { title: string; description: string }
@@ -50,6 +52,7 @@ export interface Dictionary {
     allSpecialties: string;
     noResults: string;
     featured: string;
+    ratingCount: string;
     viewProfile: string;
     specialties: Record<keyof typeof es.patientExperts.specialties, string>;
   };

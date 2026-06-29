@@ -94,10 +94,13 @@ export const es = {
     featuresTitle: "¿Qué hace la plataforma?",
     featuresDescription:
       "Consultorio te conecta con profesionales de la salud y el bienestar para que cuides tu cuerpo y tu mente de forma integral.",
-    expertsTitle: "Top 10 Expertos Destacados",
-    expertsDescription: "Profesionales verificados con las mejores valoraciones.",
+    expertsTitle: "Destacados",
+    expertsDescription:
+      "Profesionales verificados con suscripción premium activa y las mejores valoraciones.",
     viewAll: "Ver todos",
     featured: "Destacado",
+    noFeatured: "No hay profesionales destacados disponibles en este momento.",
+    noFeaturedDescription: "Volvé pronto para conocer nuevos especialistas.",
     features: {
       findExperts: {
         title: "Encontrá expertos",
@@ -187,6 +190,7 @@ export const es = {
     allSpecialties: "Todas las especialidades",
     noResults: "No se encontraron expertos con esos criterios.",
     featured: "Destacado",
+    ratingCount: "{count} valoraciones",
     viewProfile: "Ver perfil",
     specialties: {
       nutrition: "Nutrición",

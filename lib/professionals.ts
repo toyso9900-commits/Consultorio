@@ -9,6 +9,9 @@ export type Professional = {
   price: number;
   isPremium: boolean;
   image: string;
+  averageRating: number;
+  reviewCount: number;
+  isPremiumActive?: boolean;
 };
 
 export const MOCK_PROFESSIONALS: Professional[] = [
@@ -23,6 +26,8 @@ export const MOCK_PROFESSIONALS: Professional[] = [
     modality: "Online / Presencial",
     price: 800,
     isPremium: true,
+    averageRating: 0,
+    reviewCount: 0,
     image:
       "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=400&h=400&q=80",
   },
@@ -37,6 +42,8 @@ export const MOCK_PROFESSIONALS: Professional[] = [
     modality: "Online",
     price: 600,
     isPremium: false,
+    averageRating: 0,
+    reviewCount: 0,
     image:
       "https://images.unsplash.com/photo-1567013127542-490d757e51fc?auto=format&fit=crop&w=400&h=400&q=80",
   },
@@ -51,6 +58,8 @@ export const MOCK_PROFESSIONALS: Professional[] = [
     modality: "Presencial",
     price: 950,
     isPremium: true,
+    averageRating: 0,
+    reviewCount: 0,
     image:
       "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&w=400&h=400&q=80",
   },
@@ -65,6 +74,8 @@ export const MOCK_PROFESSIONALS: Professional[] = [
     modality: "Presencial",
     price: 700,
     isPremium: false,
+    averageRating: 0,
+    reviewCount: 0,
     image:
       "https://images.unsplash.com/photo-1597347343908-2937e7dcc560?auto=format&fit=crop&w=400&h=400&q=80",
   },
@@ -79,6 +90,8 @@ export const MOCK_PROFESSIONALS: Professional[] = [
     modality: "Online",
     price: 850,
     isPremium: true,
+    averageRating: 0,
+    reviewCount: 0,
     image:
       "https://images.unsplash.com/photo-1594824476967-48c8b964273f?auto=format&fit=crop&w=400&h=400&q=80",
   },
@@ -93,6 +106,8 @@ export const MOCK_PROFESSIONALS: Professional[] = [
     modality: "Online / Presencial",
     price: 650,
     isPremium: false,
+    averageRating: 0,
+    reviewCount: 0,
     image:
       "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=400&h=400&q=80",
   },
@@ -107,6 +122,8 @@ export const MOCK_PROFESSIONALS: Professional[] = [
     modality: "Online / Presencial",
     price: 900,
     isPremium: true,
+    averageRating: 0,
+    reviewCount: 0,
     image:
       "https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=400&h=400&q=80",
   },
@@ -121,6 +138,8 @@ export const MOCK_PROFESSIONALS: Professional[] = [
     modality: "Online",
     price: 550,
     isPremium: false,
+    averageRating: 0,
+    reviewCount: 0,
     image:
       "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=400&h=400&q=80",
   },
@@ -135,6 +154,8 @@ export const MOCK_PROFESSIONALS: Professional[] = [
     modality: "Online",
     price: 750,
     isPremium: true,
+    averageRating: 0,
+    reviewCount: 0,
     image:
       "https://images.unsplash.com/photo-1594824476967-48c8b964273f?auto=format&fit=crop&w=400&h=400&q=80",
   },
@@ -149,6 +170,8 @@ export const MOCK_PROFESSIONALS: Professional[] = [
     modality: "Presencial",
     price: 700,
     isPremium: true,
+    averageRating: 0,
+    reviewCount: 0,
     image:
       "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?auto=format&fit=crop&w=400&h=400&q=80",
   },
