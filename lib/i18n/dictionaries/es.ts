@@ -154,6 +154,8 @@ export const es = {
     accountType: "Tipo de cuenta",
     licenseLabel: "Cédula profesional o certificación",
     licensePlaceholder: "Ej. 12345678",
+    noSession: "No se detectó una sesión activa.",
+    backToLogin: "Volver al inicio de sesión",
   },
   errors: {
     generic: "Algo salió mal. Volvé a intentarlo.",

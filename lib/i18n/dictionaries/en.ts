@@ -154,6 +154,8 @@ export const en = {
     accountType: "Account type",
     licenseLabel: "Professional license or certification",
     licensePlaceholder: "e.g. 12345678",
+    noSession: "No active session detected.",
+    backToLogin: "Back to log in",
   },
   errors: {
     generic: "Something went wrong. Please try again.",
