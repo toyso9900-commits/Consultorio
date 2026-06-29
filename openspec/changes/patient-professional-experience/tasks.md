@@ -34,10 +34,10 @@ Chain strategy: pending
 
 ## Phase 2: i18n Foundation
 
-- [ ] **T5 — i18n server helpers** (`lib/i18n/server.ts`, ~40 lines, deps: T2, accept: guest→`es`, auth→stored `UserPreference.language`).
-- [ ] **T6 — i18n client provider/hook** (`lib/i18n/client.tsx`, ~60 lines, deps: T5, accept: `useI18n()` returns locale + dictionary).
-- [ ] **T7 — Spanish dictionary** (`lib/i18n/dictionaries/es.ts`, ~180 lines, deps: T6, accept: typed `Dictionary` covers chrome, settings, page keys).
-- [ ] **T8 — English dictionary** (`lib/i18n/dictionaries/en.ts`, ~180 lines, deps: T7, accept: keys mirror `es.ts`, typecheck passes).
+- [x] **T5 — i18n server helpers** (`lib/i18n/server.ts`, ~40 lines, deps: T2, accept: guest→`es`, auth→stored `UserPreference.language`).
+- [x] **T6 — i18n client provider/hook** (`lib/i18n/client.tsx`, ~60 lines, deps: T5, accept: `useI18n()` returns locale + dictionary).
+- [x] **T7 — Spanish dictionary** (`lib/i18n/dictionaries/es.ts`, ~180 lines, deps: T6, accept: typed `Dictionary` covers chrome, settings, page keys).
+- [x] **T8 — English dictionary** (`lib/i18n/dictionaries/en.ts`, ~180 lines, deps: T7, accept: keys mirror `es.ts`, typecheck passes).
 
 ## Phase 3: Shared Chrome Migration
 
