@@ -34,9 +34,9 @@ Chain strategy: stacked-to-main
 
 ## Phase 2: Landing Destacados
 
-- [ ] 2.1 Create reusable `StarRating` component — `components/ui/star-rating.tsx` (+80) — Accept: renders filled/partial stars; lint and typecheck pass.
-- [ ] 2.2 Wire landing page to DB-driven Destacados — `app/page.tsx` (+40/-20) — Depends: 1.4, 2.1 — Accept: uses `getFeaturedProfessionals`; renders empty state when no results.
-- [ ] 2.3 Remove `MOCK_PROFESSIONALS` — `lib/professionals.ts` (-140) — Depends: 2.2 — Accept: no imports remain; build and typecheck pass.
+- [x] 2.1 Create reusable `StarRating` component — `components/ui/star-rating.tsx` (+80) — Accept: renders filled/partial stars; lint and typecheck pass.
+- [x] 2.2 Wire landing page to DB-driven Destacados — `app/page.tsx` (+40/-20) — Depends: 1.4, 2.1 — Accept: uses `getFeaturedProfessionals`; renders empty state when no results.
+- [x] 2.3 Remove `MOCK_PROFESSIONALS` — `lib/professionals.ts` (-140) — Depends: 2.2 — Accept: no imports remain; build and typecheck pass.
 
 ## Phase 3: Guía de Expertos + Subscription Sync
 

@@ -6,7 +6,7 @@ in_progress
 
 ## Executive Summary
 
-Slice 2 is being implemented as three stacked PRs. PR 1 (foundation) is complete and committed to `feature/landing-destacados-pr1`. It adds the `Review` model, the active-subscription helper, enriched professional queries, and the required i18n keys. PR 1 passed `typecheck`, `lint`, and `build`.
+Slice 2 is being implemented as three stacked PRs. PR 1 (foundation) and PR 2 (landing UI) are complete. PR 2 adds the reusable `StarRating` component, wires the landing Destacados section to the database, and removes the hardcoded `MOCK_PROFESSIONALS`. Both PRs passed `typecheck`, `lint`, and `build`. PR 3 will add Guía badges/stars and subscription sync.
 
 ## Completed Tasks
 
@@ -15,14 +15,17 @@ Slice 2 is being implemented as three stacked PRs. PR 1 (foundation) is complete
 - [x] 1.3 Extend `Professional` type — `lib/professionals.ts`
 - [x] 1.4 Add `getFeaturedProfessionals` and enrich `getApprovedProfessionals` — `lib/professionals-db.ts`
 - [x] 1.5 Add i18n keys and interfaces — `lib/i18n/dictionaries/es.ts`, `lib/i18n/dictionaries/en.ts`, `lib/i18n/dictionaries/index.ts`
+- [x] 2.1 Create reusable `StarRating` component — `components/ui/star-rating.tsx`
+- [x] 2.2 Wire landing page to DB-driven Destacados — `app/page.tsx`
+- [x] 2.3 Remove `MOCK_PROFESSIONALS` — `lib/professionals.ts`
 
 ## PR Boundaries
 
 | PR | Branch | Base | Scope | Status |
 |---|---|---|---|---|
 | PR 1 | `feature/landing-destacados-pr1` | `feature/theme-settings-pr7` | Schema, subscription helper, queries, i18n | ✅ committed |
-| PR 2 | `feature/landing-destacados-pr2` | `feature/landing-destacados-pr1` | `StarRating`, DB-driven landing, remove `MOCK_PROFESSIONALS` | pending |
-| PR 3 | `feature/landing-destacados-pr3` | `feature/landing-destacados-pr2` | Guía badges/stars, subscription sync | pending |
+| PR 2 | `feature/landing-destacados-pr2` | `feature/landing-destacados-pr1` | `StarRating`, DB-driven landing, remove `MOCK_PROFESSIONALS` | ✅ committed |
+| PR 3 | `feature/landing-destacados-pr3` | `feature/landing-destacados-pr2` | Guía badges/stars, subscription sync | in progress |
 
 ## Verification Results
 
@@ -38,9 +41,6 @@ Slice 2 is being implemented as three stacked PRs. PR 1 (foundation) is complete
 
 ## Remaining Tasks
 
-- [ ] 2.1 Create reusable `StarRating` component
-- [ ] 2.2 Wire landing page to DB-driven Destacados
-- [ ] 2.3 Remove `MOCK_PROFESSIONALS`
 - [ ] 3.1 Enrich Guía professionals
 - [ ] 3.2 Render badge and `StarRating` in Guía cards
 - [ ] 3.3 Sync `ProfessionalProfile.isPremium` on simulated activation
