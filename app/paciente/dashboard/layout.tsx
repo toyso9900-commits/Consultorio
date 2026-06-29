@@ -1,5 +1,6 @@
 import { auth } from "@/lib/auth";
 import { DashboardShell } from "@/components/layout/dashboard-shell";
+import { getLocale, getDictionary } from "@/lib/i18n/server";
 
 export default async function PatientDashboardLayout({
   children,
@@ -7,14 +8,14 @@ export default async function PatientDashboardLayout({
   children: React.ReactNode;
 }) {
   const session = await auth();
+  const locale = await getLocale(session?.user?.id);
+  const dictionary = await getDictionary(locale);
 
-  // Middleware guarantees this session exists; fall back to a safe empty shell
-  // if for any reason auth() returns null during a client transition.
   return (
     <DashboardShell
       role="PATIENT"
-      title="Panel del Paciente"
-      subtitle="Gestioná tu salud y bienestar"
+      title={dictionary.dashboard.patientTitle}
+      subtitle={dictionary.dashboard.patientSubtitle}
       name={session?.user?.name}
       image={session?.user?.image}
     >

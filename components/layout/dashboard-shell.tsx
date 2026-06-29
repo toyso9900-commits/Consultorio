@@ -22,7 +22,7 @@ export function DashboardShell({
   badge,
 }: DashboardShellProps) {
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 lg:pl-64">
+    <div className="min-h-screen bg-background lg:pl-64">
       <Sidebar role={role} badge={badge} />
       <div className="flex min-h-screen flex-col">
         <DashboardHeader title={title} subtitle={subtitle} name={name} image={image} role={role} />

@@ -2,8 +2,9 @@
 
 import { signOut } from "next-auth/react";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
-import { LogOut, Settings } from "lucide-react";
+import { LogOut, Settings, UserCircle } from "lucide-react";
 import Link from "next/link";
+import { useI18n } from "@/lib/i18n/client";
 
 interface UserAvatarMenuProps {
   name?: string | null;
@@ -12,6 +13,8 @@ interface UserAvatarMenuProps {
 }
 
 export function UserAvatarMenu({ name, image, role }: UserAvatarMenuProps) {
+  const { dictionary } = useI18n();
+
   const initials = name
     ? name
         .split(" ")
@@ -28,17 +31,26 @@ export function UserAvatarMenu({ name, image, role }: UserAvatarMenuProps) {
       ? "/profesional/dashboard/perfil"
       : null;
 
+  const roleLabel =
+    role === "PATIENT"
+      ? dictionary.userMenu.rolePatient
+      : role === "PROFESSIONAL"
+      ? dictionary.userMenu.roleProfessional
+      : role === "ADMIN"
+      ? dictionary.userMenu.roleAdmin
+      : dictionary.userMenu.user;
+
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
         <button
           type="button"
-          className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-full bg-indigo-100 text-sm font-semibold text-indigo-700 ring-2 ring-transparent transition hover:ring-indigo-300 focus:outline-none focus:ring-indigo-400 dark:bg-indigo-950 dark:text-indigo-300 dark:hover:ring-indigo-800"
-          aria-label="Menú de usuario"
+          className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-full bg-primary/10 text-sm font-semibold text-primary ring-2 ring-transparent transition hover:ring-primary/30 focus:outline-none focus:ring-primary/50"
+          aria-label={dictionary.userMenu.user}
         >
           {image ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={image} alt={name || "Usuario"} className="h-full w-full object-cover" />
+            <img src={image} alt={name || dictionary.userMenu.user} className="h-full w-full object-cover" />
           ) : (
             initials
           )}
@@ -49,33 +61,25 @@ export function UserAvatarMenu({ name, image, role }: UserAvatarMenuProps) {
         <DropdownMenu.Content
           align="end"
           sideOffset={6}
-          className="z-50 min-w-[14rem] rounded-xl border border-slate-200 bg-white p-1.5 shadow-lg dark:border-slate-800 dark:bg-slate-950"
+          className="z-50 min-w-[14rem] rounded-xl border border-border bg-card p-1.5 shadow-lg"
         >
           <div className="px-3 py-2">
-            <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">
-              {name || "Usuario"}
+            <p className="text-sm font-semibold text-foreground">
+              {name || dictionary.userMenu.user}
             </p>
-            <p className="text-xs text-slate-500 dark:text-slate-400">
-              {role === "PATIENT"
-                ? "Paciente"
-                : role === "PROFESSIONAL"
-                ? "Profesional"
-                : role === "ADMIN"
-                ? "Administrador"
-                : "Usuario"}
-            </p>
+            <p className="text-xs text-muted-foreground">{roleLabel}</p>
           </div>
 
-          <DropdownMenu.Separator className="my-1 h-px bg-slate-200 dark:bg-slate-800" />
+          <DropdownMenu.Separator className="my-1 h-px bg-border" />
 
           {editProfileHref ? (
             <DropdownMenu.Item asChild>
               <Link
                 href={editProfileHref}
-                className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-slate-700 outline-none transition-colors hover:bg-slate-100 focus:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800 dark:focus:bg-slate-800"
+                className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-foreground outline-none transition-colors hover:bg-muted focus:bg-muted"
               >
-                <Settings className="h-4 w-4" />
-                Editar perfil
+                <UserCircle className="h-4 w-4" />
+                {dictionary.userMenu.profile}
               </Link>
             </DropdownMenu.Item>
           ) : (
@@ -83,22 +87,32 @@ export function UserAvatarMenu({ name, image, role }: UserAvatarMenuProps) {
               <button
                 type="button"
                 disabled
-                className="flex w-full cursor-not-allowed items-center gap-2 rounded-lg px-3 py-2 text-sm text-slate-400 outline-none select-none"
+                className="flex w-full cursor-not-allowed items-center gap-2 rounded-lg px-3 py-2 text-sm text-muted-foreground outline-none select-none"
               >
-                <Settings className="h-4 w-4" />
-                Editar perfil (próximamente)
+                <UserCircle className="h-4 w-4" />
+                {dictionary.userMenu.profile}
               </button>
             </DropdownMenu.Item>
           )}
 
           <DropdownMenu.Item asChild>
+            <Link
+              href="/configuracion"
+              className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-foreground outline-none transition-colors hover:bg-muted focus:bg-muted"
+            >
+              <Settings className="h-4 w-4" />
+              {dictionary.userMenu.settings}
+            </Link>
+          </DropdownMenu.Item>
+
+          <DropdownMenu.Item asChild>
             <button
               type="button"
               onClick={() => signOut({ callbackUrl: "/" })}
-              className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-rose-600 outline-none transition-colors hover:bg-rose-50 focus:bg-rose-50 dark:text-rose-400 dark:hover:bg-rose-950 dark:focus:bg-rose-950"
+              className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-destructive outline-none transition-colors hover:bg-destructive/10 focus:bg-destructive/10"
             >
               <LogOut className="h-4 w-4" />
-              Cerrar sesión
+              {dictionary.userMenu.logout}
             </button>
           </DropdownMenu.Item>
         </DropdownMenu.Content>

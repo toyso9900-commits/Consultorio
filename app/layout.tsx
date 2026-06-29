@@ -5,6 +5,7 @@ import Link from "next/link";
 import { auth } from "@/lib/auth";
 import { Toaster } from "sonner";
 import { Providers } from "./providers";
+import { getLocale, getDictionary } from "@/lib/i18n/server";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -16,11 +17,24 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  title: "Consultorio - Salud y Bienestar",
-  description:
-    "Unifica tu expediente clínico y físico. Conecta con nutriólogos y entrenadores certificados.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getLocale();
+  const dictionary = await getDictionary(locale);
+
+  return {
+    title: dictionary.meta.title,
+    description: dictionary.meta.description,
+  };
+}
+
+const themeScript = `
+  (function () {
+    const saved = localStorage.getItem('consultorio-theme');
+    const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const resolved = saved === 'dark' || (saved === 'system' && systemDark) || (!saved && systemDark) ? 'dark' : 'light';
+    document.documentElement.classList.add(resolved);
+  })();
+`;
 
 export default async function RootLayout({
   children,
@@ -28,19 +42,29 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const session = await auth();
+  const locale = await getLocale(session?.user?.id);
+  const dictionary = await getDictionary(locale);
+  const currentYear = new Date().getFullYear();
 
   return (
     <html
-      lang="es"
+      lang={locale}
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100">
-        <Providers>
-          <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/80 backdrop-blur dark:border-slate-800 dark:bg-slate-950/80">
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+      </head>
+      <body
+        className="min-h-full flex flex-col bg-background text-foreground"
+        suppressHydrationWarning
+      >
+        <Providers locale={locale} dictionary={dictionary}>
+          <header className="sticky top-0 z-50 border-b border-border bg-card/80 backdrop-blur">
             <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
               <Link
                 href="/"
-                className="flex items-center gap-2 text-xl font-bold tracking-tight text-indigo-600 dark:text-indigo-400"
+                className="flex items-center gap-2 text-xl font-bold tracking-tight text-primary"
               >
                 <svg
                   className="h-7 w-7"
@@ -61,23 +85,23 @@ export default async function RootLayout({
                         ? "/paciente/dashboard"
                         : "/profesional/dashboard"
                     }
-                    className="text-slate-600 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400"
+                    className="text-muted-foreground hover:text-primary"
                   >
-                    Mi panel
+                    {dictionary.header.dashboard}
                   </Link>
                 ) : (
                   <div className="flex items-center gap-4">
                     <Link
                       href="/login"
-                      className="text-slate-600 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400"
+                      className="text-muted-foreground hover:text-primary"
                     >
-                      Iniciar sesión
+                      {dictionary.header.login}
                     </Link>
                     <Link
                       href="/register"
-                      className="rounded-full bg-indigo-600 px-4 py-2 text-white transition-colors hover:bg-indigo-700"
+                      className="rounded-full bg-primary px-4 py-2 text-primary-foreground transition-colors hover:bg-primary/90"
                     >
-                      Registrarse
+                      {dictionary.header.register}
                     </Link>
                   </div>
                 )}
@@ -86,12 +110,10 @@ export default async function RootLayout({
           </header>
           {children}
           <Toaster position="top-right" richColors />
-          <footer className="mt-auto border-t border-slate-200 bg-white py-10 text-center text-sm text-slate-500 dark:border-slate-800 dark:bg-slate-950">
+          <footer className="mt-auto border-t border-border bg-card py-10 text-center text-sm text-muted-foreground">
             <div className="mx-auto max-w-6xl px-6">
-              <p>© {new Date().getFullYear()} Consultorio. Versión beta.</p>
-              <p className="mt-1">
-                Tu salud, nutrición y entrenamiento en un solo lugar.
-              </p>
+              <p>{dictionary.footer.copyright.replace("{year}", String(currentYear))}</p>
+              <p className="mt-1">{dictionary.footer.tagline}</p>
             </div>
           </footer>
         </Providers>
