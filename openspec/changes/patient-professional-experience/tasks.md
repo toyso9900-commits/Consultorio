@@ -63,7 +63,7 @@ Chain strategy: pending
 
 ## Phase 6: Verification
 
-- [ ] **T22 — typecheck** (project-wide, 0 lines, deps: T1–T21, accept: `npm run typecheck` exits 0).
-- [ ] **T23 — lint** (project-wide, 0 lines, deps: T1–T21, accept: `npm run lint` exits 0).
-- [ ] **T24 — build** (project-wide, 0 lines, deps: T22,T23, accept: `npm run build` exits 0).
+- [x] **T22 — typecheck** (project-wide, 0 lines, deps: T1–T21, accept: `npm run typecheck` exits 0).
+- [x] **T23 — lint** (project-wide, 0 lines, deps: T1–T21, accept: `npm run lint` exits 0).
+- [x] **T24 — build** (project-wide, 0 lines, deps: T22,T23, accept: `npm run build` exits 0).
 - [ ] **T25 — Manual verification** (none, 0 lines, deps: T24, accept: REQ-003–REQ-011 scenarios pass: theme toggle/persistence, OS fallback, off-white light, language persistence, server resolution, dictionary wiring, hydration safety).
