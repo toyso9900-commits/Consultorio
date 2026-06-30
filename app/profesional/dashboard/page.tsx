@@ -1,6 +1,10 @@
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import {
+  getAppointmentDashboardCounts,
+  getAppointmentsThisWeekCount,
+} from "@/lib/appointments";
+import {
   BadgeCheck,
   CalendarDays,
   Crown,
@@ -36,7 +40,7 @@ export default async function ProfessionalDashboardPage() {
   const activeSubscriptions = await prisma.subscription.count({
     where: { status: "ACTIVE" },
   });
-  const appointmentsThisWeek = 0;
+  const appointmentsThisWeek = await getAppointmentsThisWeekCount();
 
   const pendingProfessionals = isAdmin
     ? await prisma.professionalProfile.findMany({
@@ -238,6 +242,9 @@ export default async function ProfessionalDashboardPage() {
     where: { userId: session!.user.id },
   });
 
+  const { upcoming: upcomingAppointmentsCount, activePatients: activePatientsCount } =
+    await getAppointmentDashboardCounts(session!.user.id!, "PROFESSIONAL");
+
   const activeSubscription = await prisma.subscription.findFirst({
     where: {
       userId: session!.user.id,
@@ -321,7 +328,9 @@ export default async function ProfessionalDashboardPage() {
           <p className="mt-4 text-sm text-slate-500 dark:text-slate-400">
             {dictionary.professionalDashboard.upcomingAppointments}
           </p>
-          <p className="text-2xl font-bold text-slate-900 dark:text-slate-100">0</p>
+          <p className="text-2xl font-bold text-slate-900 dark:text-slate-100">
+            {upcomingAppointmentsCount}
+          </p>
         </div>
         <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
           <div className="flex h-10 w-10 items-center justify-center rounded-full bg-teal-100 dark:bg-teal-950">
@@ -330,7 +339,9 @@ export default async function ProfessionalDashboardPage() {
           <p className="mt-4 text-sm text-slate-500 dark:text-slate-400">
             {dictionary.professionalDashboard.activePatients}
           </p>
-          <p className="text-2xl font-bold text-slate-900 dark:text-slate-100">0</p>
+          <p className="text-2xl font-bold text-slate-900 dark:text-slate-100">
+            {activePatientsCount}
+          </p>
         </div>
         <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
           <div className="flex h-10 w-10 items-center justify-center rounded-full bg-amber-100 dark:bg-amber-950">

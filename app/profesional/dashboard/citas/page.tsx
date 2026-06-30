@@ -4,6 +4,8 @@ import { CalendarDays } from "lucide-react";
 import { getLocale, getDictionary } from "@/lib/i18n/server";
 import { getAppointmentsForProfessional } from "@/lib/appointments";
 import { AppointmentRequestList } from "@/components/appointments/appointment-request-list";
+import { DateGroupedAppointments } from "@/components/appointments/date-grouped-appointments";
+import { AppointmentStatus } from "@prisma/client";
 
 export default async function ProfessionalAppointmentsPage() {
   const session = await auth();
@@ -50,9 +52,14 @@ export default async function ProfessionalAppointmentsPage() {
   const requests = appointments.filter(
     (appointment) => appointment.status === "REQUESTED"
   );
+  const upcoming = appointments.filter(
+    (appointment) =>
+      appointment.status === AppointmentStatus.CONFIRMED ||
+      appointment.status === AppointmentStatus.COMPLETED
+  );
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <div className="flex items-center gap-3">
         <div className="flex h-10 w-10 items-center justify-center rounded-full bg-rose-100 dark:bg-rose-950">
           <CalendarDays className="h-5 w-5 text-rose-600" />
@@ -73,6 +80,18 @@ export default async function ProfessionalAppointmentsPage() {
         </h2>
         <AppointmentRequestList
           appointments={requests}
+          locale={locale}
+          dictionary={dictionary}
+        />
+      </section>
+
+      <section className="space-y-4">
+        <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
+          {dictionary.appointments.sections.upcoming}
+        </h2>
+        <DateGroupedAppointments
+          appointments={upcoming}
+          role="professional"
           locale={locale}
           dictionary={dictionary}
         />

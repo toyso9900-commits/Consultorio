@@ -42,7 +42,7 @@ Chain strategy: stacked-to-main
 - [x] **3.1 Request modal** — `components/appointments/appointment-request-modal.tsx` (~120). Date/time/notes; submit via 2.1. Deps: 2.1. AC: opens from profile, rejects past dates.
 - [x] **3.2 Appointment card** — `components/appointments/appointment-card.tsx` (~60). Badge, date/time, name, notes. Deps: none. AC: renders all statuses.
 - [x] **3.3 Request list** — `components/appointments/appointment-request-list.tsx` (~100). `REQUESTED` list with Accept/Reject. Deps: 2.2, 3.2. AC: sorted; actions wired.
-- [ ] **3.4 Date-grouped list** — `components/appointments/date-grouped-appointments.tsx` (~80). Groups `CONFIRMED`/`COMPLETED` by date. Deps: 3.2. AC: groups/sorts.
+- [x] **3.4 Date-grouped list** — `components/appointments/date-grouped-appointments.tsx` (~80). Groups `CONFIRMED`/`COMPLETED` by date. Deps: 3.2. AC: groups/sorts.
 
 ## Phase 4: Patient UI
 
@@ -53,11 +53,11 @@ Chain strategy: stacked-to-main
 ## Phase 5: Professional UI
 
 - [x] **5.1 Requests page** — `app/profesional/dashboard/citas/page.tsx` (~60). Render 3.3. Deps: 2.2, 3.3. AC: requests visible.
-- [ ] **5.2 Upcoming grouping** — `app/profesional/dashboard/citas/page.tsx` (~30). Render 3.4 below requests. Deps: 3.4, 5.1. AC: grouped by date.
-- [ ] **5.3 Dashboard counts** — `app/profesional/dashboard/page.tsx` (~25). Real upcoming + active patients. Deps: 1.4. AC: real values.
+- [x] **5.2 Upcoming grouping** — `app/profesional/dashboard/citas/page.tsx` (~30). Render 3.4 below requests. Deps: 3.4, 5.1. AC: grouped by date.
+- [x] **5.3 Dashboard counts** — `app/profesional/dashboard/page.tsx` (~25). Real upcoming + active patients. Deps: 1.4. AC: real values.
 
 ## Phase 6: i18n & Verify
 
-- [ ] **6.1 Dictionary keys** — `lib/i18n/dictionaries/es.ts`, `en.ts` (~60). Appointments namespace. Deps: 3.1–5.3. AC: complete.
-- [ ] **6.2 Quality gates** — `npm run typecheck`, `lint`, `build`. Deps: all. AC: pass.
+- [x] **6.1 Dictionary keys** — `lib/i18n/dictionaries/es.ts`, `en.ts` (~60). Appointments namespace. Deps: 3.1–5.3. AC: complete.
+- [x] **6.2 Quality gates** — `npm run typecheck`, `lint`, `build`. Deps: all. AC: pass.
 - [ ] **6.3 Manual scenarios** — Request, past date, accept, reject, complete, language switch, counts. Deps: all. AC: spec passes.
