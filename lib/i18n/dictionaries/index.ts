@@ -119,6 +119,7 @@ export interface Dictionary {
     };
     status: Record<keyof typeof es.appointments.status, string>;
     actions: Record<keyof typeof es.appointments.actions, string>;
+    confirmations: Record<keyof typeof es.appointments.confirmations, string>;
     empty: Record<keyof typeof es.appointments.empty, string>;
     errors: Record<keyof typeof es.appointments.errors, string>;
     sections: Record<keyof typeof es.appointments.sections, string>;

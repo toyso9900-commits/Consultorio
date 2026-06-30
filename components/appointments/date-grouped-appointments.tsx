@@ -1,6 +1,12 @@
 "use client";
 
+import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import { AppointmentCard } from "./appointment-card";
+import {
+  cancelAppointment,
+  completeAppointment,
+} from "@/app/profesional/dashboard/appointment-actions";
 import type { AppointmentWithUsers } from "@/lib/appointments";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
 
@@ -17,6 +23,43 @@ export function DateGroupedAppointments({
   locale,
   dictionary,
 }: DateGroupedAppointmentsProps) {
+  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
+  const [feedback, setFeedback] = useState<{ id: string; error: string } | null>(
+    null
+  );
+
+  function handleAction(
+    appointmentId: string,
+    action: "cancel" | "complete"
+  ) {
+    const confirmationKey = action === "cancel" ? "cancel" : "complete";
+    const confirmationMessage =
+      dictionary.appointments.confirmations[confirmationKey];
+
+    if (!confirm(confirmationMessage)) {
+      return;
+    }
+
+    setFeedback(null);
+    startTransition(async () => {
+      const result =
+        action === "cancel"
+          ? await cancelAppointment(appointmentId)
+          : await completeAppointment(appointmentId);
+
+      if (result.success) {
+        router.refresh();
+      } else {
+        const key = result.error as keyof typeof dictionary.appointments.errors;
+        setFeedback({
+          id: appointmentId,
+          error:
+            dictionary.appointments.errors[key] || dictionary.errors.generic,
+        });
+      }
+    });
+  }
   const grouped = appointments.reduce<Record<string, AppointmentWithUsers[]>>(
     (acc, appointment) => {
       const dateKey = appointment.scheduledAt.toISOString().split("T")[0];
@@ -66,13 +109,44 @@ export function DateGroupedAppointments({
                     a.scheduledAt.getTime() - b.scheduledAt.getTime()
                 )
                 .map((appointment) => (
-                  <AppointmentCard
-                    key={appointment.id}
-                    appointment={appointment}
-                    role={role}
-                    locale={locale}
-                    dictionary={dictionary}
-                  />
+                  <div key={appointment.id} className="space-y-3">
+                    <AppointmentCard
+                      appointment={appointment}
+                      role={role}
+                      locale={locale}
+                      dictionary={dictionary}
+                    />
+                    {role === "professional" &&
+                      appointment.status === "CONFIRMED" && (
+                        <div className="flex flex-wrap gap-3">
+                          <button
+                            type="button"
+                            disabled={isPending}
+                            onClick={() =>
+                              handleAction(appointment.id, "complete")
+                            }
+                            className="rounded-xl bg-emerald-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-emerald-700 disabled:opacity-60"
+                          >
+                            {dictionary.appointments.actions.complete}
+                          </button>
+                          <button
+                            type="button"
+                            disabled={isPending}
+                            onClick={() =>
+                              handleAction(appointment.id, "cancel")
+                            }
+                            className="rounded-xl bg-rose-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-rose-700 disabled:opacity-60"
+                          >
+                            {dictionary.appointments.actions.cancel}
+                          </button>
+                        </div>
+                      )}
+                    {feedback?.id === appointment.id && (
+                      <p className="text-sm text-rose-600 dark:text-rose-400">
+                        {feedback.error}
+                      </p>
+                    )}
+                  </div>
                 ))}
             </div>
           </section>

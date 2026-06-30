@@ -489,6 +489,10 @@ export const es = {
       cancel: "Cancelar",
       complete: "Completar",
     },
+    confirmations: {
+      cancel: "¿Estás seguro de que querés cancelar este turno?",
+      complete: "¿Estás seguro de que querés marcar este turno como completado?",
+    },
     empty: {
       patient: "No tenés citas agendadas todavía.",
       professional: "No tenés turnos pendientes.",

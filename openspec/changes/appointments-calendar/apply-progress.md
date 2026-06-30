@@ -10,8 +10,11 @@ Implemented the full Appointments + Calendar slice across four stacked PRs.
 The Prisma `AppointmentStatus` enum was renamed from `PENDING` to `REQUESTED`
 with a migration, shared query helpers and status guards were added, and the
 patient request flow, professional response flow, date-grouped calendar, and
-real dashboard counts were wired end-to-end. All automated quality gates pass;
-manual scenario verification remains outstanding.
+real dashboard counts were wired end-to-end. A focused remediation added
+professional **Cancel** and **Complete** action buttons to confirmed
+appointments in the date-grouped list, with confirmation dialogs and i18n keys.
+All automated quality gates pass; manual scenario verification remains
+outstanding.
 
 ## Completed Tasks
 
@@ -33,6 +36,7 @@ manual scenario verification remains outstanding.
 - [x] 5.3 Update `app/profesional/dashboard/page.tsx` with real upcoming and active-patient counts.
 - [x] 6.1 Add `appointments` and `professionalAppointments` i18n keys to `es.ts`/`en.ts` and `Dictionary` interface.
 - [x] 6.2 Quality gates: `npm run typecheck`, `npm run lint`, and `npm run build` pass on each PR branch.
+- [x] 6.3a Wire professional `cancelAppointment` and `completeAppointment` actions into the UI with confirmation dialogs and i18n keys.
 - [ ] 6.3 Manual scenarios (request, past date, accept, reject, complete, language switch, counts).
 
 ## Remaining Tasks
@@ -48,6 +52,7 @@ manual scenario verification remains outstanding.
 | 2 | `feature/appointments-calendar-pr2` | `feature/appointments-calendar-pr1` | Patient request flow, request modal, appointment card, patient UI, i18n | `5bfa93d` |
 | 3 | `feature/appointments-calendar-pr3` | `feature/appointments-calendar-pr2` | Professional response actions, request list, professional citas page | `5013f17` |
 | 4 | `feature/appointments-calendar-pr4` | `feature/appointments-calendar-pr3` | Date-grouped calendar, dashboard counts, build verification | `319128a` |
+| 4a | `feature/appointments-calendar-pr4` | `feature/appointments-calendar-pr3` | Remediation: professional Cancel/Complete UI controls with i18n | `pending` |
 
 ## Artifacts
 
@@ -70,7 +75,10 @@ manual scenario verification remains outstanding.
 | `app/profesional/dashboard/page.tsx` | Real upcoming + active patient counts; admin weekly count |
 | `lib/i18n/dictionaries/es.ts` | Spanish appointment strings |
 | `lib/i18n/dictionaries/en.ts` | English appointment strings |
-| `lib/i18n/dictionaries/index.ts` | Updated `Dictionary` interface |
+| `components/appointments/date-grouped-appointments.tsx` | Added Cancel/Complete action buttons for professional confirmed appointments |
+| `lib/i18n/dictionaries/es.ts` | Spanish confirmation dialog strings |
+| `lib/i18n/dictionaries/en.ts` | English confirmation dialog strings |
+| `lib/i18n/dictionaries/index.ts` | Updated `Dictionary` interface with `appointments.confirmations` |
 | `openspec/changes/appointments-calendar/tasks.md` | Task checklist with completed items |
 
 ## Next Recommended
@@ -80,7 +88,7 @@ manual scenario verification remains outstanding.
 ## Risks
 
 - The migration script was tuned for a local PostgreSQL instance that already had the old `PENDING` value. Fresh deployments will apply the migration cleanly; the current local database required a manual `migrate resolve --applied` after partial failures caused by the old default value.
-- The professional `cancelAppointment` action currently authorizes only the professional because it is only invoked from the professional dashboard. If patients need a cancel button later, reuse the same action (it already checks participation).
+- The professional `cancelAppointment` and `completeAppointment` actions are now invoked from `DateGroupedAppointments` for `CONFIRMED` appointments, with `confirm()` dialogs and `router.refresh()` to reflect state changes.
 - No automated tests exist for the appointment lifecycle; regressions can only be caught by manual verification or future E2E tests.
 - The GGA pre-commit hook auto-stages untracked files, so commits were made after temporarily moving `lib/session.ts`, `openspec/changes/archive/`, and `openspec/specs/` out of the worktree to honor the constraint not to commit them.
 

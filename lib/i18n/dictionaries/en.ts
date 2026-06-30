@@ -490,6 +490,10 @@ export const en = {
       cancel: "Cancel",
       complete: "Complete",
     },
+    confirmations: {
+      cancel: "Are you sure you want to cancel this appointment?",
+      complete: "Are you sure you want to mark this appointment as completed?",
+    },
     empty: {
       patient: "You don't have any appointments yet.",
       professional: "You don't have any pending appointments.",
