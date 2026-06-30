@@ -111,7 +111,9 @@ export async function getActivePatients(professionalId: string): Promise<number>
   return activePatientGroups.length;
 }
 
-export async function getAppointmentsThisWeekCount(): Promise<number> {
+export async function getAppointmentsThisWeekCount(
+  professionalId?: string
+): Promise<number> {
   const now = new Date();
   const dayOfWeek = now.getUTCDay();
   const startOfWeek = new Date(
@@ -141,6 +143,7 @@ export async function getAppointmentsThisWeekCount(): Promise<number> {
     where: {
       scheduledAt: { gte: startOfWeek, lte: endOfWeek },
       status: { not: AppointmentStatus.CANCELLED },
+      ...(professionalId ? { professionalId } : {}),
     },
   });
 }

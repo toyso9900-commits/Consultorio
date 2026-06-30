@@ -268,6 +268,7 @@ export const en = {
     professionalBadge: "Professional Dashboard",
     welcome: "Welcome, {name}",
     subtitle: "Manage your profile, appointments, and patients.",
+    businessSubtitle: "Manage your practice and patients.",
     pendingValidation:
       "Your account is pending validation by the Consultorio team. Once approved, you'll appear in the Expert Guide.",
     subscriptionInactiveTitle: "Your subscription is not active.",
@@ -278,14 +279,16 @@ export const en = {
     upcomingAppointments: "Upcoming appointments",
     activePatients: "Active patients",
     ratings: "Ratings",
-    hoursThisWeek: "Hours this week",
+    ratingCount: "{count} reviews",
+    appointmentsThisWeek: "Appointments this week",
     myProfessionalProfile: "My professional profile",
     licenseLabel: "Professional license",
     licenseNotRegistered: "Not registered",
     profileComingSoon:
       "Soon you'll be able to edit your specialty, bio, and prices.",
-    availability: "Availability",
-    availabilityDescription: "Set your schedules and care modalities.",
+    engagementTitle: "Recent activity",
+    engagementSubtitle: "Completed appointments in the last 30 days.",
+    engagementAppointments: "Appointments",
   },
   adminDashboard: {
     adminBadge: "Super Admin Panel",

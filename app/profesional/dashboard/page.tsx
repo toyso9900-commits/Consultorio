@@ -3,7 +3,9 @@ import { prisma } from "@/lib/prisma";
 import {
   getAppointmentDashboardCounts,
   getAppointmentsThisWeekCount,
+  getProfessionalEngagementData,
 } from "@/lib/appointments";
+import { getProfessionalRating } from "@/lib/reviews";
 import {
   BadgeCheck,
   CalendarDays,
@@ -13,14 +15,14 @@ import {
   ClipboardList,
   Briefcase,
   Star,
-  Clock,
-  Mail,
   TrendingUp,
+  Mail,
 } from "lucide-react";
 import Link from "next/link";
 import { AdminRealtimeListener } from "@/components/admin/admin-realtime-listener";
 import { AdminStatsChart } from "@/components/admin/admin-stats-chart";
 import { ValidationActions } from "@/components/admin/validation-actions";
+import { EngagementChart } from "@/components/dashboard/engagement-chart";
 import { getLocale, getDictionary } from "@/lib/i18n/server";
 
 export default async function ProfessionalDashboardPage() {
@@ -245,6 +247,11 @@ export default async function ProfessionalDashboardPage() {
   const { upcoming: upcomingAppointmentsCount, activePatients: activePatientsCount } =
     await getAppointmentDashboardCounts(session!.user.id!, "PROFESSIONAL");
 
+  const { average: averageRating, count: ratingCount } =
+    await getProfessionalRating(session!.user.id!);
+
+  const engagementData = await getProfessionalEngagementData(session!.user.id!);
+
   const activeSubscription = await prisma.subscription.findFirst({
     where: {
       userId: session!.user.id,
@@ -262,8 +269,11 @@ export default async function ProfessionalDashboardPage() {
         take: 1,
       });
 
+  const professionalAppointmentsThisWeek =
+    await getAppointmentsThisWeekCount(session!.user.id);
+
   return (
-    <div>
+    <div data-role="professional">
       <div className="mb-8">
         <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-indigo-100 px-3 py-1 text-sm font-semibold text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300">
           <Briefcase className="h-4 w-4" />
@@ -277,6 +287,9 @@ export default async function ProfessionalDashboardPage() {
         </h1>
         <p className="mt-2 text-slate-600 dark:text-slate-400">
           {dictionary.professionalDashboard.subtitle}
+        </p>
+        <p className="mt-1 text-sm font-medium text-indigo-600 dark:text-indigo-400">
+          {dictionary.professionalDashboard.businessSubtitle}
         </p>
       </div>
 
@@ -321,7 +334,10 @@ export default async function ProfessionalDashboardPage() {
       )}
 
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+        <Link
+          href="/profesional/dashboard/citas"
+          className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition-all hover:border-indigo-300 hover:shadow-md dark:border-slate-800 dark:bg-slate-900 dark:hover:border-indigo-800"
+        >
           <div className="flex h-10 w-10 items-center justify-center rounded-full bg-indigo-100 dark:bg-indigo-950">
             <CalendarDays className="h-5 w-5 text-indigo-600" />
           </div>
@@ -331,10 +347,10 @@ export default async function ProfessionalDashboardPage() {
           <p className="text-2xl font-bold text-slate-900 dark:text-slate-100">
             {upcomingAppointmentsCount}
           </p>
-        </div>
+        </Link>
         <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-teal-100 dark:bg-teal-950">
-            <Users className="h-5 w-5 text-teal-600" />
+          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-950">
+            <Users className="h-5 w-5 text-blue-600" />
           </div>
           <p className="mt-4 text-sm text-slate-500 dark:text-slate-400">
             {dictionary.professionalDashboard.activePatients}
@@ -350,20 +366,50 @@ export default async function ProfessionalDashboardPage() {
           <p className="mt-4 text-sm text-slate-500 dark:text-slate-400">
             {dictionary.professionalDashboard.ratings}
           </p>
-          <p className="text-2xl font-bold text-slate-900 dark:text-slate-100">0</p>
+          <div className="flex items-end gap-2">
+            <p className="text-2xl font-bold text-slate-900 dark:text-slate-100">
+              {ratingCount > 0 ? averageRating.toFixed(1) : "0"}
+            </p>
+            {ratingCount > 0 && (
+              <p className="mb-1 text-xs text-slate-500 dark:text-slate-400">
+                {dictionary.professionalDashboard.ratingCount.replace(
+                  "{count}",
+                  String(ratingCount)
+                )}
+              </p>
+            )}
+          </div>
         </div>
         <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-rose-100 dark:bg-rose-950">
-            <Clock className="h-5 w-5 text-rose-600" />
+          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-950">
+            <CalendarDays className="h-5 w-5 text-blue-600" />
           </div>
           <p className="mt-4 text-sm text-slate-500 dark:text-slate-400">
-            {dictionary.professionalDashboard.hoursThisWeek}
+            {dictionary.professionalDashboard.appointmentsThisWeek}
           </p>
-          <p className="text-2xl font-bold text-slate-900 dark:text-slate-100">0</p>
+          <p className="text-2xl font-bold text-slate-900 dark:text-slate-100">
+            {professionalAppointmentsThisWeek}
+          </p>
         </div>
       </div>
 
       <div className="mt-8 grid gap-6 lg:grid-cols-2">
+        <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+          <div className="mb-4 flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-indigo-100 dark:bg-indigo-950">
+              <TrendingUp className="h-5 w-5 text-indigo-600" />
+            </div>
+            <div>
+              <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
+                {dictionary.professionalDashboard.engagementTitle}
+              </h2>
+              <p className="text-sm text-slate-500 dark:text-slate-400">
+                {dictionary.professionalDashboard.engagementSubtitle}
+              </p>
+            </div>
+          </div>
+          <EngagementChart data={engagementData} />
+        </div>
         <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
           <div className="mb-4 flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-indigo-100 dark:bg-indigo-950">
@@ -378,19 +424,6 @@ export default async function ProfessionalDashboardPage() {
             {professional?.licenseNumber ||
               dictionary.professionalDashboard.licenseNotRegistered}.{" "}
             {dictionary.professionalDashboard.profileComingSoon}
-          </p>
-        </div>
-        <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-          <div className="mb-4 flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-teal-100 dark:bg-teal-950">
-              <CalendarDays className="h-5 w-5 text-teal-600" />
-            </div>
-            <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
-              {dictionary.professionalDashboard.availability}
-            </h2>
-          </div>
-          <p className="text-slate-600 dark:text-slate-400">
-            {dictionary.professionalDashboard.availabilityDescription}
           </p>
         </div>
       </div>
