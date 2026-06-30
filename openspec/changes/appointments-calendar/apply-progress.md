@@ -52,7 +52,7 @@ outstanding.
 | 2 | `feature/appointments-calendar-pr2` | `feature/appointments-calendar-pr1` | Patient request flow, request modal, appointment card, patient UI, i18n | `5bfa93d` |
 | 3 | `feature/appointments-calendar-pr3` | `feature/appointments-calendar-pr2` | Professional response actions, request list, professional citas page | `5013f17` |
 | 4 | `feature/appointments-calendar-pr4` | `feature/appointments-calendar-pr3` | Date-grouped calendar, dashboard counts, build verification | `319128a` |
-| 4a | `feature/appointments-calendar-pr4` | `feature/appointments-calendar-pr3` | Remediation: professional Cancel/Complete UI controls with i18n | `pending` |
+| 4a | `feature/appointments-calendar-pr4` | `feature/appointments-calendar-pr3` | Remediation: professional Cancel/Complete UI controls with i18n | `dea70fc` |
 
 ## Artifacts
 
@@ -84,6 +84,10 @@ outstanding.
 ## Next Recommended
 
 `sdd-verify` — run the verification phase and execute the remaining manual scenarios.
+
+## Re-verification
+
+Re-ran `npm run typecheck`, `npm run lint`, and `npm run build` on `feature/appointments-calendar-pr4` after the remediation; all gates pass. The professional Cancel and Complete buttons are rendered for `CONFIRMED` appointments in `DateGroupedAppointments`, invoke the matching server actions, show `confirm()` dialogs driven by i18n keys, and call `router.refresh()` on success.
 
 ## Risks
 

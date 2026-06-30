@@ -5,11 +5,11 @@
 **Final branch**: `feature/appointments-calendar-pr4`  
 **Base chain**: `feature/appointments-calendar-pr4` → `pr3` → `pr2` → `pr1` → `feature/landing-destacados-pr3`  
 **Mode**: Standard (Strict TDD inactive; no test runner configured)  
-**Report date**: 2026-06-29  
+**Report date**: 2026-06-29 (re-verified same day)  
 
-## Verdict: FAIL (remediated)
+## Verdict: FAIL (remediated, re-verified)
 
-Automated quality gates (`typecheck`, `lint`, `build`) pass, the data model rename is in place, and most UI surfaces are wired to real data. The focused remediation in PR4a wired the professional `cancelAppointment` and `completeAppointment` server actions into the date-grouped appointments list with confirmation dialogs and i18n keys. The remaining blocker is the manual scenario task **6.3**, which is still unchecked and unexecuted; without runtime evidence, the slice cannot be archived.
+Automated quality gates (`typecheck`, `lint`, `build`) still pass after the focused remediation. The professional `cancelAppointment` and `completeAppointment` server actions are invoked from `DateGroupedAppointments` for `CONFIRMED` appointments with confirmation dialogs and i18n keys. The remaining blocker is the manual scenario task **6.3**, which is still unchecked and unexecuted; without runtime evidence, the slice cannot be archived.
 
 ## Remediation Applied
 
@@ -56,7 +56,7 @@ Automated quality gates (`typecheck`, `lint`, `build`) pass, the data model rena
 > tsc --noEmit
 ```
 
-Result: **PASS** (exit 0, no errors).
+Result: **PASS** (exit 0, no errors; re-verified).
 
 ### `npm run lint`
 
@@ -65,7 +65,7 @@ Result: **PASS** (exit 0, no errors).
 > eslint
 ```
 
-Result: **PASS** (exit 0, no errors or warnings).
+Result: **PASS** (exit 0, no errors or warnings; re-verified).
 
 ### `npm run build`
 
@@ -77,9 +77,9 @@ Result: **PASS** (exit 0, no errors or warnings).
 - Environments: .env
 
   Creating an optimized production build ...
-✓ Compiled successfully in 17.6s
+✓ Compiled successfully in 12.5s
   Running TypeScript ...
-  Finished TypeScript in 16.1s ...
+  Finished TypeScript in 15.8s ...
   Collecting page data using 7 workers ...
   Generating static pages using 7 workers (0/26) ...
   Generating static pages using 7 workers (6/26)
@@ -117,7 +117,7 @@ Route (app)
 └ ƒ /register
 ```
 
-Result: **PASS** (exit 0, all routes generated).
+Result: **PASS** (exit 0, all routes generated; re-verified).
 
 ## Spec Compliance Matrix
 
@@ -179,8 +179,8 @@ Result: **PASS** (exit 0, all routes generated).
 4. **Patient dashboard count includes `REQUESTED` appointments**  
    Spec scenario REQ-008 says "two upcoming confirmed appointments" should show `2`. The implementation in `lib/appointments.ts` counts both `REQUESTED` and `CONFIRMED` for patients. This is a minor semantic deviation, though it matches the "Próximas citas" label.
 
-5. **Untracked `lib/session.ts` in working tree**  
-   `lib/session.ts` is untracked and not part of any branch. It was reportedly moved out during commits to avoid the GGA pre-commit hook auto-staging it. It should either be removed, added to `.gitignore`, or committed if it is intentional source code.
+5. **`lib/session.ts` tracked in current branch**  
+   `lib/session.ts` is now tracked in `feature/appointments-calendar-pr4` (introduced by the same commit as the remediation). It is outside the intended scope of this slice and should be reviewed: remove it, add it to `.gitignore`, or commit it intentionally in its own change before merging. Do not commit it as part of this appointment slice.
 
 ### SUGGESTION
 
@@ -206,7 +206,7 @@ Before this slice can be archived, the following must be completed:
    - Professional completes a confirmed appointment → status becomes `COMPLETED`.
    - Language switch to English updates appointment labels.
    - Dashboard stat cards reflect real counts.
-2. Decide the fate of untracked `lib/session.ts` (remove, ignore, or commit).
+2. Decide the fate of tracked `lib/session.ts` (remove, ignore, or commit intentionally).
 3. (Optional) Add explicit backfill comment or statement to the migration for clarity.
 
 ## PR Boundaries Verified
