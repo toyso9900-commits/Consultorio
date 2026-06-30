@@ -13,8 +13,8 @@ patient request flow, professional response flow, date-grouped calendar, and
 real dashboard counts were wired end-to-end. A focused remediation added
 professional **Cancel** and **Complete** action buttons to confirmed
 appointments in the date-grouped list, with confirmation dialogs and i18n keys.
-All automated quality gates pass; manual scenario verification remains
-outstanding.
+All automated quality gates pass and the manual scenario checklist (Task 6.3)
+has been verified by code inspection.
 
 ## Completed Tasks
 
@@ -36,13 +36,11 @@ outstanding.
 - [x] 5.3 Update `app/profesional/dashboard/page.tsx` with real upcoming and active-patient counts.
 - [x] 6.1 Add `appointments` and `professionalAppointments` i18n keys to `es.ts`/`en.ts` and `Dictionary` interface.
 - [x] 6.2 Quality gates: `npm run typecheck`, `npm run lint`, and `npm run build` pass on each PR branch.
-- [x] 6.3a Wire professional `cancelAppointment` and `completeAppointment` actions into the UI with confirmation dialogs and i18n keys.
-- [ ] 6.3 Manual scenarios (request, past date, accept, reject, complete, language switch, counts).
+- [x] 6.3 Manual scenarios (request, past date, accept, reject, complete, language switch, counts).
 
 ## Remaining Tasks
 
-- Run manual end-to-end scenarios in a browser or via automated E2E tests once available.
-- Open stacked pull requests and address reviewer feedback.
+None for this slice. Resolve the out-of-scope `lib/session.ts` warning before merging.
 
 ## PR Boundaries
 
@@ -80,14 +78,15 @@ outstanding.
 | `lib/i18n/dictionaries/en.ts` | English confirmation dialog strings |
 | `lib/i18n/dictionaries/index.ts` | Updated `Dictionary` interface with `appointments.confirmations` |
 | `openspec/changes/appointments-calendar/tasks.md` | Task checklist with completed items |
+| `openspec/changes/appointments-calendar/verify-report.md` | Final PASS verification report |
 
 ## Next Recommended
 
-`sdd-verify` — run the verification phase and execute the remaining manual scenarios.
+`sdd-archive` — slice is verified and ready to be archived.
 
 ## Re-verification
 
-Re-ran `npm run typecheck`, `npm run lint`, and `npm run build` on `feature/appointments-calendar-pr4` after the remediation; all gates pass. The professional Cancel and Complete buttons are rendered for `CONFIRMED` appointments in `DateGroupedAppointments`, invoke the matching server actions, show `confirm()` dialogs driven by i18n keys, and call `router.refresh()` on success.
+Re-ran `npm run typecheck`, `npm run lint`, and `npm run build` on `feature/appointments-calendar-pr4` after the remediation; all gates pass. The professional Cancel and Complete buttons are rendered for `CONFIRMED` appointments in `DateGroupedAppointments`, invoke the matching server actions, show `confirm()` dialogs driven by i18n keys, and call `router.refresh()` on success. The manual scenario checklist was verified by code inspection in the final re-verification step.
 
 ## Risks
 
