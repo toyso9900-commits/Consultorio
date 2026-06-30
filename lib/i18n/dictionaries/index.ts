@@ -105,6 +105,23 @@ export interface Dictionary {
   userActions: Record<keyof typeof es.userActions, string>;
   validationActions: Record<keyof typeof es.validationActions, string>;
   chart: Record<keyof typeof es.chart, string>;
+  appointments: {
+    request: {
+      title: string;
+      date: string;
+      time: string;
+      notes: string;
+      notesHint: string;
+      submit: string;
+      submitting: string;
+      success: string;
+    };
+    status: Record<keyof typeof es.appointments.status, string>;
+    actions: Record<keyof typeof es.appointments.actions, string>;
+    empty: Record<keyof typeof es.appointments.empty, string>;
+    errors: Record<keyof typeof es.appointments.errors, string>;
+    sections: Record<keyof typeof es.appointments.sections, string>;
+  };
 }
 
 export const dictionaries: Record<Locale, Dictionary> = { es, en };

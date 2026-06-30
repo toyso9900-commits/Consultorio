@@ -462,4 +462,41 @@ export const es = {
     sat: "Sáb",
     sun: "Dom",
   },
+  appointments: {
+    request: {
+      title: "Solicitar turno",
+      date: "Fecha",
+      time: "Hora",
+      notes: "Motivo o nota (opcional)",
+      notesHint: "Máximo 500 caracteres",
+      submit: "Solicitar turno",
+      submitting: "Solicitando...",
+      success: "Turno solicitado correctamente.",
+    },
+    status: {
+      REQUESTED: "Solicitada",
+      CONFIRMED: "Confirmada",
+      CANCELLED: "Cancelada",
+      COMPLETED: "Completada",
+    },
+    actions: {
+      accept: "Aceptar",
+      reject: "Rechazar",
+      cancel: "Cancelar",
+      complete: "Completar",
+    },
+    empty: {
+      patient: "No tenés citas agendadas todavía.",
+      professional: "No tenés turnos pendientes.",
+    },
+    errors: {
+      pastDate: "La fecha y hora deben ser futuras.",
+      invalidTransition: "No se puede cambiar el estado de este turno.",
+      unauthorized: "No tenés permiso para realizar esta acción.",
+    },
+    sections: {
+      requests: "Solicitudes pendientes",
+      upcoming: "Próximos turnos",
+    },
+  },
 } as const;

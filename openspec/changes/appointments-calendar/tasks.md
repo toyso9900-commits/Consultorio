@@ -34,21 +34,21 @@ Chain strategy: stacked-to-main
 
 ## Phase 2: Server Actions
 
-- [ ] **2.1 Patient request** — `app/paciente/dashboard/appointment-actions.ts` (~80). Validate patient, validated prof, future date, notes ≤500; revalidate. Deps: 1.4. AC: creates `REQUESTED`.
+- [x] **2.1 Patient request** — `app/paciente/dashboard/appointment-actions.ts` (~80). Validate patient, validated prof, future date, notes ≤500; revalidate. Deps: 1.4. AC: creates `REQUESTED`.
 - [ ] **2.2 Professional response** — `app/profesional/dashboard/appointment-actions.ts` (~130). Accept/reject/cancel/complete; authorize prof. Deps: 1.3, 1.4. AC: transitions match spec.
 
 ## Phase 3: Components
 
-- [ ] **3.1 Request modal** — `components/appointments/appointment-request-modal.tsx` (~120). Date/time/notes; submit via 2.1. Deps: 2.1. AC: opens from profile, rejects past dates.
-- [ ] **3.2 Appointment card** — `components/appointments/appointment-card.tsx` (~60). Badge, date/time, name, notes. Deps: none. AC: renders all statuses.
+- [x] **3.1 Request modal** — `components/appointments/appointment-request-modal.tsx` (~120). Date/time/notes; submit via 2.1. Deps: 2.1. AC: opens from profile, rejects past dates.
+- [x] **3.2 Appointment card** — `components/appointments/appointment-card.tsx` (~60). Badge, date/time, name, notes. Deps: none. AC: renders all statuses.
 - [ ] **3.3 Request list** — `components/appointments/appointment-request-list.tsx` (~100). `REQUESTED` list with Accept/Reject. Deps: 2.2, 3.2. AC: sorted; actions wired.
 - [ ] **3.4 Date-grouped list** — `components/appointments/date-grouped-appointments.tsx` (~80). Groups `CONFIRMED`/`COMPLETED` by date. Deps: 3.2. AC: groups/sorts.
 
 ## Phase 4: Patient UI
 
-- [ ] **4.1 Schedule button** — `app/profesional/[id]/page.tsx` (~15). Enable Agendar; open 3.1. Deps: 3.1. AC: patient can request.
-- [ ] **4.2 Appointments page** — `app/paciente/dashboard/citas/page.tsx` (~50). Real list via 3.2. Deps: 1.4, 3.2. AC: sorted by date/time.
-- [ ] **4.3 Dashboard count** — `app/paciente/dashboard/page.tsx` (~10). Real upcoming count. Deps: 1.4. AC: real value.
+- [x] **4.1 Schedule button** — `app/profesional/[id]/page.tsx` (~15). Enable Agendar; open 3.1. Deps: 3.1. AC: patient can request.
+- [x] **4.2 Appointments page** — `app/paciente/dashboard/citas/page.tsx` (~50). Real list via 3.2. Deps: 1.4, 3.2. AC: sorted by date/time.
+- [x] **4.3 Dashboard count** — `app/paciente/dashboard/page.tsx` (~10). Real upcoming count. Deps: 1.4. AC: real value.
 
 ## Phase 5: Professional UI
 

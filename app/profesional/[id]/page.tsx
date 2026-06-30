@@ -2,8 +2,11 @@ import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { ArrowLeft, Calendar, Shield } from "lucide-react";
+import { auth } from "@/lib/auth";
 import { getApprovedProfessionalById } from "@/lib/professionals-db";
+import { getLocale, getDictionary } from "@/lib/i18n/server";
 import { ChatButton } from "@/components/chat/chat-button";
+import { AppointmentRequestModal } from "@/components/appointments/appointment-request-modal";
 
 export default async function ProfessionalDetailPage({
   params,
@@ -12,10 +15,15 @@ export default async function ProfessionalDetailPage({
 }) {
   const { id } = await params;
   const prof = await getApprovedProfessionalById(id);
+  const session = await auth();
+  const locale = await getLocale(session?.user?.id);
+  const dictionary = await getDictionary(locale);
 
   if (!prof) {
     notFound();
   }
+
+  const isPatient = session?.user?.role === "PATIENT";
 
   return (
     <main className="mx-auto max-w-4xl flex-1 px-6 py-12">
@@ -81,13 +89,22 @@ export default async function ProfessionalDetailPage({
             </div>
             <div className="flex w-full gap-3 sm:w-auto">
               <ChatButton professionalId={prof.id} professionalName={prof.name} />
-              <button
-                disabled
-                className="inline-flex flex-1 items-center justify-center gap-2 rounded-full bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white opacity-60 sm:flex-none"
-              >
-                <Calendar className="h-4 w-4" />
-                Agendar (próximamente)
-              </button>
+              {isPatient ? (
+                <AppointmentRequestModal
+                  professionalId={prof.id}
+                  professionalName={prof.name}
+                  locale={locale}
+                  dictionary={dictionary}
+                />
+              ) : (
+                <button
+                  disabled
+                  className="inline-flex flex-1 items-center justify-center gap-2 rounded-full bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white opacity-60 sm:flex-none"
+                >
+                  <Calendar className="h-4 w-4" />
+                  Agendar (próximamente)
+                </button>
+              )}
             </div>
           </div>
         </div>

@@ -1,6 +1,7 @@
 import { auth } from "@/lib/auth";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
+import { getAppointmentDashboardCounts } from "@/lib/appointments";
 import {
   Activity,
   Apple,
@@ -24,6 +25,9 @@ export default async function PatientDashboardPage() {
   const patientProfile = await prisma.patientProfile.findUnique({
     where: { userId },
   });
+
+  const { upcoming: upcomingAppointmentsCount } =
+    await getAppointmentDashboardCounts(userId, "PATIENT");
 
   const needsOnboarding =
     !patientProfile ||
@@ -76,7 +80,9 @@ export default async function PatientDashboardPage() {
           <p className="mt-4 text-sm text-slate-500 dark:text-slate-400">
             {dictionary.patientHome.upcomingAppointments}
           </p>
-          <p className="text-2xl font-bold text-slate-900 dark:text-slate-100">0</p>
+          <p className="text-2xl font-bold text-slate-900 dark:text-slate-100">
+            {upcomingAppointmentsCount}
+          </p>
         </div>
         <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
           <div className="flex h-10 w-10 items-center justify-center rounded-full bg-rose-100 dark:bg-rose-950">

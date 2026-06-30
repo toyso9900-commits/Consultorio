@@ -463,4 +463,41 @@ export const en = {
     sat: "Sat",
     sun: "Sun",
   },
+  appointments: {
+    request: {
+      title: "Request appointment",
+      date: "Date",
+      time: "Time",
+      notes: "Reason or note (optional)",
+      notesHint: "Maximum 500 characters",
+      submit: "Request appointment",
+      submitting: "Requesting...",
+      success: "Appointment requested successfully.",
+    },
+    status: {
+      REQUESTED: "Requested",
+      CONFIRMED: "Confirmed",
+      CANCELLED: "Cancelled",
+      COMPLETED: "Completed",
+    },
+    actions: {
+      accept: "Accept",
+      reject: "Reject",
+      cancel: "Cancel",
+      complete: "Complete",
+    },
+    empty: {
+      patient: "You don't have any appointments yet.",
+      professional: "You don't have any pending appointments.",
+    },
+    errors: {
+      pastDate: "The date and time must be in the future.",
+      invalidTransition: "This appointment status cannot be changed.",
+      unauthorized: "You don't have permission to perform this action.",
+    },
+    sections: {
+      requests: "Pending requests",
+      upcoming: "Upcoming appointments",
+    },
+  },
 } as const;
