@@ -70,6 +70,7 @@ export interface Dictionary {
   adminValidations: Record<keyof typeof es.adminValidations, string>;
   adminAppointments: Record<keyof typeof es.adminAppointments, string>;
   adminReviews: Record<keyof typeof es.adminReviews, string>;
+  professionalAppointments: Record<keyof typeof es.professionalAppointments, string>;
   professionalProfile: Record<keyof typeof es.professionalProfile, string>;
   professionalClients: Record<keyof typeof es.professionalClients, string>;
   professionalMessages: Record<keyof typeof es.professionalMessages, string>;

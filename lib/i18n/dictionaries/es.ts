@@ -338,6 +338,10 @@ export const es = {
     emptySubtitle:
       "Mientras tanto, los mensajes directos entre pacientes y profesionales siguen activos.",
   },
+  professionalAppointments: {
+    title: "Citas",
+    description: "Administrá tus solicitudes y próximos turnos.",
+  },
   professionalProfile: {
     title: "Mi perfil",
     subtitle: "Editá cómo te ven los pacientes.",

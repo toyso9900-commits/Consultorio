@@ -339,6 +339,10 @@ export const en = {
     emptySubtitle:
       "In the meantime, direct messages between patients and professionals remain active.",
   },
+  professionalAppointments: {
+    title: "Appointments",
+    description: "Manage your requests and upcoming appointments.",
+  },
   professionalProfile: {
     title: "My profile",
     subtitle: "Edit how patients see you.",

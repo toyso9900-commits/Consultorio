@@ -35,13 +35,13 @@ Chain strategy: stacked-to-main
 ## Phase 2: Server Actions
 
 - [x] **2.1 Patient request** — `app/paciente/dashboard/appointment-actions.ts` (~80). Validate patient, validated prof, future date, notes ≤500; revalidate. Deps: 1.4. AC: creates `REQUESTED`.
-- [ ] **2.2 Professional response** — `app/profesional/dashboard/appointment-actions.ts` (~130). Accept/reject/cancel/complete; authorize prof. Deps: 1.3, 1.4. AC: transitions match spec.
+- [x] **2.2 Professional response** — `app/profesional/dashboard/appointment-actions.ts` (~130). Accept/reject/cancel/complete; authorize prof. Deps: 1.3, 1.4. AC: transitions match spec.
 
 ## Phase 3: Components
 
 - [x] **3.1 Request modal** — `components/appointments/appointment-request-modal.tsx` (~120). Date/time/notes; submit via 2.1. Deps: 2.1. AC: opens from profile, rejects past dates.
 - [x] **3.2 Appointment card** — `components/appointments/appointment-card.tsx` (~60). Badge, date/time, name, notes. Deps: none. AC: renders all statuses.
-- [ ] **3.3 Request list** — `components/appointments/appointment-request-list.tsx` (~100). `REQUESTED` list with Accept/Reject. Deps: 2.2, 3.2. AC: sorted; actions wired.
+- [x] **3.3 Request list** — `components/appointments/appointment-request-list.tsx` (~100). `REQUESTED` list with Accept/Reject. Deps: 2.2, 3.2. AC: sorted; actions wired.
 - [ ] **3.4 Date-grouped list** — `components/appointments/date-grouped-appointments.tsx` (~80). Groups `CONFIRMED`/`COMPLETED` by date. Deps: 3.2. AC: groups/sorts.
 
 ## Phase 4: Patient UI
@@ -52,7 +52,7 @@ Chain strategy: stacked-to-main
 
 ## Phase 5: Professional UI
 
-- [ ] **5.1 Requests page** — `app/profesional/dashboard/citas/page.tsx` (~60). Render 3.3. Deps: 2.2, 3.3. AC: requests visible.
+- [x] **5.1 Requests page** — `app/profesional/dashboard/citas/page.tsx` (~60). Render 3.3. Deps: 2.2, 3.3. AC: requests visible.
 - [ ] **5.2 Upcoming grouping** — `app/profesional/dashboard/citas/page.tsx` (~30). Render 3.4 below requests. Deps: 3.4, 5.1. AC: grouped by date.
 - [ ] **5.3 Dashboard counts** — `app/profesional/dashboard/page.tsx` (~25). Real upcoming + active patients. Deps: 1.4. AC: real values.
 
