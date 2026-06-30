@@ -392,11 +392,16 @@ export const es = {
   },
   professionalClients: {
     title: "Clientes",
-    description: "Lista de pacientes que han contactado o agendado con vos.",
+    description: "Lista de pacientes que han agendado o se han comunicado con vos.",
     conversations: "Conversaciones",
     empty:
-      "No tenés clientes registrados todavía. Cuando un paciente te contacte, aparecerá acá.",
+      "No tenés clientes registrados todavía. Cuando un paciente agende o te contacte, aparecerá acá.",
     unidentified: "No se pudo identificar al usuario.",
+    noName: "Sin nombre",
+    noAppointment: "Sin citas",
+    activeSubscription: "Suscripción activa",
+    noActiveSubscription: "Sin suscripción activa",
+    message: "Mensaje",
   },
   professionalMessages: {
     conversations: "Conversaciones",

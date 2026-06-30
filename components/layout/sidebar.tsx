@@ -48,7 +48,6 @@ const navigation: Record<UserRole, NavItem[]> = {
     { label: (d) => d.nav.clients, href: "/profesional/dashboard/clientes", icon: Users, badge: 0 },
     { label: (d) => d.nav.subscription, href: "/profesional/dashboard/suscripcion", icon: CreditCard },
     { label: (d) => d.nav.appointments, href: "/profesional/dashboard/citas", icon: CalendarDays },
-    { label: (d) => d.nav.messages, href: "/profesional/dashboard/mensajes", icon: MessageSquare },
   ],
   PATIENT: [
     { label: (d) => d.nav.home, href: "/paciente/dashboard", icon: LayoutDashboard },

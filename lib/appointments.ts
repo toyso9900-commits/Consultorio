@@ -111,6 +111,72 @@ export async function getActivePatients(professionalId: string): Promise<number>
   return activePatientGroups.length;
 }
 
+export interface ProfessionalClient {
+  patientId: string;
+  name: string | null;
+  image: string | null;
+  hasActivePaidSubscription: boolean;
+  lastAppointment: Date | null;
+}
+
+export async function getProfessionalClients(
+  professionalId: string
+): Promise<ProfessionalClient[]> {
+  const appointments = await prisma.appointment.findMany({
+    where: { professionalId },
+    select: {
+      patientId: true,
+      scheduledAt: true,
+      patient: {
+        select: {
+          id: true,
+          name: true,
+          image: true,
+          subscriptions: {
+            where: {
+              status: "ACTIVE",
+              plan: "PREMIUM",
+            },
+            select: { id: true },
+            take: 1,
+          },
+        },
+      },
+    },
+    orderBy: { scheduledAt: "desc" },
+  });
+
+  const clientMap = new Map<string, ProfessionalClient>();
+
+  for (const appointment of appointments) {
+    const existing = clientMap.get(appointment.patientId);
+
+    if (existing) {
+      if (
+        !existing.lastAppointment ||
+        appointment.scheduledAt > existing.lastAppointment
+      ) {
+        existing.lastAppointment = appointment.scheduledAt;
+      }
+    } else {
+      clientMap.set(appointment.patientId, {
+        patientId: appointment.patient.id,
+        name: appointment.patient.name,
+        image: appointment.patient.image,
+        hasActivePaidSubscription:
+          appointment.patient.subscriptions.length > 0,
+        lastAppointment: appointment.scheduledAt,
+      });
+    }
+  }
+
+  return Array.from(clientMap.values()).sort((a, b) => {
+    if (!a.lastAppointment) return 1;
+    if (!b.lastAppointment) return -1;
+    return b.lastAppointment.getTime() - a.lastAppointment.getTime();
+  });
+}
+
 export async function getAppointmentsThisWeekCount(
   professionalId?: string
 ): Promise<number> {
