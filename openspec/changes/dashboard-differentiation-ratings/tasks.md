@@ -46,12 +46,12 @@ Chain strategy: stacked-to-main
 
 ## Phase 3: Professional Dashboard Differentiation
 
-| ID | Title | Description | Affected files | Lines | Dependencies | Acceptance criteria |
-|----|-------|-------------|----------------|-------|--------------|---------------------|
-| 3.1 | Theme professional dashboard | Apply indigo/blue tokens and business greeting | `app/profesional/dashboard/page.tsx`, `lib/i18n/dictionaries/*` | 60 | 1.5 | Page uses role variables and updated copy |
-| 3.2 | Engagement chart and card | Replace "Horario de esta semana" with weekly appointments and `EngagementChart` | `app/profesional/dashboard/page.tsx`, `components/dashboard/engagement-chart.tsx`, `lib/appointments.ts` | 80 | 1.4, 3.1 | Hours card removed; bar chart renders |
-| 3.3 | Real stat counts | Wire real average rating and active patient counts | `app/profesional/dashboard/page.tsx`, `lib/reviews.ts`, `lib/appointments.ts` | 40 | 1.3, 1.4 | Cards display computed values or zero state |
-| 3.4 | Clickable appointments card | Make "Próximas citas" card navigate to sorted list | `app/profesional/dashboard/page.tsx`, `app/profesional/dashboard/citas/page.tsx` | 20 | 3.1 | Click navigates to `/profesional/dashboard/citas` sorted ascending |
+| ID | Title | Description | Affected files | Lines | Dependencies | Acceptance criteria | Status |
+|----|-------|-------------|----------------|-------|--------------|---------------------|--------|
+| 3.1 | Theme professional dashboard | Apply indigo/blue tokens and business greeting | `app/profesional/dashboard/page.tsx`, `lib/i18n/dictionaries/*` | 60 | 1.5 | Page uses role variables and updated copy | [x] |
+| 3.2 | Engagement chart and card | Replace "Horario de esta semana" with weekly appointments and `EngagementChart` | `app/profesional/dashboard/page.tsx`, `components/dashboard/engagement-chart.tsx`, `lib/appointments.ts` | 80 | 1.4, 3.1 | Hours card removed; bar chart renders | [x] |
+| 3.3 | Real stat counts | Wire real average rating and active patient counts | `app/profesional/dashboard/page.tsx`, `lib/reviews.ts`, `lib/appointments.ts` | 40 | 1.3, 1.4 | Cards display computed values or zero state | [x] |
+| 3.4 | Clickable appointments card | Make "Próximas citas" card navigate to sorted list | `app/profesional/dashboard/page.tsx`, `app/profesional/dashboard/citas/page.tsx` | 20 | 3.1 | Click navigates to `/profesional/dashboard/citas` sorted ascending | [x] |
 
 ## Phase 4: Rating Flow & Client List
 
