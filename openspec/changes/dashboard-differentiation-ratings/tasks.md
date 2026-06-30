@@ -37,12 +37,12 @@ Chain strategy: stacked-to-main
 
 ## Phase 2: Patient Dashboard Differentiation
 
-| ID | Title | Description | Affected files | Lines | Dependencies | Acceptance criteria |
-|----|-------|-------------|----------------|-------|--------------|---------------------|
-| 2.1 | Theme patient dashboard | Apply emerald/teal tokens, wellness greeting, quick actions | `app/paciente/dashboard/page.tsx`, `lib/i18n/dictionaries/*` | 60 | 1.5 | Page uses role variables and updated copy |
-| 2.2 | Integrate weight chart | Fetch history and render `WeightChart` with empty state | `app/paciente/dashboard/page.tsx`, `components/dashboard/weight-chart.tsx`, `lib/weight.ts` | 80 | 1.2, 2.1 | Chart renders history or empty prompt |
-| 2.3 | Wire weight recording | Call `recordWeight` on onboarding and profile saves | `app/paciente/dashboard/actions.ts`, `app/paciente/dashboard/perfil/actions.ts` | 20 | 1.2 | Each save creates a `WeightEntry` |
-| 2.4 | Add rating prompt | Show `RatingPrompt` on dashboard and `/citas` for pending reviews | `app/paciente/dashboard/page.tsx`, `app/paciente/dashboard/citas/page.tsx`, `components/rating/rating-prompt.tsx` | 70 | 1.3, 2.1 | Prompt appears for completed unreviewed appointments |
+| ID | Title | Description | Affected files | Lines | Dependencies | Acceptance criteria | Status |
+|----|-------|-------------|----------------|-------|--------------|---------------------|--------|
+| 2.1 | Theme patient dashboard | Apply emerald/teal tokens, wellness greeting, quick actions | `app/paciente/dashboard/page.tsx`, `lib/i18n/dictionaries/*` | 60 | 1.5 | Page uses role variables and updated copy | [x] |
+| 2.2 | Integrate weight chart | Fetch history and render `WeightChart` with empty state | `app/paciente/dashboard/page.tsx`, `components/dashboard/weight-chart.tsx`, `lib/weight.ts` | 80 | 1.2, 2.1 | Chart renders history or empty prompt | [x] |
+| 2.3 | Wire weight recording | Call `recordWeight` on onboarding and profile saves | `app/paciente/dashboard/actions.ts`, `app/paciente/dashboard/perfil/actions.ts` | 20 | 1.2 | Each save creates a `WeightEntry` | [x] |
+| 2.4 | Add rating prompt | Show `RatingPrompt` on dashboard and `/citas` for pending reviews | `app/paciente/dashboard/page.tsx`, `app/paciente/dashboard/citas/page.tsx`, `components/rating/rating-prompt.tsx` | 70 | 1.3, 2.1 | Prompt appears for completed unreviewed appointments | [x] |
 
 ## Phase 3: Professional Dashboard Differentiation
 
