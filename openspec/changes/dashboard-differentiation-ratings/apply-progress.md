@@ -5,11 +5,11 @@
 **Mode**: Standard (Strict TDD inactive; no test runner configured)  
 **Artifact store**: OpenSpec + Engram  
 **Start branch**: `feature/appointments-calendar-pr4`  
-**Current branch**: `feature/dashboard-differentiation-ratings-pr3`
+**Current branch**: `feature/dashboard-differentiation-ratings-pr4`
 
 ## Executive Summary
 
-Completed PR 1 (foundation), PR 2 (patient dashboard differentiation), and PR 3 (professional dashboard differentiation). All dashboards now use role-specific themes, real metrics, and charts; the rating prompt and weight chart are live on the patient side, and the professional side shows real active-patient counts, average rating, weekly appointments, and an engagement bar chart.
+All four stacked PRs of Slice 4 are complete and verified. The foundation (schema, helpers, role CSS variables), patient dashboard differentiation (emerald/teal theme, weight chart, rating prompt), professional dashboard differentiation (indigo/blue theme, engagement chart, real stats), and ratings/clients cleanup (rating form component, client list rewrite, sidebar cleanup, i18n) have been implemented. All automated quality gates pass.
 
 ## Completed Tasks
 
@@ -26,15 +26,16 @@ Completed PR 1 (foundation), PR 2 (patient dashboard differentiation), and PR 3 
 - [x] 3.2 Engagement chart and card
 - [x] 3.3 Real stat counts
 - [x] 3.4 Clickable appointments card
+- [x] 4.1 Revalidate on completion
+- [x] 4.2 Rating form and submit
+- [x] 4.3 Rewrite client list
+- [x] 4.4 Update professional sidebar
+- [x] 5.1 Add i18n strings
+- [x] 5.2 Verify and close
 
 ## Remaining Tasks
 
-- [ ] 4.1 Revalidate on completion
-- [ ] 4.2 Rating form and submit
-- [ ] 4.3 Rewrite client list
-- [ ] 4.4 Update professional sidebar
-- [ ] 5.1 Add i18n strings
-- [ ] 5.2 Verify and close
+None. Ready for `sdd-verify`.
 
 ## PR Boundaries
 
@@ -43,7 +44,7 @@ Completed PR 1 (foundation), PR 2 (patient dashboard differentiation), and PR 3 
 | 1 | `feature/dashboard-differentiation-ratings-pr1` | `feature/appointments-calendar-pr4` | Schema, helpers, role CSS | ✅ committed |
 | 2 | `feature/dashboard-differentiation-ratings-pr2` | `feature/dashboard-differentiation-ratings-pr1` | Patient dashboard theme, weight chart, rating prompt | ✅ committed |
 | 3 | `feature/dashboard-differentiation-ratings-pr3` | `feature/dashboard-differentiation-ratings-pr2` | Professional dashboard theme, engagement chart, real stats | ✅ committed |
-| 4 | `feature/dashboard-differentiation-ratings-pr4` | `feature/dashboard-differentiation-ratings-pr3` | Rating form, client list, sidebar, i18n, verification | pending |
+| 4 | `feature/dashboard-differentiation-ratings-pr4` | `feature/dashboard-differentiation-ratings-pr3` | Rating form, client list, sidebar, i18n, verification | ✅ committed |
 
 ## Artifacts
 
@@ -53,7 +54,7 @@ Completed PR 1 (foundation), PR 2 (patient dashboard differentiation), and PR 3 
 | `prisma/migrations/20260630035337_add_weight_entry/migration.sql` | Create | Migration for `WeightEntry` table, index, and FK |
 | `lib/weight.ts` | Create | `recordWeight`, `getWeightHistory` helpers (server actions) |
 | `lib/reviews.ts` | Create | `getProfessionalRating`, `getPendingReviewsForPatient`, `submitReview` (server actions) |
-| `lib/appointments.ts` | Modify | `getActivePatients`, `getProfessionalEngagementData`, updated dashboard counts, optional professional filter for weekly count |
+| `lib/appointments.ts` | Modify | `getActivePatients`, `getProfessionalEngagementData`, `getProfessionalClients`, updated counts, optional professional filter for weekly count |
 | `app/globals.css` | Modify | Role CSS variables for emerald/teal and indigo/blue |
 | `app/paciente/dashboard/page.tsx` | Modify | Emerald/teal theme, weight chart, weight entry form, rating prompt |
 | `app/paciente/dashboard/citas/page.tsx` | Modify | Rating prompt, emerald icon theme |
@@ -61,16 +62,27 @@ Completed PR 1 (foundation), PR 2 (patient dashboard differentiation), and PR 3 
 | `app/paciente/dashboard/perfil/actions.ts` | Modify | Records `WeightEntry` on profile update |
 | `app/paciente/dashboard/weight-entry-form.tsx` | Create | Inline weight entry form |
 | `components/dashboard/weight-chart.tsx` | Create | Recharts area/line chart using role CSS variables |
-| `components/rating/rating-prompt.tsx` | Create | Dismissible pending-review prompt with star input + comment |
+| `components/rating/rating-prompt.tsx` | Create | Dismissible pending-review prompt |
+| `components/rating/rating-form.tsx` | Create | Reusable star input + comment rating form |
 | `app/profesional/dashboard/page.tsx` | Modify | Indigo/blue theme, engagement chart, real rating/active counts, clickable appointments card |
 | `components/dashboard/engagement-chart.tsx` | Create | Recharts bar chart for completed appointments over last 30 days |
-| `lib/i18n/dictionaries/es.ts` | Modify | New patient, rating, and professional dashboard strings |
-| `lib/i18n/dictionaries/en.ts` | Modify | New patient, rating, and professional dashboard strings |
+| `app/profesional/dashboard/clientes/page.tsx` | Modify | Patient list with subscription status, last appointment, message action |
+| `components/layout/sidebar.tsx` | Modify | Removed Messages from professional navigation |
+| `lib/i18n/dictionaries/es.ts` | Modify | New patient, rating, professional dashboard, and client strings |
+| `lib/i18n/dictionaries/en.ts` | Modify | New patient, rating, professional dashboard, and client strings |
 | `lib/i18n/dictionaries/index.ts` | Modify | Added `rating` namespace to `Dictionary` |
+
+## Verification
+
+| Command | Result |
+|---------|--------|
+| `npm run typecheck` | ✅ PASS |
+| `npm run lint` | ✅ PASS |
+| `npm run build` | ✅ PASS (26/26 static routes generated) |
 
 ## Next Recommended
 
-`sdd-apply` — continue with PR 4 (ratings, client list, sidebar, i18n, verification).
+`sdd-verify` — run the verification phase and execute the spec's manual checks.
 
 ## Risks
 
