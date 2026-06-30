@@ -5,11 +5,11 @@
 **Mode**: Standard (Strict TDD inactive; no test runner configured)  
 **Artifact store**: OpenSpec + Engram  
 **Start branch**: `feature/appointments-calendar-pr4`  
-**Current branch**: `feature/dashboard-differentiation-ratings-pr1`
+**Current branch**: `feature/dashboard-differentiation-ratings-pr2`
 
 ## Executive Summary
 
-Started the `sdd-apply` phase for Slice 4 and completed PR 1 (foundation). The `WeightEntry` model and migration were added, data-layer helpers for weight and reviews were created, appointment helpers were updated with real active-patient and engagement logic, and role-specific CSS variables were defined.
+Completed PR 1 (foundation) and PR 2 (patient dashboard differentiation). The `WeightEntry` model and migration are in place, data-layer helpers for weight/reviews/appointments are wired, role CSS variables are defined, and the patient dashboard now uses an emerald/teal wellness theme with a weight chart and rating prompt.
 
 ## Completed Tasks
 
@@ -18,13 +18,13 @@ Started the `sdd-apply` phase for Slice 4 and completed PR 1 (foundation). The `
 - [x] 1.3 Create review helpers
 - [x] 1.4 Update appointment helpers
 - [x] 1.5 Add role CSS variables
+- [x] 2.1 Theme patient dashboard
+- [x] 2.2 Integrate weight chart
+- [x] 2.3 Wire weight recording
+- [x] 2.4 Add rating prompt
 
 ## Remaining Tasks
 
-- [ ] 2.1 Theme patient dashboard
-- [ ] 2.2 Integrate weight chart
-- [ ] 2.3 Wire weight recording
-- [ ] 2.4 Add rating prompt
 - [ ] 3.1 Theme professional dashboard
 - [ ] 3.2 Engagement chart and card
 - [ ] 3.3 Real stat counts
@@ -41,7 +41,7 @@ Started the `sdd-apply` phase for Slice 4 and completed PR 1 (foundation). The `
 | PR | Branch | Base | Scope | Status |
 |----|--------|------|-------|--------|
 | 1 | `feature/dashboard-differentiation-ratings-pr1` | `feature/appointments-calendar-pr4` | Schema, helpers, role CSS | ✅ committed |
-| 2 | `feature/dashboard-differentiation-ratings-pr2` | `feature/dashboard-differentiation-ratings-pr1` | Patient dashboard theme, weight chart, rating prompt | pending |
+| 2 | `feature/dashboard-differentiation-ratings-pr2` | `feature/dashboard-differentiation-ratings-pr1` | Patient dashboard theme, weight chart, rating prompt | ✅ committed |
 | 3 | `feature/dashboard-differentiation-ratings-pr3` | `feature/dashboard-differentiation-ratings-pr2` | Professional dashboard theme, engagement chart, real stats | pending |
 | 4 | `feature/dashboard-differentiation-ratings-pr4` | `feature/dashboard-differentiation-ratings-pr3` | Rating form, client list, sidebar, i18n, verification | pending |
 
@@ -51,19 +51,30 @@ Started the `sdd-apply` phase for Slice 4 and completed PR 1 (foundation). The `
 |------|--------|-------------|
 | `prisma/schema.prisma` | Modify | Added `WeightEntry` model and `PatientProfile.weightEntries` relation |
 | `prisma/migrations/20260630035337_add_weight_entry/migration.sql` | Create | Migration for `WeightEntry` table, index, and FK |
-| `lib/weight.ts` | Create | `recordWeight` and `getWeightHistory` helpers |
-| `lib/reviews.ts` | Create | `getProfessionalRating`, `getPendingReviewsForPatient`, `submitReview` |
+| `lib/weight.ts` | Create | `recordWeight`, `getWeightHistory` helpers (server actions) |
+| `lib/reviews.ts` | Create | `getProfessionalRating`, `getPendingReviewsForPatient`, `submitReview` (server actions) |
 | `lib/appointments.ts` | Modify | `getActivePatients`, `getProfessionalEngagementData`, updated dashboard counts |
 | `app/globals.css` | Modify | Role CSS variables for emerald/teal and indigo/blue |
+| `app/paciente/dashboard/page.tsx` | Modify | Emerald/teal theme, weight chart, weight entry form, rating prompt |
+| `app/paciente/dashboard/citas/page.tsx` | Modify | Rating prompt, emerald icon theme |
+| `app/paciente/dashboard/actions.ts` | Modify | Records `WeightEntry` on onboarding save |
+| `app/paciente/dashboard/perfil/actions.ts` | Modify | Records `WeightEntry` on profile update |
+| `app/paciente/dashboard/weight-entry-form.tsx` | Create | Inline weight entry form |
+| `components/dashboard/weight-chart.tsx` | Create | Recharts area/line chart using role CSS variables |
+| `components/rating/rating-prompt.tsx` | Create | Dismissible pending-review prompt with star input + comment |
+| `lib/i18n/dictionaries/es.ts` | Modify | New patient/rating strings |
+| `lib/i18n/dictionaries/en.ts` | Modify | New patient/rating strings |
+| `lib/i18n/dictionaries/index.ts` | Modify | Added `rating` namespace to `Dictionary` |
 
 ## Next Recommended
 
-`sdd-apply` — continue with PR 2 (patient dashboard differentiation).
+`sdd-apply` — continue with PR 3 (professional dashboard differentiation).
 
 ## Risks
 
 - Prisma migration required a dev DB reset because the previous migration checksum drifted; production rollout will need careful migration ordering.
 - `WeightEntry` uses `patientProfileId` per the design rather than `userId` as listed in the high-level scope, but an optional `notes` field was added to align with the scope note.
+- `lib/weight.ts` and `lib/reviews.ts` were marked `"use server"` to prevent `pg` from being bundled into client components; this is a workaround that should be revisited if a `server-only` marker is adopted.
 
 ## Skill Resolution
 
