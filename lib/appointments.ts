@@ -83,17 +83,32 @@ export async function getAppointmentDashboardCounts(
     return { upcoming };
   }
 
-  const activePatients = await prisma.appointment.groupBy({
+  const activePatients = await getActivePatients(userId);
+
+  return { upcoming, activePatients };
+}
+
+export async function getActivePatients(professionalId: string): Promise<number> {
+  const today = startOfTodayUtc();
+
+  const activePatientGroups = await prisma.appointment.groupBy({
     by: ["patientId"],
     where: {
-      professionalId: userId,
-      status: {
-        in: [AppointmentStatus.REQUESTED, AppointmentStatus.CONFIRMED],
+      professionalId,
+      status: AppointmentStatus.CONFIRMED,
+      scheduledAt: { gte: today },
+      patient: {
+        subscriptions: {
+          some: {
+            status: "ACTIVE",
+            plan: "PREMIUM",
+          },
+        },
       },
     },
   });
 
-  return { upcoming, activePatients: activePatients.length };
+  return activePatientGroups.length;
 }
 
 export async function getAppointmentsThisWeekCount(): Promise<number> {
@@ -128,4 +143,52 @@ export async function getAppointmentsThisWeekCount(): Promise<number> {
       status: { not: AppointmentStatus.CANCELLED },
     },
   });
+}
+
+export interface EngagementDataPoint {
+  date: string;
+  count: number;
+}
+
+export async function getProfessionalEngagementData(
+  professionalId: string
+): Promise<EngagementDataPoint[]> {
+  const now = new Date();
+  const startDate = new Date(
+    Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() - 29)
+  );
+
+  const appointments = await prisma.appointment.findMany({
+    where: {
+      professionalId,
+      status: AppointmentStatus.COMPLETED,
+      scheduledAt: { gte: startDate },
+    },
+    select: { scheduledAt: true },
+    orderBy: { scheduledAt: "asc" },
+  });
+
+  const dateMap = new Map<string, number>();
+
+  for (let i = 0; i < 30; i++) {
+    const date = new Date(
+      Date.UTC(
+        now.getUTCFullYear(),
+        now.getUTCMonth(),
+        now.getUTCDate() - (29 - i)
+      )
+    );
+    const dateKey = date.toISOString().split("T")[0];
+    dateMap.set(dateKey, 0);
+  }
+
+  for (const appointment of appointments) {
+    const dateKey = appointment.scheduledAt.toISOString().split("T")[0];
+    dateMap.set(dateKey, (dateMap.get(dateKey) || 0) + 1);
+  }
+
+  return Array.from(dateMap.entries()).map(([date, count]) => ({
+    date,
+    count,
+  }));
 }

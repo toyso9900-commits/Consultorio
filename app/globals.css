@@ -21,6 +21,13 @@
 
   --destructive: #e11d48;
   --destructive-foreground: #ffffff;
+
+  --role-patient-primary: #10b981;
+  --role-patient-secondary: #0d9488;
+  --role-patient-primary-foreground: #ffffff;
+  --role-professional-primary: #4f46e5;
+  --role-professional-secondary: #2563eb;
+  --role-professional-primary-foreground: #ffffff;
 }
 
 .dark {
@@ -43,6 +50,13 @@
 
   --destructive: #fb7185;
   --destructive-foreground: #020617;
+
+  --role-patient-primary: #34d399;
+  --role-patient-secondary: #2dd4bf;
+  --role-patient-primary-foreground: #020617;
+  --role-professional-primary: #818cf8;
+  --role-professional-secondary: #60a5fa;
+  --role-professional-primary-foreground: #020617;
 }
 
 @theme inline {

@@ -98,7 +98,8 @@ model PatientProfile {
   restrictions String?  @db.Text
   goals        String?  @db.Text
 
-  documents Document[]
+  documents     Document[]
+  weightEntries WeightEntry[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -133,6 +134,19 @@ enum Specialty {
   NUTRITION
   TRAINING
   BOTH
+}
+
+model WeightEntry {
+  id               String         @id @default(cuid())
+  patientProfileId String
+  patientProfile   PatientProfile @relation(fields: [patientProfileId], references: [id], onDelete: Cascade)
+  weight           Float
+  recordedAt       DateTime       @default(now())
+  notes            String?        @db.Text
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+
+  @@index([patientProfileId, recordedAt])
 }
 
 enum Modality {
