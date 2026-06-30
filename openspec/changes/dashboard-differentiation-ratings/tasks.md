@@ -55,16 +55,16 @@ Chain strategy: stacked-to-main
 
 ## Phase 4: Rating Flow & Client List
 
-| ID | Title | Description | Affected files | Lines | Dependencies | Acceptance criteria |
-|----|-------|-------------|----------------|-------|--------------|---------------------|
-| 4.1 | Revalidate on completion | Ensure `completeAppointment` revalidates patient paths | `app/profesional/dashboard/appointment-actions.ts` | 5 | 1.1 | `/paciente/dashboard` and `/paciente/dashboard/citas` revalidated |
-| 4.2 | Rating form and submit | Build star input + comment form calling `submitReview` | `components/rating/rating-form.tsx`, `lib/reviews.ts` | 60 | 1.3 | Submits 1–5 rating and handles errors |
-| 4.3 | Rewrite client list | Replace conversation list with patient rows (subscription, last appointment, message) | `app/profesional/dashboard/clientes/page.tsx`, `lib/appointments.ts`, `lib/i18n/dictionaries/*` | 80 | 1.4 | Rows link to `/profesional/dashboard/mensajes?paciente={id}` |
-| 4.4 | Update professional sidebar | Remove "Mensajes" from `PROFESSIONAL` navigation | `components/layout/sidebar.tsx`, `lib/i18n/dictionaries/*` | 10 | 4.3 | Messages link no longer shown |
+| ID | Title | Description | Affected files | Lines | Dependencies | Acceptance criteria | Status |
+|----|-------|-------------|----------------|-------|--------------|---------------------|--------|
+| 4.1 | Revalidate on completion | Ensure `completeAppointment` revalidates patient paths | `app/profesional/dashboard/appointment-actions.ts` | 5 | 1.1 | `/paciente/dashboard` and `/paciente/dashboard/citas` revalidated | [x] |
+| 4.2 | Rating form and submit | Build star input + comment form calling `submitReview` | `components/rating/rating-form.tsx`, `lib/reviews.ts` | 60 | 1.3 | Submits 1–5 rating and handles errors | [x] |
+| 4.3 | Rewrite client list | Replace conversation list with patient rows (subscription, last appointment, message) | `app/profesional/dashboard/clientes/page.tsx`, `lib/appointments.ts`, `lib/i18n/dictionaries/*` | 80 | 1.4 | Rows link to `/profesional/dashboard/mensajes?paciente={id}` | [x] |
+| 4.4 | Update professional sidebar | Remove "Mensajes" from `PROFESSIONAL` navigation | `components/layout/sidebar.tsx`, `lib/i18n/dictionaries/*` | 10 | 4.3 | Messages link no longer shown | [x] |
 
 ## Phase 5: i18n & Verification
 
-| ID | Title | Description | Affected files | Lines | Dependencies | Acceptance criteria |
-|----|-------|-------------|----------------|-------|--------------|---------------------|
-| 5.1 | Add i18n strings | Add all new dashboard, chart, rating, and client strings to both locales | `lib/i18n/dictionaries/es.ts`, `lib/i18n/dictionaries/en.ts` | 60 | All UI tasks | Both dictionaries include new keys |
-| 5.2 | Verify and close | Run `typecheck`, `lint`, `build`; execute spec manual checks | All changed files | 10 | 5.1 | Commands pass and acceptance criteria met |
+| ID | Title | Description | Affected files | Lines | Dependencies | Acceptance criteria | Status |
+|----|-------|-------------|----------------|-------|--------------|---------------------|--------|
+| 5.1 | Add i18n strings | Add all new dashboard, chart, rating, and client strings to both locales | `lib/i18n/dictionaries/es.ts`, `lib/i18n/dictionaries/en.ts` | 60 | All UI tasks | Both dictionaries include new keys | [x] |
+| 5.2 | Verify and close | Run `typecheck`, `lint`, `build`; execute spec manual checks | All changed files | 10 | 5.1 | Commands pass and acceptance criteria met | [x] |
