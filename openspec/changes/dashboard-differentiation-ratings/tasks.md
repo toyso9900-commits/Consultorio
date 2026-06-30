@@ -27,13 +27,13 @@ Chain strategy: stacked-to-main
 
 ## Phase 1: Foundation
 
-| ID | Title | Description | Affected files | Lines | Dependencies | Acceptance criteria |
-|----|-------|-------------|----------------|-------|--------------|---------------------|
-| 1.1 | Add `WeightEntry` model and migration | Extend `PatientProfile` relation and create the `WeightEntry` migration | `prisma/schema.prisma`, `prisma/migrations/` | 30 | — | Migration applies and `typecheck` passes |
-| 1.2 | Create weight helpers | Add `recordWeight` and `getWeightHistory` | `lib/weight.ts` | 40 | 1.1 | Creates entries and returns sorted history |
-| 1.3 | Create review helpers | Add `getProfessionalRating`, `submitReview`, and `getPendingReviewsForPatient` | `lib/reviews.ts` | 60 | 1.1 | Validates 1–5; duplicate appointment rejected |
-| 1.4 | Update appointment helpers | Implement `getActivePatients` and `getProfessionalEngagementData` | `lib/appointments.ts` | 50 | 1.1 | Active patients require paid subscription + active appointment |
-| 1.5 | Add role CSS variables | Define `--role-patient-*` and `--role-professional-*` tokens | `app/globals.css` | 10 | — | Variables available for dashboard wrappers |
+| ID | Title | Description | Affected files | Lines | Dependencies | Acceptance criteria | Status |
+|----|-------|-------------|----------------|-------|--------------|---------------------|--------|
+| 1.1 | Add `WeightEntry` model and migration | Extend `PatientProfile` relation and create the `WeightEntry` migration | `prisma/schema.prisma`, `prisma/migrations/` | 30 | — | Migration applies and `typecheck` passes | [x] |
+| 1.2 | Create weight helpers | Add `recordWeight` and `getWeightHistory` | `lib/weight.ts` | 40 | 1.1 | Creates entries and returns sorted history | [x] |
+| 1.3 | Create review helpers | Add `getProfessionalRating`, `submitReview`, and `getPendingReviewsForPatient` | `lib/reviews.ts` | 60 | 1.1 | Validates 1–5; duplicate appointment rejected | [x] |
+| 1.4 | Update appointment helpers | Implement `getActivePatients` and `getProfessionalEngagementData` | `lib/appointments.ts` | 50 | 1.1 | Active patients require paid subscription + active appointment | [x] |
+| 1.5 | Add role CSS variables | Define `--role-patient-*` and `--role-professional-*` tokens | `app/globals.css` | 10 | — | Variables available for dashboard wrappers | [x] |
 
 ## Phase 2: Patient Dashboard Differentiation
 
