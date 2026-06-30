@@ -62,6 +62,7 @@ export interface Dictionary {
   patientProfile: Record<keyof typeof es.patientProfile, string>;
   onboarding: Record<keyof typeof es.onboarding, string>;
   gender: Record<keyof typeof es.gender, string>;
+  rating: Record<keyof typeof es.rating, string>;
   professionalDashboard: Record<keyof typeof es.professionalDashboard, string>;
   adminDashboard: Record<keyof typeof es.adminDashboard, string>;
   adminUsers: Record<keyof typeof es.adminUsers, string>;

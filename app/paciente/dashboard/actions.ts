@@ -3,6 +3,7 @@
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { recordWeight } from "@/lib/weight";
 
 const onboardingSchema = z.object({
   name: z.string().min(2, "El nombre debe tener al menos 2 caracteres."),
@@ -44,12 +45,12 @@ export async function savePatientOnboarding(
   const { name, gender, height, weight } = parsed.data;
 
   try {
-    await prisma.$transaction([
-      prisma.user.update({
+    await prisma.$transaction(async (tx) => {
+      await tx.user.update({
         where: { id: userId },
         data: { name },
-      }),
-      prisma.patientProfile.upsert({
+      });
+      await tx.patientProfile.upsert({
         where: { userId },
         create: {
           userId,
@@ -62,8 +63,17 @@ export async function savePatientOnboarding(
           height,
           weight,
         },
-      }),
-    ]);
+      });
+    });
+
+    const profile = await prisma.patientProfile.findUnique({
+      where: { userId },
+      select: { id: true },
+    });
+
+    if (profile) {
+      await recordWeight(profile.id, weight);
+    }
 
     revalidatePath("/paciente/dashboard");
     return { success: true };

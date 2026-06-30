@@ -2,16 +2,23 @@ import { auth } from "@/lib/auth";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { getAppointmentDashboardCounts } from "@/lib/appointments";
+import { getWeightHistory } from "@/lib/weight";
+import { getPendingReviewsForPatient } from "@/lib/reviews";
 import {
   Activity,
   Apple,
   CalendarDays,
   FileText,
   MessageSquare,
-  User,
   Search,
+  TrendingDown,
+  TrendingUp,
+  Scale,
 } from "lucide-react";
 import { OnboardingModal } from "./onboarding-modal";
+import { WeightEntryForm } from "./weight-entry-form";
+import { WeightChart } from "@/components/dashboard/weight-chart";
+import { RatingPrompt } from "@/components/rating/rating-prompt";
 import { getLocale, getDictionary } from "@/lib/i18n/server";
 import type { Dictionary } from "@/lib/i18n/server";
 
@@ -36,9 +43,34 @@ export default async function PatientDashboardPage() {
     patientProfile.height == null ||
     patientProfile.weight == null;
 
+  const weightHistory = patientProfile
+    ? await getWeightHistory(patientProfile.id)
+    : [];
+
+  const pendingReviews = await getPendingReviewsForPatient(userId);
+
+  const weightChartData = weightHistory.map((entry) => ({
+    date: entry.recordedAt.toISOString(),
+    weight: entry.weight,
+  }));
+
+  const currentWeight = weightHistory.length > 0
+    ? weightHistory[weightHistory.length - 1].weight
+    : patientProfile?.weight ?? null;
+
+  const previousWeight =
+    weightHistory.length > 1 ? weightHistory[weightHistory.length - 2].weight : null;
+
+  const weightTrend =
+    currentWeight != null && previousWeight != null
+      ? currentWeight - previousWeight
+      : null;
+
   return (
-    <div>
+    <div data-role="patient">
       {needsOnboarding && <OnboardingModal userId={userId} />}
+
+      <RatingPrompt patientId={userId} pendingReviews={pendingReviews} />
 
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100">
@@ -50,19 +82,40 @@ export default async function PatientDashboardPage() {
             session!.user.name || session!.user.email || ""
           )}
         </p>
+        <p className="mt-1 text-sm font-medium text-emerald-600 dark:text-emerald-400">
+          {dictionary.patientHome.wellnessSubtitle}
+        </p>
       </div>
 
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-indigo-100 dark:bg-indigo-950">
-            <Activity className="h-5 w-5 text-indigo-600" />
+          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-950">
+            <Scale className="h-5 w-5 text-emerald-600" />
           </div>
           <p className="mt-4 text-sm text-slate-500 dark:text-slate-400">
             {dictionary.patientHome.currentWeight}
           </p>
-          <p className="text-2xl font-bold text-slate-900 dark:text-slate-100">
-            {patientProfile?.weight ? `${patientProfile.weight} kg` : "-- kg"}
-          </p>
+          <div className="flex items-end gap-2">
+            <p className="text-2xl font-bold text-slate-900 dark:text-slate-100">
+              {currentWeight ? `${currentWeight} kg` : "-- kg"}
+            </p>
+            {weightTrend != null && (
+              <span
+                className={`mb-1 flex items-center text-xs font-medium ${
+                  weightTrend < 0
+                    ? "text-emerald-600 dark:text-emerald-400"
+                    : "text-rose-600 dark:text-rose-400"
+                }`}
+              >
+                {weightTrend < 0 ? (
+                  <TrendingDown className="mr-0.5 h-3 w-3" />
+                ) : (
+                  <TrendingUp className="mr-0.5 h-3 w-3" />
+                )}
+                {Math.abs(weightTrend).toFixed(1)} kg
+              </span>
+            )}
+          </div>
         </div>
         <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
           <div className="flex h-10 w-10 items-center justify-center rounded-full bg-teal-100 dark:bg-teal-950">
@@ -97,17 +150,28 @@ export default async function PatientDashboardPage() {
 
       <div className="mt-8 grid gap-6 lg:grid-cols-3">
         <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900 lg:col-span-2">
-          <div className="mb-4 flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-indigo-100 dark:bg-indigo-950">
-              <User className="h-5 w-5 text-indigo-600" />
+          <div className="mb-4 flex items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-950">
+                <Activity className="h-5 w-5 text-emerald-600" />
+              </div>
+              <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
+                {dictionary.patientHome.myRecord}
+              </h2>
             </div>
-            <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
-              {dictionary.patientHome.myRecord}
-            </h2>
+            {patientProfile && (
+              <WeightEntryForm
+                patientProfileId={patientProfile.id}
+                dictionary={dictionary}
+              />
+            )}
           </div>
+
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="rounded-xl bg-slate-50 p-4 dark:bg-slate-800">
-              <p className="text-sm text-slate-500 dark:text-slate-400">{dictionary.patientHome.height}</p>
+              <p className="text-sm text-slate-500 dark:text-slate-400">
+                {dictionary.patientHome.height}
+              </p>
               <p className="text-lg font-semibold text-slate-900 dark:text-slate-100">
                 {patientProfile?.height
                   ? `${patientProfile.height} cm`
@@ -115,13 +179,28 @@ export default async function PatientDashboardPage() {
               </p>
             </div>
             <div className="rounded-xl bg-slate-50 p-4 dark:bg-slate-800">
-              <p className="text-sm text-slate-500 dark:text-slate-400">{dictionary.patientHome.gender}</p>
+              <p className="text-sm text-slate-500 dark:text-slate-400">
+                {dictionary.patientHome.gender}
+              </p>
               <p className="text-lg font-semibold text-slate-900 dark:text-slate-100 capitalize">
                 {patientProfile?.gender
                   ? formatGender(patientProfile.gender, dictionary)
                   : dictionary.patientHome.notCompleted}
               </p>
             </div>
+          </div>
+
+          <div className="mt-6">
+            <h3 className="mb-3 text-sm font-semibold text-slate-900 dark:text-slate-100">
+              {dictionary.patientHome.weightHistory}
+            </h3>
+            {weightChartData.length > 0 ? (
+              <WeightChart data={weightChartData} />
+            ) : (
+              <p className="rounded-xl bg-slate-50 p-4 text-sm text-slate-500 dark:bg-slate-800 dark:text-slate-400">
+                {dictionary.patientHome.weightEmpty}
+              </p>
+            )}
           </div>
         </div>
         <div className="space-y-6">
@@ -140,11 +219,11 @@ export default async function PatientDashboardPage() {
           </div>
           <Link
             href="/paciente/dashboard/expertos"
-            className="flex items-center justify-between rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition-all hover:border-indigo-300 hover:shadow-md dark:border-slate-800 dark:bg-slate-900 dark:hover:border-indigo-800"
+            className="flex items-center justify-between rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition-all hover:border-emerald-300 hover:shadow-md dark:border-slate-800 dark:bg-slate-900 dark:hover:border-emerald-800"
           >
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-indigo-100 dark:bg-indigo-950">
-                <Search className="h-5 w-5 text-indigo-600" />
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-950">
+                <Search className="h-5 w-5 text-emerald-600" />
               </div>
               <div>
                 <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">

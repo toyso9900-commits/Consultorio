@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
+import { recordWeight } from "@/lib/weight";
 
 const updateSchema = z.object({
   userId: z.string().min(1),
@@ -31,17 +32,26 @@ export async function updatePatientProfile(data: UpdatePatientProfileData) {
   const { userId, name, height, weight, gender } = parsed.data;
 
   try {
-    await prisma.$transaction([
-      prisma.user.update({
+    await prisma.$transaction(async (tx) => {
+      await tx.user.update({
         where: { id: userId },
         data: { name },
-      }),
-      prisma.patientProfile.upsert({
+      });
+      await tx.patientProfile.upsert({
         where: { userId },
         create: { userId, height, weight, gender },
         update: { height, weight, gender },
-      }),
-    ]);
+      });
+    });
+
+    const profile = await prisma.patientProfile.findUnique({
+      where: { userId },
+      select: { id: true },
+    });
+
+    if (profile) {
+      await recordWeight(profile.id, weight);
+    }
 
     revalidatePath("/paciente/dashboard");
     return { success: true };
