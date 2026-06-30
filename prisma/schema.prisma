@@ -185,7 +185,7 @@ model Appointment {
   professional   User     @relation("ProfessionalAppointments", fields: [professionalId], references: [id], onDelete: Cascade)
 
   scheduledAt DateTime
-  status      AppointmentStatus @default(PENDING)
+  status      AppointmentStatus @default(REQUESTED)
   notes       String?  @db.Text
   review      Review?
 
@@ -194,7 +194,7 @@ model Appointment {
 }
 
 enum AppointmentStatus {
-  PENDING
+  REQUESTED
   CONFIRMED
   CANCELLED
   COMPLETED
