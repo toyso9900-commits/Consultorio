@@ -25,6 +25,7 @@ interface ConversationListProps {
   selectedUserId?: string;
   emptyMessage?: string;
   hrefPrefix?: string;
+  initialOnlineStatus?: Record<string, boolean>;
 }
 
 const MAX_PREVIEW_LENGTH = 60;
@@ -56,8 +57,10 @@ export function ConversationList({
   selectedUserId,
   emptyMessage = "No tenés conversaciones todavía.",
   hrefPrefix = "/profesional/dashboard/mensajes",
+  initialOnlineStatus = {},
 }: ConversationListProps) {
   const [conversations, setConversations] = useState(initialConversations);
+  const [onlineStatus, setOnlineStatus] = useState(initialOnlineStatus);
 
   useEffect(() => {
     if (!isPusherClientConfigured()) {
@@ -135,6 +138,8 @@ export function ConversationList({
 
           return [newConversation, ...updatedList].sort(sortByLatest);
         });
+
+        setOnlineStatus((prev) => ({ ...prev, [partnerId]: true }));
       }
     );
 
@@ -174,7 +179,15 @@ export function ConversationList({
                     {(user.name || "U").slice(0, 1).toUpperCase()}
                   </div>
                   <div className="min-w-0">
-                    <p className="truncate font-medium">{user.name || "Paciente"}</p>
+                    <p className="truncate font-medium">
+                      {user.name || "Paciente"}
+                      {onlineStatus[user.id] && (
+                        <span
+                          className="ml-1.5 inline-block h-2 w-2 rounded-full bg-emerald-500"
+                          title="En línea"
+                        />
+                      )}
+                    </p>
                     <p className="truncate text-xs text-slate-500 dark:text-slate-400">
                       {truncatePreview(user.lastMessage, MAX_PREVIEW_LENGTH)}
                     </p>

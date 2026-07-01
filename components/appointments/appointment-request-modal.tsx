@@ -45,6 +45,8 @@ export function AppointmentRequestModal({
       return;
     }
 
+    const form = event.currentTarget;
+
     startTransition(async () => {
       const response = await requestAppointment({
         professionalId,
@@ -54,7 +56,7 @@ export function AppointmentRequestModal({
       setResult(response);
       if (response.success) {
         setOpen(false);
-        event.currentTarget.reset();
+        form.reset();
       }
     });
   }

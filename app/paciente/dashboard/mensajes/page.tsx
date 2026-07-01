@@ -3,6 +3,8 @@ import { MessageSquare } from "lucide-react";
 import { getConversation, getUserConversations } from "@/app/messages/actions";
 import { ChatPanel } from "@/components/chat/chat-panel";
 import { ConversationList } from "@/components/chat/conversation-list";
+import { PresenceHeartbeat } from "@/components/chat/presence-heartbeat";
+import { getUsersOnlineStatus, markUserOnline } from "@/lib/actions/presence";
 import Link from "next/link";
 import { getLocale, getDictionary } from "@/lib/i18n/server";
 
@@ -18,6 +20,10 @@ export default async function PatientMessagesPage({ searchParams }: PageProps) {
   const params = await searchParams;
   const professionalId = params.profesional;
   const professionalName = params.nombre || dictionary.patientMessages.defaultName;
+
+  if (session?.user?.id) {
+    await markUserOnline();
+  }
 
   let initialMessages: { id: string; senderId: string; receiverId: string; content: string; createdAt: string; sender: { id: string; name: string | null; image: string | null } }[] = [];
 
@@ -37,8 +43,11 @@ export default async function PatientMessagesPage({ searchParams }: PageProps) {
       ? conversationsResult.users
       : [];
 
+  const onlineStatus = await getUsersOnlineStatus(conversations.map((c) => c.id));
+
   return (
     <div className="grid h-[calc(100vh-8rem)] gap-6 lg:grid-cols-3">
+      <PresenceHeartbeat />
       <div className="hidden flex-col rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900 lg:flex">
         <div className="border-b border-slate-200 p-4 dark:border-slate-800">
           <div className="flex items-center gap-2">
@@ -55,6 +64,7 @@ export default async function PatientMessagesPage({ searchParams }: PageProps) {
             currentUserId={session!.user.id ?? ""}
             selectedUserId={professionalId}
             hrefPrefix="/paciente/dashboard/mensajes"
+            initialOnlineStatus={Object.fromEntries(onlineStatus)}
           />
         </div>
       </div>

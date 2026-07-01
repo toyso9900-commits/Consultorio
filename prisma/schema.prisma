@@ -46,6 +46,7 @@ model User {
   image         String?
   role          UserRole  @default(PATIENT)
   password      String?
+  lastSeenAt    DateTime?
 
   accounts      Account[]
   sessions      Session[]

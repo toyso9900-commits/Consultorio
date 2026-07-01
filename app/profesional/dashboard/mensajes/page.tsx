@@ -4,6 +4,9 @@ import { getUserConversations, getConversation } from "@/app/messages/actions";
 import { Suspense } from "react";
 import ProfessionalChatPage from "./chat-page";
 import { ConversationList } from "@/components/chat/conversation-list";
+import { PresenceHeartbeat } from "@/components/chat/presence-heartbeat";
+import { getUsersOnlineStatus } from "@/lib/actions/presence";
+import { markUserOnline } from "@/lib/actions/presence";
 import { getLocale, getDictionary } from "@/lib/i18n/server";
 
 interface PageProps {
@@ -18,11 +21,17 @@ export default async function ProfessionalMessagesPage({ searchParams }: PagePro
   const params = await searchParams;
   const patientId = params.paciente;
 
+  if (session?.user?.id) {
+    await markUserOnline();
+  }
+
   const conversationsResult = await getUserConversations(session!.user.id ?? "");
   const conversations =
     conversationsResult.success && "users" in conversationsResult
       ? conversationsResult.users
       : [];
+
+  const onlineStatus = await getUsersOnlineStatus(conversations.map((c) => c.id));
 
   const initialMessagesPromise = patientId
     ? getConversation(session!.user.id ?? "", patientId)
@@ -30,6 +39,7 @@ export default async function ProfessionalMessagesPage({ searchParams }: PagePro
 
   return (
     <div className="grid h-[calc(100vh-8rem)] gap-6 lg:grid-cols-3">
+      <PresenceHeartbeat />
       <div className="hidden flex-col rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900 lg:flex">
         <div className="border-b border-slate-200 p-4 dark:border-slate-800">
           <div className="flex items-center gap-2">
@@ -45,6 +55,7 @@ export default async function ProfessionalMessagesPage({ searchParams }: PagePro
             initialConversations={conversations}
             currentUserId={session!.user.id ?? ""}
             selectedUserId={patientId}
+            initialOnlineStatus={Object.fromEntries(onlineStatus)}
           />
         </div>
       </div>

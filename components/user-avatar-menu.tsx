@@ -5,6 +5,7 @@ import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { LogOut, Settings, UserCircle } from "lucide-react";
 import Link from "next/link";
 import { useI18n } from "@/lib/i18n/client";
+import { markUserOffline } from "@/lib/actions/presence";
 
 interface UserAvatarMenuProps {
   name?: string | null;
@@ -14,6 +15,11 @@ interface UserAvatarMenuProps {
 
 export function UserAvatarMenu({ name, image, role }: UserAvatarMenuProps) {
   const { dictionary } = useI18n();
+
+  async function handleSignOut() {
+    await markUserOffline();
+    await signOut({ callbackUrl: "/" });
+  }
 
   const initials = name
     ? name
@@ -108,7 +114,7 @@ export function UserAvatarMenu({ name, image, role }: UserAvatarMenuProps) {
           <DropdownMenu.Item asChild>
             <button
               type="button"
-              onClick={() => signOut({ callbackUrl: "/" })}
+              onClick={handleSignOut}
               className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-destructive outline-none transition-colors hover:bg-destructive/10 focus:bg-destructive/10"
             >
               <LogOut className="h-4 w-4" />
