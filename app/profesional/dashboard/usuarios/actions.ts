@@ -35,8 +35,7 @@ export async function getAllUsers(): Promise<
     });
 
     return { success: true, users };
-  } catch (error) {
-    console.error("Get all users error:", error);
+  } catch {
     return { success: false, error: "No se pudieron cargar los usuarios." };
   }
 }
@@ -53,8 +52,7 @@ export async function deleteUser(userId: string) {
 
     revalidatePath("/profesional/dashboard/usuarios");
     return { success: true };
-  } catch (error) {
-    console.error("Delete user error:", error);
+  } catch {
     return { success: false, error: "No se pudo eliminar el usuario." };
   }
 }
@@ -81,11 +79,10 @@ export async function toggleUserValidation(profileId: string, isValidated: boole
       type: eventType,
       userId: profile.userId,
       profileId: profile.id,
-    }).catch((err) => console.error("Pusher trigger error:", err));
+    }).catch(() => {});
 
     return { success: true };
-  } catch (error) {
-    console.error("Toggle validation error:", error);
+  } catch {
     return { success: false, error: "No se pudo actualizar el estado." };
   }
 }

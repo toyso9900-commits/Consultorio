@@ -31,11 +31,10 @@ export async function validateProfessional(formData: FormData): Promise<{ succes
       type: "professional-validated",
       userId: profile.userId,
       profileId: profile.id,
-    }).catch((err) => console.error("Pusher trigger error:", err));
+    }).catch(() => {});
 
     return { success: true };
-  } catch (error) {
-    console.error("Validate professional error:", error);
+  } catch {
     return { success: false, error: "No se pudo validar al profesional." };
   }
 }
@@ -59,11 +58,10 @@ export async function rejectProfessional(formData: FormData): Promise<{ success:
       type: "professional-rejected",
       userId: profile.userId,
       profileId: profile.id,
-    }).catch((err) => console.error("Pusher trigger error:", err));
+    }).catch(() => {});
 
     return { success: true };
-  } catch (error) {
-    console.error("Reject professional error:", error);
+  } catch {
     return { success: false, error: "No se pudo rechazar al profesional." };
   }
 }

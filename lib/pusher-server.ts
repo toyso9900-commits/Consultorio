@@ -42,7 +42,6 @@ export const pusherServer = createPusherServer();
 
 export async function triggerAdminUpdate(event: AdminUpdateEvent) {
   if (!pusherServer) {
-    console.warn("Pusher not configured; skipping admin update event", event);
     return;
   }
 
@@ -54,7 +53,6 @@ export async function triggerUnreadCounts(
   counts: { senderId: string; count: number }[]
 ) {
   if (!pusherServer) {
-    console.warn("Pusher not configured; skipping unread counts event");
     return;
   }
 
@@ -63,7 +61,6 @@ export async function triggerUnreadCounts(
 
 export async function triggerConversationRead(readerId: string, senderId: string) {
   if (!pusherServer) {
-    console.warn("Pusher not configured; skipping conversation read event");
     return;
   }
 
@@ -72,7 +69,6 @@ export async function triggerConversationRead(readerId: string, senderId: string
 
 export async function triggerMessage(message: NewMessagePayload) {
   if (!pusherServer) {
-    console.warn("Pusher not configured; skipping new message event");
     return;
   }
 

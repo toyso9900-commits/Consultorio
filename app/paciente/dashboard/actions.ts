@@ -77,8 +77,7 @@ export async function savePatientOnboarding(
 
     revalidatePath("/paciente/dashboard");
     return { success: true };
-  } catch (error) {
-    console.error("Onboarding error:", error);
+  } catch {
     return {
       success: false,
       error: "Ocurrió un error al guardar tu perfil. Intentá de nuevo.",

@@ -107,8 +107,7 @@ export const {
             image: user.image,
             role: user.role,
           };
-        } catch (error) {
-          console.error("[auth] authorize error:", error);
+        } catch {
           return null;
         }
       },

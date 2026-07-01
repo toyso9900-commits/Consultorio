@@ -55,8 +55,7 @@ export async function uploadProfessionalAvatar(formData: FormData): Promise<{
     revalidatePath(`/profesional/${userId}`);
 
     return { success: true, imageUrl };
-  } catch (error) {
-    console.error("Upload avatar error:", error);
+  } catch {
     return { success: false, error: "No se pudo subir la imagen." };
   }
 }

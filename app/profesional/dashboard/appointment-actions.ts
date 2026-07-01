@@ -52,8 +52,7 @@ async function transitionAppointment(
     }
 
     return { success: true };
-  } catch (error) {
-    console.error(`Transition ${from} -> ${to} error:`, error);
+  } catch {
     return {
       success: false,
       error: "No se pudo actualizar el turno. Intentá de nuevo.",
@@ -124,8 +123,7 @@ export async function cancelAppointment(
     revalidatePath("/paciente/dashboard");
 
     return { success: true };
-  } catch (error) {
-    console.error("Cancel appointment error:", error);
+  } catch {
     return {
       success: false,
       error: "No se pudo cancelar el turno. Intentá de nuevo.",

@@ -116,8 +116,7 @@ export async function submitReview(
     });
 
     return { success: true };
-  } catch (error) {
-    console.error("Submit review error:", error);
+  } catch {
     return { success: false, error: "submitFailed" };
   }
 }

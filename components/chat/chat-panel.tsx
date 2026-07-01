@@ -86,7 +86,6 @@ function ChatPanelInner({
 
   useEffect(() => {
     if (!isPusherClientConfigured()) {
-      console.warn("Pusher client not configured; chat live updates disabled.");
       return;
     }
 
@@ -180,10 +179,9 @@ function ChatPanelInner({
         setMessages((prev) => prev.filter((m) => m.id !== tempId));
         toast.error(result.error || "No se pudo enviar el mensaje");
       }
-    } catch (error) {
+    } catch {
       setMessages((prev) => prev.filter((m) => m.id !== tempId));
       toast.error("Error de red al enviar el mensaje");
-      console.error(error);
     } finally {
       setIsSending(false);
     }

@@ -75,7 +75,7 @@ export async function registerUser(data: {
       });
 
       triggerAdminUpdate({ type: "professional-registered", userId: user.id }).catch(
-        (err) => console.error("Pusher trigger error:", err)
+        () => {}
       );
     } else {
       await prisma.user.create({
@@ -92,8 +92,7 @@ export async function registerUser(data: {
     }
 
     return { success: true };
-  } catch (error) {
-    console.error("Registration error:", error);
+  } catch {
     return {
       success: false,
       error: "Ocurrió un error al registrarte. Intentá de nuevo más tarde.",

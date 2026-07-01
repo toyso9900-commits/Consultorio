@@ -55,8 +55,7 @@ export async function updatePatientProfile(data: UpdatePatientProfileData) {
 
     revalidatePath("/paciente/dashboard");
     return { success: true };
-  } catch (error) {
-    console.error("Update patient profile error:", error);
+  } catch {
     return { success: false, error: "No se pudo actualizar el perfil." };
   }
 }

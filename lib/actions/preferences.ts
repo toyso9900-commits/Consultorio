@@ -41,8 +41,7 @@ export async function updateUserLanguage(
     revalidatePath("/profesional/dashboard");
 
     return { success: true };
-  } catch (error) {
-    console.error("[updateUserLanguage] error:", error);
+  } catch {
     return { success: false, error: "Failed to update language preference" };
   }
 }

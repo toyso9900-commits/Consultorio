@@ -47,21 +47,18 @@ export async function sendMessage(payload: MessagePayload) {
     };
 
     // Trigger Pusher in the background; don't await it
-    triggerMessage(messagePayload).catch((err) => console.error("Pusher trigger error:", err));
+    triggerMessage(messagePayload).catch(() => {});
 
     getUnreadCountsBySender(receiverId)
       .then((counts) => {
         if (counts.success && "counts" in counts) {
-          triggerUnreadCounts(receiverId, counts.counts).catch((err) =>
-            console.error("Pusher unread counts trigger error:", err)
-          );
+          triggerUnreadCounts(receiverId, counts.counts).catch(() => {});
         }
       })
-      .catch((err) => console.error("Unread counts computation error:", err));
+      .catch(() => {});
 
     return { success: true, message };
-  } catch (error) {
-    console.error("Send message error:", error);
+  } catch {
     return { success: false, error: "No se pudo enviar el mensaje." };
   }
 }
@@ -85,8 +82,7 @@ export async function getConversation(userId: string, otherId: string): Promise<
     });
 
     return { success: true, messages };
-  } catch (error) {
-    console.error("Get conversation error:", error);
+  } catch {
     return { success: false, error: "No se pudo cargar la conversación." };
   }
 }
@@ -100,8 +96,7 @@ export async function getUnreadMessageCount(userId: string): Promise<number> {
       },
     });
     return count;
-  } catch (error) {
-    console.error("Get unread count error:", error);
+  } catch {
     return 0;
   }
 }
@@ -131,8 +126,7 @@ export async function getUnreadCountsBySender(
     }));
 
     return { success: true, counts };
-  } catch (error) {
-    console.error("Get unread counts by sender error:", error);
+  } catch {
     return { success: false, error: "No se pudieron cargar los conteos." };
   }
 }
@@ -148,23 +142,18 @@ export async function markMessagesAsRead(receiverId: string, senderId: string) {
       data: { readAt: new Date() },
     });
 
-    triggerConversationRead(receiverId, senderId).catch((err) =>
-      console.error("Pusher conversation read trigger error:", err)
-    );
+    triggerConversationRead(receiverId, senderId).catch(() => {});
 
     getUnreadCountsBySender(receiverId)
       .then((result) => {
         if (result.success && "counts" in result) {
-          triggerUnreadCounts(receiverId, result.counts).catch((err) =>
-            console.error("Pusher unread counts trigger error:", err)
-          );
+          triggerUnreadCounts(receiverId, result.counts).catch(() => {});
         }
       })
-      .catch((err) => console.error("Unread counts computation error:", err));
+      .catch(() => {});
 
     return { success: true };
-  } catch (error) {
-    console.error("Mark messages as read error:", error);
+  } catch {
     return { success: false };
   }
 }
@@ -224,8 +213,7 @@ export async function getUserConversations(userId: string): Promise<
     }));
 
     return { success: true, users };
-  } catch (error) {
-    console.error("Get conversations error:", error);
+  } catch {
     return { success: false, error: "No se pudieron cargar las conversaciones." };
   }
 }

@@ -65,8 +65,7 @@ export async function updateProfessionalProfile(data: UpdateProfessionalProfileD
     revalidatePath("/profesional/dashboard/perfil");
     revalidatePath("/paciente/dashboard/expertos");
     return { success: true };
-  } catch (error) {
-    console.error("Update professional profile error:", error);
+  } catch {
     return { success: false, error: "No se pudo actualizar el perfil." };
   }
 }

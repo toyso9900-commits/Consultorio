@@ -69,8 +69,7 @@ export async function requestAppointment(
     revalidatePath("/paciente/dashboard");
 
     return { success: true };
-  } catch (error) {
-    console.error("Request appointment error:", error);
+  } catch {
     return {
       success: false,
       error: "No se pudo solicitar el turno. Intentá de nuevo.",

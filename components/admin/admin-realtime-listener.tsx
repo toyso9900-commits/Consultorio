@@ -14,7 +14,6 @@ export function AdminRealtimeListener() {
 
   useEffect(() => {
     if (!isPusherClientConfigured()) {
-      console.warn("Pusher client not configured; admin real-time updates disabled.");
       return;
     }
 

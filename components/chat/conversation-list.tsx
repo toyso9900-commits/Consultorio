@@ -64,7 +64,6 @@ export function ConversationList({
 
   useEffect(() => {
     if (!isPusherClientConfigured()) {
-      console.warn("Pusher client not configured; conversation live updates disabled.");
       return;
     }
 

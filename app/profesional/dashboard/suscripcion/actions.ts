@@ -49,8 +49,7 @@ export async function activateSubscription(userId: string, planId: string) {
     revalidatePath("/profesional/dashboard");
     revalidatePath("/");
     return { success: true };
-  } catch (error) {
-    console.error("Activate subscription error:", error);
+  } catch {
     return { success: false, error: "No se pudo activar la suscripción." };
   }
 }
