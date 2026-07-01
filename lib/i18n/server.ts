@@ -12,12 +12,21 @@ export async function getLocale(userId?: string): Promise<Locale> {
 
   if (preference?.language === "en") return "en";
 
-  // Lazily create a default preference so later updates have a row to touch.
-  await prisma.userPreference.upsert({
-    where: { userId: resolvedUserId },
-    create: { userId: resolvedUserId, language: "es" },
-    update: {},
+  // Only create a default preference if the user still exists in the database.
+  // The session JWT may reference a deleted or reset user, which would violate
+  // the UserPreference_userId_fkey foreign key constraint on insert.
+  const userExists = await prisma.user.findUnique({
+    where: { id: resolvedUserId },
+    select: { id: true },
   });
+
+  if (userExists) {
+    await prisma.userPreference.upsert({
+      where: { userId: resolvedUserId },
+      create: { userId: resolvedUserId, language: "es" },
+      update: {},
+    });
+  }
 
   return "es";
 }
