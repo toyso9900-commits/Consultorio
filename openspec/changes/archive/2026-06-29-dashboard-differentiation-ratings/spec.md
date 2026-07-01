@@ -217,19 +217,19 @@ The existing `Review` model already supports per-appointment ratings. Ensure rat
 
 ## Acceptance Criteria
 
-- [ ] Patient dashboard uses emerald/teal wellness theme.
-- [ ] Professional dashboard uses indigo/blue business theme.
-- [ ] Weight progress chart renders in "Mi expediente".
-- [ ] Professional engagement chart renders on dashboard.
-- [ ] "Próximas citas" card navigates to sorted appointments list.
-- [ ] "Pacientes activos" counts only patients with paid subscription + active appointment.
-- [ ] "Valoraciones" shows real average rating and count.
-- [ ] "Horario de esta semana" card is removed or replaced.
-- [ ] `/profesional/dashboard/clientes` shows patient list with profile info and message action.
-- [ ] Patient can submit a rating after an appointment is completed.
-- [ ] Rating prompt appears after professional marks appointment complete.
-- [ ] All new strings are translated in `es.ts` and `en.ts`.
-- [ ] `npm run build`, `npm run typecheck`, and `npm run lint` pass.
+- [x] Patient dashboard uses emerald/teal wellness theme.
+- [x] Professional dashboard uses indigo/blue business theme.
+- [x] Weight progress chart renders in "Mi expediente".
+- [x] Professional engagement chart renders on dashboard.
+- [x] "Próximas citas" card navigates to sorted appointments list.
+- [x] "Pacientes activos" counts only patients with paid subscription + active appointment.
+- [x] "Valoraciones" shows real average rating and count.
+- [x] "Horario de esta semana" card is removed or replaced.
+- [x] `/profesional/dashboard/clientes` shows patient list with profile info and message action.
+- [x] Patient can submit a rating after an appointment is completed.
+- [x] Rating prompt appears after professional marks appointment complete.
+- [x] All new strings are translated in `es.ts` and `en.ts`.
+- [x] `npm run build`, `npm run typecheck`, and `npm run lint` pass.
 
 ## Verification Approach
 
