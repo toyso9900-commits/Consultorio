@@ -122,6 +122,8 @@ model ProfessionalProfile {
   isPremium      Boolean   @default(false)
   isValidated    Boolean   @default(false)
   rejectedAt     DateTime?
+  averageRating  Float     @default(0)
+  reviewCount    Int       @default(0)
 
   validations ProfessionalValidation[]
 

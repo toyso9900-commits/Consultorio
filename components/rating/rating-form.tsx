@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { Star } from "lucide-react";
-import { submitReview } from "@/lib/reviews";
+import { submitReview, type ReviewErrorCode } from "@/lib/reviews";
 import { useI18n } from "@/lib/i18n/client";
 
 interface RatingFormProps {
@@ -27,6 +27,14 @@ export function RatingForm({
   const [error, setError] = useState("");
   const [isPending, startTransition] = useTransition();
 
+  const errorMessages: Record<ReviewErrorCode, string> = {
+    ALREADY_REVIEWED: dictionary.rating.errorAlreadyReviewed,
+    APPOINTMENT_NOT_COMPLETED: dictionary.rating.errorAppointmentNotCompleted,
+    UNAUTHORIZED: dictionary.rating.errorUnauthorized,
+    INVALID_SCORE: dictionary.rating.errorInvalidScore,
+    NOT_FOUND: dictionary.rating.errorNotFound,
+  };
+
   const dateLabel = scheduledAt.toLocaleDateString(locale, {
     month: "short",
     day: "numeric",
@@ -42,16 +50,20 @@ export function RatingForm({
     }
 
     startTransition(async () => {
-      const result = await submitReview(
-        appointmentId,
-        patientId,
-        rating,
-        comment.trim() || undefined
-      );
+      try {
+        const result = await submitReview(
+          appointmentId,
+          patientId,
+          rating,
+          comment.trim() || undefined
+        );
 
-      if (result.success) {
-        onSubmitted?.();
-      } else {
+        if (result.success) {
+          onSubmitted?.();
+        } else {
+          setError(errorMessages[result.error]);
+        }
+      } catch {
         setError(dictionary.rating.submitError);
       }
     });

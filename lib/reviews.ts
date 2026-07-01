@@ -8,6 +8,17 @@ export interface RatingSummary {
   count: number;
 }
 
+export type ReviewErrorCode =
+  | "ALREADY_REVIEWED"
+  | "APPOINTMENT_NOT_COMPLETED"
+  | "UNAUTHORIZED"
+  | "INVALID_SCORE"
+  | "NOT_FOUND";
+
+export type SubmitReviewResult =
+  | { success: true }
+  | { success: false; error: ReviewErrorCode };
+
 const submitReviewSchema = z.object({
   appointmentId: z.string().min(1),
   patientId: z.string().min(1),
@@ -18,21 +29,18 @@ const submitReviewSchema = z.object({
 export async function getProfessionalRating(
   professionalId: string
 ): Promise<RatingSummary> {
-  const reviews = await prisma.review.findMany({
-    where: { professionalId },
-    select: { rating: true },
+  const profile = await prisma.professionalProfile.findUnique({
+    where: { userId: professionalId },
+    select: { averageRating: true, reviewCount: true },
   });
 
-  if (reviews.length === 0) {
+  if (!profile) {
     return { average: 0, count: 0 };
   }
 
-  const sum = reviews.reduce((acc, review) => acc + review.rating, 0);
-  const average = sum / reviews.length;
-
   return {
-    average: Math.round(average * 10) / 10,
-    count: reviews.length,
+    average: Math.round(profile.averageRating * 10) / 10,
+    count: profile.reviewCount,
   };
 }
 
@@ -71,7 +79,7 @@ export async function submitReview(
   patientId: string,
   rating: number,
   comment?: string
-): Promise<{ success: boolean; error?: string }> {
+): Promise<SubmitReviewResult> {
   const parsed = submitReviewSchema.safeParse({
     appointmentId,
     patientId,
@@ -80,32 +88,32 @@ export async function submitReview(
   });
 
   if (!parsed.success) {
-    return { success: false, error: parsed.error.issues[0]?.message };
+    return { success: false, error: "INVALID_SCORE" };
   }
 
-  try {
-    const appointment = await prisma.appointment.findUnique({
-      where: { id: parsed.data.appointmentId },
-      include: { review: true },
-    });
+  const appointment = await prisma.appointment.findUnique({
+    where: { id: parsed.data.appointmentId },
+    include: { review: true },
+  });
 
-    if (!appointment) {
-      return { success: false, error: "appointmentNotFound" };
-    }
+  if (!appointment) {
+    return { success: false, error: "NOT_FOUND" };
+  }
 
-    if (appointment.patientId !== parsed.data.patientId) {
-      return { success: false, error: "unauthorized" };
-    }
+  if (appointment.patientId !== parsed.data.patientId) {
+    return { success: false, error: "UNAUTHORIZED" };
+  }
 
-    if (appointment.status !== "COMPLETED") {
-      return { success: false, error: "appointmentNotCompleted" };
-    }
+  if (appointment.status !== "COMPLETED") {
+    return { success: false, error: "APPOINTMENT_NOT_COMPLETED" };
+  }
 
-    if (appointment.review) {
-      return { success: false, error: "reviewAlreadyExists" };
-    }
+  if (appointment.review) {
+    return { success: false, error: "ALREADY_REVIEWED" };
+  }
 
-    await prisma.review.create({
+  await prisma.$transaction(async (tx) => {
+    await tx.review.create({
       data: {
         appointmentId: parsed.data.appointmentId,
         patientId: parsed.data.patientId,
@@ -115,8 +123,62 @@ export async function submitReview(
       },
     });
 
-    return { success: true };
-  } catch {
-    return { success: false, error: "submitFailed" };
-  }
+    const reviews = await tx.review.findMany({
+      where: { professionalId: appointment.professionalId },
+      select: { rating: true },
+    });
+
+    const count = reviews.length;
+    const average =
+      count === 0 ? 0 : reviews.reduce((sum, r) => sum + r.rating, 0) / count;
+
+    await tx.professionalProfile.update({
+      where: { userId: appointment.professionalId },
+      data: {
+        averageRating: Math.round(average * 10) / 10,
+        reviewCount: count,
+      },
+    });
+  });
+
+  return { success: true };
+}
+
+export async function getReviewsForViewer(
+  viewerId: string,
+  role: "ADMIN" | "PROFESSIONAL"
+): Promise<
+  {
+    id: string;
+    rating: number;
+    comment: string | null;
+    createdAt: Date;
+    patient: { name: string | null; image: string | null };
+    professional: { name: string | null; image: string | null };
+  }[]
+> {
+  const where =
+    role === "ADMIN" ? undefined : { professionalId: viewerId };
+
+  const reviews = await prisma.review.findMany({
+    where,
+    include: {
+      patient: {
+        select: { name: true, image: true },
+      },
+      professional: {
+        select: { name: true, image: true },
+      },
+    },
+    orderBy: { createdAt: "desc" },
+  });
+
+  return reviews.map((review) => ({
+    id: review.id,
+    rating: review.rating,
+    comment: review.comment,
+    createdAt: review.createdAt,
+    patient: review.patient,
+    professional: review.professional,
+  }));
 }

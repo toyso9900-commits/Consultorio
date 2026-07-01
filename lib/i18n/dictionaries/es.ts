@@ -263,6 +263,11 @@ export const es = {
     thankYou: "¡Gracias por tu valoración!",
     error: "Seleccioná una calificación entre 1 y 5 estrellas.",
     submitError: "No se pudo enviar la valoración.",
+    errorAlreadyReviewed: "Esta cita ya fue valorada.",
+    errorAppointmentNotCompleted: "La cita debe estar completada para valorar.",
+    errorUnauthorized: "No podés valorar esta cita.",
+    errorInvalidScore: "Seleccioná una calificación entre 1 y 5 estrellas.",
+    errorNotFound: "No se encontró la cita.",
   },
   professionalDashboard: {
     professionalBadge: "Panel del Profesional",

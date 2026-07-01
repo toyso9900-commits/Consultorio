@@ -263,6 +263,11 @@ export const en = {
     thankYou: "Thanks for your rating!",
     error: "Please select a rating between 1 and 5 stars.",
     submitError: "Could not submit rating.",
+    errorAlreadyReviewed: "This appointment has already been rated.",
+    errorAppointmentNotCompleted: "The appointment must be completed before rating.",
+    errorUnauthorized: "You are not allowed to rate this appointment.",
+    errorInvalidScore: "Please select a rating between 1 and 5 stars.",
+    errorNotFound: "Appointment not found.",
   },
   professionalDashboard: {
     professionalBadge: "Professional Dashboard",

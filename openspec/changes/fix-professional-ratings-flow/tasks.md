@@ -27,20 +27,20 @@ Chain strategy: stacked-to-main
 ## Phase 1: Foundation
 
 - [x] 1.1 Extend `prisma/seed.ts` to create a deterministic admin, a validated professional with a complete `ProfessionalProfile`, a patient with a `PatientProfile`, and one past `COMPLETED` appointment without a review.
-- [ ] 1.2 Add `ReviewErrorCode` and `SubmitReviewResult` types to `lib/reviews.ts`.
+- [x] 1.2 Add `ReviewErrorCode` and `SubmitReviewResult` types to `lib/reviews.ts`.
 
 ## Phase 2: Core Rating Logic
 
-- [ ] 2.1 Refactor `submitReview` in `lib/reviews.ts` to return `{ success: true }` or `{ success: false; error: ReviewErrorCode }` with codes `NOT_FOUND`, `UNAUTHORIZED`, `APPOINTMENT_NOT_COMPLETED`, `ALREADY_REVIEWED`, and `INVALID_SCORE`.
-- [ ] 2.2 Recompute the professional's average rating and review count inside the same Prisma transaction as `review.create` in `submitReview`.
-- [ ] 2.3 Add `getReviewsForViewer(viewerId, role)` to `lib/reviews.ts`, returning reviews filtered by `professionalId` for professionals and unfiltered for admins.
+- [x] 2.1 Refactor `submitReview` in `lib/reviews.ts` to return `{ success: true }` or `{ success: false; error: ReviewErrorCode }` with codes `NOT_FOUND`, `UNAUTHORIZED`, `APPOINTMENT_NOT_COMPLETED`, `ALREADY_REVIEWED`, and `INVALID_SCORE`.
+- [x] 2.2 Recompute the professional's average rating and review count inside the same Prisma transaction as `review.create` in `submitReview`.
+- [x] 2.3 Add `getReviewsForViewer(viewerId, role)` to `lib/reviews.ts`, returning reviews filtered by `professionalId` for professionals and unfiltered for admins.
 
 ## Phase 3: UI Feedback & Patient Prompt
 
-- [ ] 3.1 Add translated error message keys for each `ReviewErrorCode` to `lib/i18n/dictionaries/es.ts` and `lib/i18n/dictionaries/en.ts`.
-- [ ] 3.2 Update `components/rating/rating-form.tsx` to map returned error codes to dictionary keys and preserve the client-side 1–5 score guard.
-- [ ] 3.3 Verify `app/paciente/dashboard/page.tsx` passes `getPendingReviewsForPatient` results to `RatingPrompt`; fix any prop or rendering regression.
-- [ ] 3.4 Verify `components/rating/rating-prompt.tsx` correctly filters out submitted appointments via `onSubmitted` and does not hide prompts due to stale local state.
+- [x] 3.1 Add translated error message keys for each `ReviewErrorCode` to `lib/i18n/dictionaries/es.ts` and `lib/i18n/dictionaries/en.ts`.
+- [x] 3.2 Update `components/rating/rating-form.tsx` to map returned error codes to dictionary keys and preserve the client-side 1–5 score guard.
+- [x] 3.3 Verify `app/paciente/dashboard/page.tsx` passes `getPendingReviewsForPatient` results to `RatingPrompt`; fix any prop or rendering regression.
+- [x] 3.4 Verify `components/rating/rating-prompt.tsx` correctly filters out submitted appointments via `onSubmitted` and does not hide prompts due to stale local state.
 
 ## Phase 4: Professional Reviews Page
 
