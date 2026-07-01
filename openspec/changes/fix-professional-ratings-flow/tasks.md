@@ -44,11 +44,11 @@ Chain strategy: stacked-to-main
 
 ## Phase 4: Professional Reviews Page
 
-- [ ] 4.1 Replace the empty state in `app/profesional/dashboard/resenas/page.tsx` with a server-rendered list using `getReviewsForViewer`, displaying rating, comment, patient name, and created date.
-- [ ] 4.2 Add empty-state and list/table dictionary keys to `lib/i18n/dictionaries/es.ts` and `lib/i18n/dictionaries/en.ts` if missing.
+- [x] 4.1 Replace the empty state in `app/profesional/dashboard/resenas/page.tsx` with a server-rendered list using `getReviewsForViewer`, displaying rating, comment, patient name, and created date.
+- [x] 4.2 Add empty-state and list/table dictionary keys to `lib/i18n/dictionaries/es.ts` and `lib/i18n/dictionaries/en.ts` if missing.
 
 ## Phase 5: Verification
 
-- [ ] 5.1 Run `npx prisma db reset` and `npx prisma db seed`, then confirm the three accounts and one `COMPLETED` appointment without a review exist.
-- [ ] 5.2 Run `npm run typecheck` and `npm run lint`; fix any errors introduced by the refactor.
-- [ ] 5.3 Manually verify the patient rating prompt, each error code path, successful review creation, average update, and `/profesional/dashboard/resenas` for both professional and admin roles.
+- [x] 5.1 Run `npx prisma db reset` and `npx prisma db seed`, then confirm the three accounts and one `COMPLETED` appointment without a review exist.
+- [x] 5.2 Run `npm run typecheck` and `npm run lint`; fix any errors introduced by the refactor.
+- [x] 5.3 Manually verify the patient rating prompt, each error code path, successful review creation, average update, and `/profesional/dashboard/resenas` for both professional and admin roles.

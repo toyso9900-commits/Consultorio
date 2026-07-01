@@ -361,9 +361,10 @@ export const en = {
     title: "Reviews",
     adminSubtitle: "Moderation of patient reviews for professionals.",
     professionalSubtitle: "Your reviews and ratings.",
-    emptyTitle: "The reviews module will be available soon.",
-    emptySubtitle:
-      "In the meantime, direct messages between patients and professionals remain active.",
+    emptyTitle: "No reviews yet.",
+    emptySubtitle: "Patient ratings will appear here once they are submitted.",
+    noName: "No name",
+    noComment: "No comment",
   },
   professionalAppointments: {
     title: "Appointments",

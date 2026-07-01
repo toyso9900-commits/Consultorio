@@ -360,9 +360,11 @@ export const es = {
     title: "Reseñas",
     adminSubtitle: "Moderación de reseñas de pacientes hacia profesionales.",
     professionalSubtitle: "Tus reseñas y valoraciones.",
-    emptyTitle: "El módulo de reseñas estará disponible próximamente.",
+    emptyTitle: "No hay reseñas todavía.",
     emptySubtitle:
-      "Mientras tanto, los mensajes directos entre pacientes y profesionales siguen activos.",
+      "Las valoraciones de tus pacientes aparecerán acá cuando las envíen.",
+    noName: "Sin nombre",
+    noComment: "Sin comentario",
   },
   professionalAppointments: {
     title: "Citas",
