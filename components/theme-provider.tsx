@@ -1,13 +1,18 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import {
   createContext,
   useContext,
   useEffect,
+  useLayoutEffect,
   useState,
   useCallback,
   ReactNode,
 } from "react";
+
+const useIsomorphicLayoutEffect =
+  typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
 export type Theme = "light" | "dark" | "system";
 
@@ -65,10 +70,11 @@ export function ThemeProvider({
   const [resolvedTheme, setResolvedTheme] = useState<"light" | "dark">(() =>
     resolveTheme(readStoredTheme(defaultTheme))
   );
+  const pathname = usePathname();
 
-  useEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     applyTheme(resolvedTheme);
-  }, [resolvedTheme]);
+  }, [resolvedTheme, pathname]);
 
   useEffect(() => {
     const media = window.matchMedia("(prefers-color-scheme: dark)");

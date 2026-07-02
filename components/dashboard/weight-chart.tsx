@@ -1,5 +1,6 @@
 "use client";
 
+import { useId } from "react";
 import {
   Area,
   Line,
@@ -11,6 +12,7 @@ import {
   ComposedChart,
 } from "recharts";
 import { useI18n } from "@/lib/i18n/client";
+import { useTheme } from "@/components/theme-provider";
 
 interface WeightChartDataPoint {
   date: string;
@@ -23,6 +25,8 @@ interface WeightChartProps {
 
 export function WeightChart({ data }: WeightChartProps) {
   const { dictionary, locale } = useI18n();
+  const { resolvedTheme } = useTheme();
+  const gradientId = useId();
 
   const chartData = data.map((point) => ({
     ...point,
@@ -33,14 +37,14 @@ export function WeightChart({ data }: WeightChartProps) {
   }));
 
   return (
-    <div className="h-64 w-full">
+    <div key={resolvedTheme} className="h-64 w-full">
       <ResponsiveContainer width="100%" height="100%">
         <ComposedChart
           data={chartData}
           margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
         >
           <defs>
-            <linearGradient id="colorWeight" x1="0" y1="0" x2="0" y2="1">
+            <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
               <stop
                 offset="5%"
                 stopColor="var(--role-patient-primary)"
@@ -94,7 +98,7 @@ export function WeightChart({ data }: WeightChartProps) {
             type="monotone"
             dataKey="weight"
             stroke="none"
-            fill="url(#colorWeight)"
+            fill={`url(#${gradientId})`}
           />
           <Line
             type="monotone"

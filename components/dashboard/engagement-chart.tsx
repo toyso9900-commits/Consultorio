@@ -10,6 +10,7 @@ import {
   BarChart,
 } from "recharts";
 import { useI18n } from "@/lib/i18n/client";
+import { useTheme } from "@/components/theme-provider";
 
 interface EngagementChartDataPoint {
   date: string;
@@ -22,6 +23,7 @@ interface EngagementChartProps {
 
 export function EngagementChart({ data }: EngagementChartProps) {
   const { dictionary, locale } = useI18n();
+  const { resolvedTheme } = useTheme();
 
   const chartData = data.map((point) => ({
     ...point,
@@ -32,7 +34,7 @@ export function EngagementChart({ data }: EngagementChartProps) {
   }));
 
   return (
-    <div className="h-72 w-full">
+    <div key={resolvedTheme} className="h-72 w-full">
       <ResponsiveContainer width="100%" height="100%">
         <BarChart
           data={chartData}
