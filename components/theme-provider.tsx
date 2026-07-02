@@ -116,3 +116,8 @@ export function useTheme(): ThemeProviderState {
   }
   return context;
 }
+
+export function useResolvedTheme(): "light" | "dark" {
+  const context = useContext(ThemeContext);
+  return context?.resolvedTheme ?? "light";
+}

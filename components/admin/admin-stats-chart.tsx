@@ -12,7 +12,7 @@ import {
   ComposedChart,
 } from "recharts";
 import { useI18n } from "@/lib/i18n/client";
-import { useTheme } from "@/components/theme-provider";
+import { useResolvedTheme } from "@/components/theme-provider";
 
 interface ChartDataPoint {
   date: string;
@@ -26,7 +26,7 @@ interface AdminStatsChartProps {
 
 export function AdminStatsChart({ data }: AdminStatsChartProps) {
   const { dictionary } = useI18n();
-  const { resolvedTheme } = useTheme();
+  const resolvedTheme = useResolvedTheme();
   const gradientId = useId();
 
   const defaultData: ChartDataPoint[] = [
@@ -67,7 +67,7 @@ export function AdminStatsChart({ data }: AdminStatsChartProps) {
             contentStyle={{
               borderRadius: "0.75rem",
               border: "1px solid var(--border)",
-              boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
+              boxShadow: "0 4px 6px -1px color-mix(in hsl, var(--border) 20%, transparent)",
               backgroundColor: "var(--card)",
               color: "var(--card-foreground)",
             }}

@@ -10,7 +10,7 @@ import {
   BarChart,
 } from "recharts";
 import { useI18n } from "@/lib/i18n/client";
-import { useTheme } from "@/components/theme-provider";
+import { useResolvedTheme } from "@/components/theme-provider";
 
 interface EngagementChartDataPoint {
   date: string;
@@ -23,7 +23,7 @@ interface EngagementChartProps {
 
 export function EngagementChart({ data }: EngagementChartProps) {
   const { dictionary, locale } = useI18n();
-  const { resolvedTheme } = useTheme();
+  const resolvedTheme = useResolvedTheme();
 
   const chartData = data.map((point) => ({
     ...point,
@@ -67,7 +67,7 @@ export function EngagementChart({ data }: EngagementChartProps) {
             contentStyle={{
               borderRadius: "0.75rem",
               border: "1px solid var(--border)",
-              boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
+              boxShadow: "0 4px 6px -1px color-mix(in hsl, var(--border) 20%, transparent)",
               backgroundColor: "var(--card)",
               color: "var(--card-foreground)",
             }}
