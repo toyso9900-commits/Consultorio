@@ -10,6 +10,8 @@ import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import type { MealType, MealSource } from "@prisma/client";
 
+const GEMINI_MODEL = "gemini-flash-latest";
+
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"];
 const MAX_SIZE_MB = 5;
 const UPLOAD_DIR = path.join(process.cwd(), "public", "uploads", "meals");
@@ -117,7 +119,7 @@ export async function analyzeFoodImage(
     const ai = new GoogleGenAI({ apiKey });
 
     const response = await ai.models.generateContent({
-      model: "gemini-1.5-flash-latest",
+      model: GEMINI_MODEL,
       contents: [
         {
           role: "user",
@@ -219,7 +221,7 @@ export async function saveMealEntry(
         carbsG,
         fatG,
         aiConfidence: confidence,
-        aiModel: "gemini-1.5-flash-latest",
+        aiModel: GEMINI_MODEL,
         source: "AI",
         imageUrl,
         consumedAt: consumedAt ? new Date(consumedAt) : new Date(),
