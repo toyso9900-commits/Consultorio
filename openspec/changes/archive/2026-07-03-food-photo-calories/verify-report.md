@@ -12,9 +12,11 @@
 
 ## Executive Summary
 
-All OpenSpec tasks are marked complete and the project passes `typecheck`, `lint`, and `build`. Static inspection confirms the new Prisma model, enums, server actions, components, i18n keys, sidebar link, and dashboard widget are in place. However, one functional deviation blocks a clean pass: the nutrition history section is titled "Hoy"/"Today" but renders **all** saved meal entries, not just today's, violating the spec requirement that the page "MUST list today's saved entries." Runtime verification of the AI flow was not performed because there is no test runner and this environment cannot run a browser/manual session.
+The history-filtering fix has been applied and verified. `getMealEntries` now queries only `MealEntry` rows whose `consumedAt` falls within the current calendar day, and the nutrition page passes those filtered entries to `MealHistoryList` under the "Hoy"/"Today" heading. All OpenSpec tasks remain checked, and `npm run typecheck`, `npm run lint`, and `npm run build` pass cleanly.
 
-**Verdict**: `FAIL` (one CRITICAL spec deviation). Once the history filter is corrected, the change can move to `PASS WITH WARNINGS` pending manual AI-flow validation.
+The implementation is therefore spec-compliant for all verifiable dimensions. The end-to-end AI upload→analysis→save flow still requires manual/browser validation in an environment with a valid `GEMINI_API_KEY`, so the verdict is `PASS WITH WARNINGS` rather than an unconditional `PASS`.
+
+**Verdict**: `PASS WITH WARNINGS`
 
 ---
 
@@ -29,19 +31,19 @@ All OpenSpec tasks are marked complete and the project passes `typecheck`, `lint
 | 1.5 Add `nav.meals` and `nutrition.*` i18n keys | ✅ | `lib/i18n/dictionaries/es.ts`, `en.ts`, `lib/i18n/dictionaries/index.ts` |
 | 1.6 Add patient "Meals" nav item | ✅ | `components/layout/sidebar.tsx` lines 55, 17 |
 | 1.7 Create `get-today-calories.ts` and update dashboard | ✅ | `app/paciente/dashboard/nutricion/get-today-calories.ts`; `app/paciente/dashboard/page.tsx` line 53 |
-| 2.1 Create `actions.ts` exporting required functions/schemas | ✅ | `app/paciente/dashboard/nutricion/actions.ts` lines 23–261 |
+| 2.1 Create `actions.ts` exporting required functions/schemas | ✅ | `app/paciente/dashboard/nutricion/actions.ts` lines 23–275 |
 | 2.2 File validation (MIME + 5 MB) | ✅ | `actions.ts` lines 84–92 |
 | 2.3 Per-user in-memory rate limiting | ✅ | `actions.ts` lines 19–72, 94–96 |
 | 2.4 Store images under `public/uploads/meals/` | ✅ | `actions.ts` lines 98–108 |
 | 2.5 Gemini call with JSON prompt + Zod validation | ✅ | `actions.ts` lines 112–171 |
 | 2.6 `saveMealEntry` persistence | ✅ | `actions.ts` lines 186–238 |
-| 2.7 `getMealEntries(userId)` | ✅ | `actions.ts` lines 240–261 |
+| 2.7 `getMealEntries(userId)` | ✅ | `actions.ts` lines 240–275; now filters to current day |
 | 3.1 `food-photo-upload.tsx` | ✅ | `components/food/food-photo-upload.tsx` |
 | 3.2 `food-analysis-result.tsx` | ✅ | `components/food/food-analysis-result.tsx` |
 | 3.3 `meal-history-list.tsx` | ✅ | `components/food/meal-history-list.tsx` |
 | 3.4 Nutrition page composing all parts | ✅ | `app/paciente/dashboard/nutricion/page.tsx` + `nutrition-page-client.tsx` |
 | 4.1 `typecheck` and `build` pass | ✅ | See Build Evidence below |
-| 4.2 Manual verification noted in apply-progress | ⚠️ | Documented as smoke-tested by apply agent; not re-run in this headless session |
+| 4.2 Manual verification noted in apply-progress | ⚠️ | Smoke-tested by apply agent; not re-run in this headless session |
 
 **Task completion**: 20/20 checked.
 
@@ -77,17 +79,17 @@ All OpenSpec tasks are marked complete and the project passes `typecheck`, `lint
 - Environments: .env
 
   Creating an optimized production build ...
-✓ Compiled successfully in 44s
+✓ Compiled successfully in 31.4s
   Running TypeScript ...
-  Finished TypeScript in 33.5s ...
+  Finished TypeScript in 33.2s ...
   Collecting page data using 7 workers ...
   Generating static pages using 7 workers (0/27) ...
   ...
-✓ Generating static pages using 7 workers (27/27) in 2.2s
+✓ Generating static pages using 7 workers (27/27) in 2.5s
   Finalizing page optimization ...
 
 Route (app)
-├ ...
+┌ ...
 ├ ƒ /paciente/dashboard/nutricion
 ├ ...
 ```
@@ -107,7 +109,7 @@ Build completed with exit code `0` and the `/paciente/dashboard/nutricion` route
 | **analyzeFoodImage** | Invalid file rejected | `actions.ts` lines 84–92 enforce MIME type, size, non-empty | ✅ Implemented |
 | **Nutrition Page** | Playground analysis | `FoodPhotoUpload` calls `analyzeFoodImage`; only `setAnalysis` is called, no DB write until Save | ⚠️ Implemented / not runtime-tested |
 | **Nutrition Page** | Save analyzed meal | `FoodAnalysisResult` calls `saveMealEntry`; `revalidatePath` refreshes page | ⚠️ Implemented / not runtime-tested |
-| **Nutrition Page** | History reflects saved entries | `MealHistoryList` renders entries; **but entries are not filtered to today** | ❌ **CRITICAL deviation** |
+| **Nutrition Page** | History reflects saved entries | `getMealEntries` now filters to today's rows; `MealHistoryList` renders them | ✅ Implemented |
 | **Navigation** | Sidebar renders meals link | `components/layout/sidebar.tsx` PATIENT nav lines 53–61 | ✅ Implemented |
 | **Dashboard** | Calorie widget sums today | `app/paciente/dashboard/page.tsx` line 53 uses `getTodayCalories(userId)` | ✅ Implemented |
 | **i18n** | Translation coverage | `es.ts` and `en.ts` contain full `nutrition` namespace; `Dictionary` interface updated | ✅ Implemented |
@@ -129,6 +131,7 @@ Build completed with exit code `0` and the `/paciente/dashboard/nutricion` route
 | Sidebar includes "Comidas"/"Meals" link | Yes | `components/layout/sidebar.tsx` line 55 | ✅ |
 | Dashboard widget sums today's `MealEntry.calories` | Yes | `app/paciente/dashboard/page.tsx` line 53 | ✅ |
 | i18n keys present in both locales | Yes | `es.ts` and `en.ts` `nutrition` namespace; `Dictionary` interface updated | ✅ |
+| `getMealEntries` filters to today's entries | Yes | `actions.ts` lines 251–265 filter `consumedAt` to current calendar day | ✅ |
 
 ---
 
@@ -140,7 +143,7 @@ Build completed with exit code `0` and the `/paciente/dashboard/nutricion` route
 | File storage in `public/uploads/meals/` with UUID | Yes | Yes (`randomUUID` + extension) | ✅ |
 | Rate limit window | 15 min sliding window, 10 requests in design.md | 15 min, 5 requests | ⚠️ WARNING: design doc stale; implementation matches tasks/spec |
 | Vision model | `gemini-1.5-flash-latest` | `gemini-flash-latest` alias | ⚠️ WARNING: API alias substitution (documented in apply-progress) |
-| History list receives "today's entries" | Yes | Receives all user entries | ❌ **CRITICAL deviation** |
+| History list receives "today's entries" | Yes | `getMealEntries` now returns only today's rows | ✅ |
 | i18n key plan | Listed keys | All present plus extra UI labels (calories, protein, etc.) | ✅ |
 
 ---
@@ -149,11 +152,7 @@ Build completed with exit code `0` and the `/paciente/dashboard/nutricion` route
 
 ### CRITICAL
 
-1. **History section shows all saved entries, not just today's.**
-   - **Location**: `app/paciente/dashboard/nutricion/actions.ts` `getMealEntries` (lines 250–255) and `app/paciente/dashboard/nutricion/page.tsx`.
-   - **Details**: `getMealEntries` queries `where: { userId }` with `take: 50` and no date filter. The page passes these unfiltered entries to `MealHistoryList`, whose title is "Hoy"/"Today".
-   - **Spec impact**: Violates "The page MUST list today's saved entries" and the scenario "History reflects saved entries" (today).
-   - **Recommended fix**: Add a `startOfDay`/`endOfDay` filter on `consumedAt` in `getMealEntries`, or filter server-side in `page.tsx` before passing props.
+None.
 
 ### WARNING
 
@@ -171,7 +170,7 @@ Build completed with exit code `0` and the `/paciente/dashboard/nutricion` route
 1. Revoke `URL.createObjectURL` previews in `FoodPhotoUpload` to avoid client-side memory leaks.
 2. Clear the analysis panel after a successful save to give clearer user feedback.
 3. Add integration/unit tests for file validation, rate limiting, and `saveMealEntry` once a test runner is introduced.
-4. Consider server-side timezone handling for `getTodayCalories` if users span timezones.
+4. Consider server-side timezone handling for `getTodayCalories` and `getMealEntries` if users span timezones.
 
 ---
 
@@ -182,6 +181,8 @@ Build completed with exit code `0` and the `/paciente/dashboard/nutricion` route
 - `npm run typecheck` passes (no TypeScript errors).
 - `npm run lint` passes.
 - `npm run build` passes and includes `/paciente/dashboard/nutricion`.
+- `getMealEntries` now filters `consumedAt` to the current calendar day (`actions.ts` lines 251–265).
+- The nutrition page passes filtered entries to `MealHistoryList` (`page.tsx` line 17 → `NutritionPageClient` → `MealHistoryList`).
 - Prisma schema contains `MealEntry`, `MealType`, and `MealSource`.
 - Migration file `20260703201533_add_meal_entries` exists.
 - `app/paciente/dashboard/nutricion/actions.ts` exports `analyzeFoodImage`, `saveMealEntry`, `getMealEntries`, Zod schemas, and result types.
@@ -195,7 +196,7 @@ Build completed with exit code `0` and the `/paciente/dashboard/nutricion` route
 - Photo upload and camera capture on mobile/desktop.
 - Gemini analysis returning valid JSON and the UI displaying estimates.
 - Playground analysis **not** creating a `MealEntry`.
-- Save flow persisting a row and the corrected history list showing only today's entries.
+- Save flow persisting a row and the history list showing only today's entries.
 - Dashboard "Calories today" widget updating after a save.
 - Locale switch rendering all new labels in English/Spanish.
 - Invalid file and rate-limit error UI messages.
@@ -205,12 +206,12 @@ Build completed with exit code `0` and the `/paciente/dashboard/nutricion` route
 
 ## 8. Final Verdict
 
-**`FAIL`**
+**`PASS WITH WARNINGS`**
 
-The implementation is structurally complete and builds cleanly, but the CRITICAL history-filter deviation means the spec requirement "list today's saved entries" is not met. Once `getMealEntries` (or the page) is corrected to return only today's entries, the change can be re-verified. At that point the expected verdict is **`PASS WITH WARNINGS`** because the AI end-to-end flow still requires manual/browser validation in an environment with a valid Gemini API key.
+The previous CRITICAL history-filter deviation has been resolved. The implementation is structurally complete, builds cleanly, and the spec requirement "list today's saved entries" is now met because `getMealEntries` filters by the current day before rendering. The AI end-to-end flow still requires manual/browser validation in an environment with a valid Gemini API key, so an unconditional `PASS` is not justified.
 
 ---
 
 ## 9. Next Recommended Phase
 
-- **`sdd-apply`** to fix the history filtering deviation, then re-run `sdd-verify`.
+- **`sdd-archive`** is now viable once manual AI-flow validation is completed, or immediately if the team accepts the documented manual-only risk for the vision end-to-end path.
