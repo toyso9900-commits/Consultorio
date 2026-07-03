@@ -269,7 +269,26 @@ model MealEntry {
   createdAt     DateTime   @default(now())
   updatedAt     DateTime   @updatedAt
 
+  ingredients MealIngredient[]
+
   @@index([userId, consumedAt])
+}
+
+model MealIngredient {
+  id          String    @id @default(cuid())
+  mealEntryId String
+  mealEntry   MealEntry @relation(fields: [mealEntryId], references: [id], onDelete: Cascade)
+  name        String
+  weightG     Float?
+  calories    Int
+  proteinG    Float?
+  carbsG      Float?
+  fatG        Float?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([mealEntryId])
 }
 
 enum MealType {
