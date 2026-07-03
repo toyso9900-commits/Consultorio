@@ -5,7 +5,7 @@ import { DashboardHeader } from "./dashboard-header";
 interface DashboardShellProps {
   children: ReactNode;
   role: UserRole;
-  title: string;
+  title?: string;
   subtitle?: string;
   name?: string | null;
   image?: string | null;

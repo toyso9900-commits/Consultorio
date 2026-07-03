@@ -6,6 +6,7 @@ import { auth } from "@/lib/auth";
 import { Toaster } from "sonner";
 import { Providers } from "./providers";
 import { getLocale, getDictionary } from "@/lib/i18n/server";
+import { HeaderAuth } from "@/components/layout/header-auth";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -79,16 +80,11 @@ export default async function RootLayout({
               </Link>
               <div className="flex items-center gap-4 text-sm font-medium">
                 {session?.user ? (
-                  <Link
-                    href={
-                      session.user.role === "PATIENT"
-                        ? "/paciente/dashboard"
-                        : "/profesional/dashboard"
-                    }
-                    className="text-muted-foreground hover:text-primary"
-                  >
-                    {dictionary.header.dashboard}
-                  </Link>
+                  <HeaderAuth
+                    name={session.user.name}
+                    image={session.user.image}
+                    role={session.user.role}
+                  />
                 ) : (
                   <div className="flex items-center gap-4">
                     <Link

@@ -42,6 +42,8 @@ function applyTheme(resolved: "light" | "dark") {
   const root = document.documentElement;
   root.classList.remove("light", "dark");
   root.classList.add(resolved);
+  document.body.classList.remove("light", "dark");
+  document.body.classList.add(resolved);
 }
 
 function readStoredTheme(fallback: Theme): Theme {
@@ -75,6 +77,18 @@ export function ThemeProvider({
   useIsomorphicLayoutEffect(() => {
     applyTheme(resolvedTheme);
   }, [resolvedTheme, pathname]);
+
+  useEffect(() => {
+    const root = document.documentElement;
+    const observer = new MutationObserver(() => {
+      if (!root.classList.contains(resolvedTheme)) {
+        applyTheme(resolvedTheme);
+      }
+    });
+
+    observer.observe(root, { attributes: true, attributeFilter: ["class"] });
+    return () => observer.disconnect();
+  }, [resolvedTheme]);
 
   useEffect(() => {
     const media = window.matchMedia("(prefers-color-scheme: dark)");
