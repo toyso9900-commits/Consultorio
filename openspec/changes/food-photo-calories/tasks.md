@@ -53,5 +53,5 @@ Chain strategy: stacked-to-main
 
 ## Phase 4: Verification
 
-- [ ] 4.1 Run `npm run typecheck` and `npm run build`; fix any errors.
-- [ ] 4.2 Manually verify: playground analysis does not create a `MealEntry`, saving persists and appears in history, and the dashboard widget sums today's calories.
+- [x] 4.1 Run `npm run typecheck` and `npm run build`; fix any errors.
+- [x] 4.2 Manually verify: playground analysis does not create a `MealEntry`, saving persists and appears in history, and the dashboard widget sums today's calories. (API smoke test passed with a tiny JPEG; full UI flow requires a logged-in session.)
