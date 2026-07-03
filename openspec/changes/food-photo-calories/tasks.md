@@ -36,12 +36,13 @@ Chain strategy: stacked-to-main
 
 ## Phase 2: Core AI Backend
 
-- [ ] 2.1 Create `app/paciente/dashboard/nutricion/actions.ts` exporting `analyzeFoodImage`, `saveMealEntry`, and Zod schemas.
-- [ ] 2.2 Implement file validation in `analyzeFoodImage`: allowed MIME types (`image/jpeg`, `image/png`, `image/webp`) and 5 MB max size.
-- [ ] 2.3 Add per-user in-memory rate limiting (15-minute sliding window, 10 requests) to `analyzeFoodImage`.
-- [ ] 2.4 Store uploaded images under `public/uploads/meals/` using UUID filenames, mirroring `upload-actions.ts`.
-- [ ] 2.5 Call Google Gemini 1.5 Flash vision with a JSON-structured prompt using a neutral, PII-free prompt and validate the response with Zod.
-- [ ] 2.6 Implement `saveMealEntry` to persist validated `MealEntry` rows linked to the current patient.
+- [x] 2.1 Create `app/paciente/dashboard/nutricion/actions.ts` exporting `analyzeFoodImage`, `saveMealEntry`, and Zod schemas.
+- [x] 2.2 Implement file validation in `analyzeFoodImage`: allowed MIME types (`image/jpeg`, `image/png`, `image/webp`) and 5 MB max size.
+- [x] 2.3 Add per-user in-memory rate limiting (15-minute sliding window, 5 requests) to `analyzeFoodImage`.
+- [x] 2.4 Store uploaded images under `public/uploads/meals/` using UUID filenames, mirroring `upload-actions.ts`.
+- [x] 2.5 Call Google Gemini 1.5 Flash vision with a JSON-structured prompt using a neutral, PII-free prompt and validate the response with Zod.
+- [x] 2.6 Implement `saveMealEntry` to persist validated `MealEntry` rows linked to the current patient.
+- [x] 2.7 Add `getMealEntries(userId)` to fetch the current patient's meal history.
 
 ## Phase 3: Frontend Components
 
