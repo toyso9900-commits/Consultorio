@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { Save } from "lucide-react";
 import { saveMealEntry, type FoodAnalysisData } from "@/app/paciente/dashboard/nutricion/actions";
 import type { Dictionary } from "@/lib/i18n/server";
@@ -72,11 +73,13 @@ export function FoodAnalysisResult({
       </h3>
 
       {imageUrl && (
-        <div className="overflow-hidden rounded-xl border border-slate-200 dark:border-slate-800">
-          <img
+        <div className="relative h-48 overflow-hidden rounded-xl border border-slate-200 dark:border-slate-800">
+          <Image
             src={imageUrl}
             alt="Analyzed meal"
-            className="max-h-48 w-full object-cover"
+            fill
+            unoptimized
+            className="object-cover"
           />
         </div>
       )}

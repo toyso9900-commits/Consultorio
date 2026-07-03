@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition, useRef } from "react";
+import Image from "next/image";
 import { Camera, Upload } from "lucide-react";
 import { analyzeFoodImage, type AnalyzeFoodImageResult } from "@/app/paciente/dashboard/nutricion/actions";
 import type { Dictionary } from "@/lib/i18n/server";
@@ -76,11 +77,13 @@ export function FoodPhotoUpload({ dictionary, onAnalysis }: FoodPhotoUploadProps
       />
 
       {preview && (
-        <div className="overflow-hidden rounded-xl border border-slate-200 dark:border-slate-800">
-          <img
+        <div className="relative h-64 overflow-hidden rounded-xl border border-slate-200 dark:border-slate-800">
+          <Image
             src={preview}
             alt="Selected meal"
-            className="max-h-64 w-full object-cover"
+            fill
+            unoptimized
+            className="object-cover"
           />
         </div>
       )}
