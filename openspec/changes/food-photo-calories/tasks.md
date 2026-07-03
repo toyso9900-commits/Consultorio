@@ -46,10 +46,10 @@ Chain strategy: stacked-to-main
 
 ## Phase 3: Frontend Components
 
-- [ ] 3.1 Create `components/food/food-photo-upload.tsx` with file/camera input, preview, and `useTransition` submission.
-- [ ] 3.2 Create `components/food/food-analysis-result.tsx` to display and edit AI results and trigger `saveMealEntry`.
-- [ ] 3.3 Create `components/food/meal-history-list.tsx` to list today's saved entries with type, calories, and time.
-- [ ] 3.4 Create `app/paciente/dashboard/nutricion/page.tsx` composing upload, result, history, and i18n; fetch today's history server-side.
+- [x] 3.1 Create `components/food/food-photo-upload.tsx` with file/camera input, preview, and `useTransition` submission.
+- [x] 3.2 Create `components/food/food-analysis-result.tsx` to display and edit AI results and trigger `saveMealEntry`.
+- [x] 3.3 Create `components/food/meal-history-list.tsx` to list today's saved entries with type, calories, and time.
+- [x] 3.4 Create `app/paciente/dashboard/nutricion/page.tsx` composing upload, result, history, and i18n; fetch today's history server-side.
 
 ## Phase 4: Verification
 

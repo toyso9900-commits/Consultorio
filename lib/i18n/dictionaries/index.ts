@@ -44,6 +44,7 @@ export interface Dictionary {
   auth: Record<keyof typeof es.auth, string>;
   errors: Record<keyof typeof es.errors, string>;
   patientHome: Record<keyof typeof es.patientHome, string>;
+  nutrition: Record<keyof typeof es.nutrition, string>;
   patientExperts: {
     backToDashboard: string;
     title: string;
