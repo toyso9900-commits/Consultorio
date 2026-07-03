@@ -248,8 +248,22 @@ export async function getMealEntries(
   }
 
   try {
+    const now = new Date();
+    const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const startOfNextDay = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate() + 1
+    );
+
     const entries = await prisma.mealEntry.findMany({
-      where: { userId },
+      where: {
+        userId,
+        consumedAt: {
+          gte: startOfDay,
+          lt: startOfNextDay,
+        },
+      },
       orderBy: { consumedAt: "desc" },
       take: 50,
     });
