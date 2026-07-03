@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { getAppointmentDashboardCounts } from "@/lib/appointments";
 import { getWeightHistory } from "@/lib/weight";
 import { getPendingReviewsForPatient } from "@/lib/reviews";
+import { getTodayCalories } from "./nutricion/get-today-calories";
 import {
   Activity,
   Apple,
@@ -48,6 +49,8 @@ export default async function PatientDashboardPage() {
     : [];
 
   const pendingReviews = await getPendingReviewsForPatient(userId);
+
+  const todayCalories = await getTodayCalories(userId);
 
   const weightChartData = weightHistory.map((entry) => ({
     date: entry.recordedAt.toISOString(),
@@ -124,7 +127,9 @@ export default async function PatientDashboardPage() {
           <p className="mt-4 text-sm text-slate-500 dark:text-slate-400">
             {dictionary.patientHome.caloriesToday}
           </p>
-          <p className="text-2xl font-bold text-slate-900 dark:text-slate-100">0 kcal</p>
+          <p className="text-2xl font-bold text-slate-900 dark:text-slate-100">
+            {todayCalories} kcal
+          </p>
         </div>
         <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
           <div className="flex h-10 w-10 items-center justify-center rounded-full bg-amber-100 dark:bg-amber-950">

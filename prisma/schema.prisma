@@ -61,6 +61,7 @@ model User {
   appointmentsAsProfessional Appointment[] @relation("ProfessionalAppointments")
 
   calorieEntries CalorieEntry[]
+  mealEntries    MealEntry[]
   subscriptions  Subscription[]
   receivedReviews Review[] @relation("ProfessionalReviews")
   givenReviews    Review[] @relation("PatientReviews")
@@ -243,6 +244,45 @@ model CalorieEntry {
   description String
   calories    Int
   consumedAt  DateTime @default(now())
+}
+
+// AI-assisted meal entries with optional photo and macros
+model MealEntry {
+  id            String     @id @default(cuid())
+  userId        String
+  user          User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  imageUrl      String?
+  description   String
+  mealType      MealType   @default(OTHER)
+
+  calories      Int
+  proteinG      Float?
+  carbsG        Float?
+  fatG          Float?
+
+  aiModel       String?
+  aiConfidence  Float?
+  source        MealSource @default(AI)
+
+  consumedAt    DateTime   @default(now())
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+
+  @@index([userId, consumedAt])
+}
+
+enum MealType {
+  BREAKFAST
+  LUNCH
+  DINNER
+  SNACK
+  OTHER
+}
+
+enum MealSource {
+  AI
+  MANUAL
 }
 
 // Professional subscription plan

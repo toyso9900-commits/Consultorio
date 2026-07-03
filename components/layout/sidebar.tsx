@@ -14,6 +14,7 @@ import {
   FileText,
   Search,
   Briefcase,
+  Camera,
 } from "lucide-react";
 import { useI18n } from "@/lib/i18n/client";
 import type { Dictionary } from "@/lib/i18n/server";
@@ -51,6 +52,7 @@ const navigation: Record<UserRole, NavItem[]> = {
   ],
   PATIENT: [
     { label: (d) => d.nav.home, href: "/paciente/dashboard", icon: LayoutDashboard },
+    { label: (d) => d.nav.meals, href: "/paciente/dashboard/nutricion", icon: Camera },
     { label: (d) => d.nav.experts, href: "/paciente/dashboard/expertos", icon: Search },
     { label: (d) => d.nav.appointments, href: "/paciente/dashboard/citas", icon: CalendarDays },
     { label: (d) => d.nav.messages, href: "/paciente/dashboard/mensajes", icon: MessageSquare },
