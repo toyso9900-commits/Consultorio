@@ -33,10 +33,10 @@ Chain strategy: pending
 
 ## Phase 2: Analysis Pipeline
 
-- [ ] 2.1 Update Zod schemas in `app/paciente/dashboard/nutricion/actions.ts` to include `referenceScale` and `ingredients`.
-- [ ] 2.2 Update Gemini prompt to request reference object, ingredient list, and per-ingredient weights.
-- [ ] 2.3 Apply `computeIngredient` override to each analyzed ingredient before returning results.
-- [ ] 2.4 Update `saveMealEntry` to accept and persist `ingredients` as nested `MealIngredient` rows.
+- [x] 2.1 Update Zod schemas in `app/paciente/dashboard/nutricion/actions.ts` to include `referenceScale` and `ingredients`.
+- [x] 2.2 Update Gemini prompt to request reference object, ingredient list, and per-ingredient weights.
+- [x] 2.3 Apply `computeIngredient` override to each analyzed ingredient before returning results.
+- [x] 2.4 Update `saveMealEntry` to accept and persist `ingredients` as nested `MealIngredient` rows.
 
 ## Phase 3: Dashboard Widget
 

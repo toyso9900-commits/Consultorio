@@ -8,6 +8,7 @@ import { GoogleGenAI } from "@google/genai";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { computeIngredient } from "@/lib/nutrition-data";
 import type { MealType, MealSource } from "@prisma/client";
 
 const GEMINI_MODEL = "gemini-flash-latest";
@@ -20,8 +21,24 @@ const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000;
 const RATE_LIMIT_MAX_REQUESTS = 5;
 const requestTimestamps = new Map<string, number[]>();
 
+const ingredientSchema = z.object({
+  name: z.string().min(1),
+  weightG: z.number().min(0),
+  calories: z.number().int().min(0),
+  proteinG: z.number().min(0).optional(),
+  carbsG: z.number().min(0).optional(),
+  fatG: z.number().min(0).optional(),
+  confidence: z.number().min(0).max(1),
+});
+
 const foodAnalysisSchema = z.object({
   description: z.string().min(1),
+  referenceScale: z.object({
+    type: z.enum(["coin", "card", "spoon", "hand", "none"]),
+    detected: z.boolean(),
+    confidence: z.number().min(0).max(1),
+  }),
+  ingredients: z.array(ingredientSchema),
   calories: z.number().int().min(0),
   proteinG: z.number().min(0).optional(),
   carbsG: z.number().min(0).optional(),
@@ -32,7 +49,12 @@ const foodAnalysisSchema = z.object({
 export type FoodAnalysisData = z.infer<typeof foodAnalysisSchema>;
 
 export type AnalyzeFoodImageResult =
-  | { success: true; data: FoodAnalysisData; imageUrl: string }
+  | {
+      success: true;
+      data: FoodAnalysisData;
+      imageUrl: string;
+      needsReferenceWarning: boolean;
+    }
   | { success: false; error: string };
 
 export type SaveMealEntryResult =
@@ -69,6 +91,29 @@ function recordRequest(userId: string): void {
   const timestamps = requestTimestamps.get(userId) ?? [];
   timestamps.push(Date.now());
   requestTimestamps.set(userId, timestamps);
+}
+
+function recomputeIngredient(
+  ingredient: z.infer<typeof ingredientSchema>
+): z.infer<typeof ingredientSchema> {
+  const computed = computeIngredient(
+    ingredient.name,
+    ingredient.weightG,
+    {
+      calories: ingredient.calories,
+      proteinG: ingredient.proteinG,
+      carbsG: ingredient.carbsG,
+      fatG: ingredient.fatG,
+    }
+  );
+
+  return {
+    ...ingredient,
+    calories: computed.calories,
+    proteinG: computed.proteinG,
+    carbsG: computed.carbsG,
+    fatG: computed.fatG,
+  };
 }
 
 export async function analyzeFoodImage(
@@ -125,13 +170,29 @@ export async function analyzeFoodImage(
           role: "user",
           parts: [
             {
-              text: `Analyze this food photo and estimate the nutritional content. Respond ONLY with a JSON object matching this exact schema, no markdown, no extra text:
+              text: `Analyze this food photo and estimate the nutritional content. First, look for a common reference object in the image (coin, card, spoon, or hand) to estimate portion size. If no reference is visible, set referenceScale.type to "none", referenceScale.detected to false, and lower the confidence. Then break the dish into ingredients, estimate each ingredient's weight in grams based on the reference, and provide per-ingredient calories and macros. Respond ONLY with a JSON object matching this exact schema, no markdown, no extra text:
 {
   "description": "short description of the dish",
-  "calories": integer,
-  "proteinG": number (optional),
-  "carbsG": number (optional),
-  "fatG": number (optional),
+  "referenceScale": {
+    "type": "coin" | "card" | "spoon" | "hand" | "none",
+    "detected": boolean,
+    "confidence": number between 0 and 1
+  },
+  "ingredients": [
+    {
+      "name": "ingredient name",
+      "weightG": number,
+      "calories": integer,
+      "proteinG": number (optional),
+      "carbsG": number (optional),
+      "fatG": number (optional),
+      "confidence": number between 0 and 1
+    }
+  ],
+  "calories": integer (total),
+  "proteinG": number (optional, total),
+  "carbsG": number (optional, total),
+  "fatG": number (optional, total),
   "confidence": number between 0 and 1
 }`,
             },
@@ -161,15 +222,46 @@ export async function analyzeFoodImage(
       return { success: false, error: "nutrition.errorAnalysis" };
     }
 
+    const recomputedIngredients = parsed.data.ingredients.map(recomputeIngredient);
+
+    const totals = recomputedIngredients.reduce(
+      (acc, ingredient) => ({
+        calories: acc.calories + ingredient.calories,
+        proteinG: acc.proteinG + (ingredient.proteinG ?? 0),
+        carbsG: acc.carbsG + (ingredient.carbsG ?? 0),
+        fatG: acc.fatG + (ingredient.fatG ?? 0),
+      }),
+      { calories: 0, proteinG: 0, carbsG: 0, fatG: 0 }
+    );
+
+    const finalData: FoodAnalysisData = {
+      ...parsed.data,
+      ingredients: recomputedIngredients,
+      calories: totals.calories,
+      proteinG: totals.proteinG,
+      carbsG: totals.carbsG,
+      fatG: totals.fatG,
+    };
+
     return {
       success: true,
-      data: parsed.data,
+      data: finalData,
       imageUrl,
+      needsReferenceWarning: !finalData.referenceScale.detected,
     };
   } catch {
     return { success: false, error: "nutrition.errorAnalysis" };
   }
 }
+
+const mealIngredientSchema = z.object({
+  name: z.string().min(1),
+  weightG: z.number().min(0).optional(),
+  calories: z.number().int().min(0),
+  proteinG: z.number().min(0).optional(),
+  carbsG: z.number().min(0).optional(),
+  fatG: z.number().min(0).optional(),
+});
 
 const saveMealEntrySchema = z.object({
   description: z.string().min(1),
@@ -181,6 +273,7 @@ const saveMealEntrySchema = z.object({
   confidence: z.number().min(0).max(1).optional(),
   imageUrl: z.string().optional(),
   consumedAt: z.string().datetime().optional(),
+  ingredients: z.array(mealIngredientSchema).optional(),
 });
 
 export async function saveMealEntry(
@@ -201,14 +294,36 @@ export async function saveMealEntry(
   const {
     description,
     mealType,
-    calories,
-    proteinG,
-    carbsG,
-    fatG,
+    calories: inputCalories,
+    proteinG: inputProteinG,
+    carbsG: inputCarbsG,
+    fatG: inputFatG,
     confidence,
     imageUrl,
     consumedAt,
+    ingredients,
   } = parsed.data;
+
+  const hasIngredients = ingredients && ingredients.length > 0;
+
+  const calories = hasIngredients
+    ? ingredients.reduce((sum, ingredient) => sum + ingredient.calories, 0)
+    : inputCalories;
+  const proteinG = hasIngredients
+    ? ingredients.reduce(
+        (sum, ingredient) => sum + (ingredient.proteinG ?? 0),
+        0
+      )
+    : inputProteinG;
+  const carbsG = hasIngredients
+    ? ingredients.reduce(
+        (sum, ingredient) => sum + (ingredient.carbsG ?? 0),
+        0
+      )
+    : inputCarbsG;
+  const fatG = hasIngredients
+    ? ingredients.reduce((sum, ingredient) => sum + (ingredient.fatG ?? 0), 0)
+    : inputFatG;
 
   try {
     const entry = await prisma.mealEntry.create({
@@ -225,6 +340,19 @@ export async function saveMealEntry(
         source: "AI",
         imageUrl,
         consumedAt: consumedAt ? new Date(consumedAt) : new Date(),
+        ingredients:
+          hasIngredients
+            ? {
+                create: ingredients.map((ingredient) => ({
+                  name: ingredient.name,
+                  weightG: ingredient.weightG,
+                  calories: ingredient.calories,
+                  proteinG: ingredient.proteinG,
+                  carbsG: ingredient.carbsG,
+                  fatG: ingredient.fatG,
+                })),
+              }
+            : undefined,
       },
     });
 
