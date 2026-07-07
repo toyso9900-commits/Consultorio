@@ -52,6 +52,6 @@ Chain strategy: pending
 
 ## Phase 5: Verification
 
-- [ ] 5.1 Run `npm run typecheck` and fix type errors.
-- [ ] 5.2 Run `npm run build` and fix build errors.
+- [x] 5.1 Run `npm run typecheck` and fix type errors.
+- [x] 5.2 Run `npm run build` and fix build errors.
 - [ ] 5.3 Smoke test photo upload, ingredient editing, save, and dashboard widget locally.
