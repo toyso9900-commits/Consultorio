@@ -46,9 +46,9 @@ Chain strategy: pending
 
 ## Phase 4: Ingredient Editing UI
 
-- [ ] 4.1 Update `components/food/food-analysis-result.tsx` to render reference-scale banner and editable ingredient rows.
-- [ ] 4.2 Add live totals recalculation and ingredient removal in `components/food/food-analysis-result.tsx`.
-- [ ] 4.3 Add new nutrition and patient-home labels to `lib/i18n/dictionaries/es.ts` and `en.ts`.
+- [x] 4.1 Update `components/food/food-analysis-result.tsx` to render reference-scale banner and editable ingredient rows.
+- [x] 4.2 Add live totals recalculation and ingredient removal in `components/food/food-analysis-result.tsx`.
+- [x] 4.3 Add new nutrition and patient-home labels to `lib/i18n/dictionaries/es.ts` and `en.ts`.
 
 ## Phase 5: Verification
 

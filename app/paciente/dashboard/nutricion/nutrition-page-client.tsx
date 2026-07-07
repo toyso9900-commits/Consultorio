@@ -41,6 +41,7 @@ export function NutritionPageClient({
           dictionary={dictionary}
           initialData={analysis.data}
           imageUrl={analysis.imageUrl}
+          needsReferenceWarning={analysis.needsReferenceWarning}
         />
       )}
 
