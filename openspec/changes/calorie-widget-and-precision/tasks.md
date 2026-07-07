@@ -40,9 +40,9 @@ Chain strategy: pending
 
 ## Phase 3: Dashboard Widget
 
-- [ ] 3.1 Rename `app/paciente/dashboard/nutricion/get-today-calories.ts` to `get-today-macros.ts` and aggregate calories + macros.
-- [ ] 3.2 Create `components/dashboard/calorie-summary.tsx` server component with progress bar and macro bars.
-- [ ] 3.3 Update `app/paciente/dashboard/page.tsx` to call `getTodayMacros` and render `CalorieSummary`.
+- [x] 3.1 Rename `app/paciente/dashboard/nutricion/get-today-calories.ts` to `get-today-macros.ts` and aggregate calories + macros.
+- [x] 3.2 Create `components/dashboard/calorie-summary.tsx` server component with progress bar and macro bars.
+- [x] 3.3 Update `app/paciente/dashboard/page.tsx` to call `getTodayMacros` and render `CalorieSummary`.
 
 ## Phase 4: Ingredient Editing UI
 

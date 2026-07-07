@@ -172,6 +172,7 @@ export const en = {
     wellnessSubtitle: "Your wellness and tracking space.",
     currentWeight: "Current weight",
     caloriesToday: "Calories today",
+    calorieGoal: "Daily goal",
     upcomingAppointments: "Upcoming appointments",
     messages: "Messages",
     myRecord: "My record",

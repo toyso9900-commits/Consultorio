@@ -172,6 +172,7 @@ export const es = {
     wellnessSubtitle: "Tu espacio de bienestar y seguimiento.",
     currentWeight: "Peso actual",
     caloriesToday: "Calorías hoy",
+    calorieGoal: "Meta diaria",
     upcomingAppointments: "Próximas citas",
     messages: "Mensajes",
     myRecord: "Mi expediente",

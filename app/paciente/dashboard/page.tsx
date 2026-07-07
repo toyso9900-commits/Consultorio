@@ -4,10 +4,10 @@ import { prisma } from "@/lib/prisma";
 import { getAppointmentDashboardCounts } from "@/lib/appointments";
 import { getWeightHistory } from "@/lib/weight";
 import { getPendingReviewsForPatient } from "@/lib/reviews";
-import { getTodayCalories } from "./nutricion/get-today-calories";
+import { getTodayMacros } from "./nutricion/get-today-macros";
+import { CalorieSummary } from "@/components/dashboard/calorie-summary";
 import {
   Activity,
-  Apple,
   CalendarDays,
   FileText,
   MessageSquare,
@@ -50,7 +50,7 @@ export default async function PatientDashboardPage() {
 
   const pendingReviews = await getPendingReviewsForPatient(userId);
 
-  const todayCalories = await getTodayCalories(userId);
+  const todayMacros = await getTodayMacros(userId);
 
   const weightChartData = weightHistory.map((entry) => ({
     date: entry.recordedAt.toISOString(),
@@ -120,17 +120,14 @@ export default async function PatientDashboardPage() {
             )}
           </div>
         </div>
-        <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-teal-100 dark:bg-teal-950">
-            <Apple className="h-5 w-5 text-teal-600" />
-          </div>
-          <p className="mt-4 text-sm text-muted-foreground">
-            {dictionary.patientHome.caloriesToday}
-          </p>
-          <p className="text-2xl font-bold text-card-foreground">
-            {todayCalories} kcal
-          </p>
-        </div>
+        <CalorieSummary
+          calories={todayMacros.calories}
+          proteinG={todayMacros.proteinG}
+          carbsG={todayMacros.carbsG}
+          fatG={todayMacros.fatG}
+          goal={2000}
+          dictionary={dictionary}
+        />
         <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
           <div className="flex h-10 w-10 items-center justify-center rounded-full bg-amber-100 dark:bg-amber-950">
             <CalendarDays className="h-5 w-5 text-amber-600" />
