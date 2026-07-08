@@ -75,25 +75,25 @@ export default async function ProfessionalDashboardPage() {
               <ShieldCheck className="h-3.5 w-3.5" />
               {dictionary.adminDashboard.adminGlobal}
             </div>
-            <h1 className="text-2xl font-bold text-stone-800 dark:text-stone-100 sm:text-3xl">
+            <h1 className="text-2xl font-bold text-foreground dark:text-stone-100 sm:text-3xl">
               {dictionary.adminDashboard.title}
             </h1>
           </div>
           <div className="flex items-center gap-3">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-stone-400" />
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground dark:text-stone-400" />
               <input
                 type="text"
                 placeholder={dictionary.adminDashboard.globalSearch}
-                className="h-10 w-56 rounded-full bg-white pl-9 pr-4 text-sm text-stone-800 shadow-sm outline-none ring-1 ring-stone-200 placeholder:text-stone-400 dark:bg-stone-800 dark:text-stone-200 dark:ring-stone-700"
+                className="h-10 w-56 rounded-full bg-card pl-9 pr-4 text-sm text-foreground shadow-sm outline-none ring-1 ring-border placeholder:text-muted-foreground dark:bg-stone-800 dark:text-stone-200 dark:ring-stone-700"
               />
             </div>
             <button
               type="button"
-              className="relative rounded-full bg-white p-2.5 shadow-sm ring-1 ring-stone-200 dark:bg-stone-800 dark:ring-stone-700"
+              className="relative rounded-full bg-card p-2.5 shadow-sm ring-1 ring-border dark:bg-stone-800 dark:ring-stone-700"
               aria-label={dictionary.common.notifications}
             >
-              <Bell className="h-5 w-5 text-stone-600 dark:text-stone-300" />
+              <Bell className="h-5 w-5 text-muted-foreground dark:text-stone-300" />
               {pendingValidations > 0 && (
                 <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-rose-500" />
               )}
@@ -102,9 +102,9 @@ export default async function ProfessionalDashboardPage() {
         </header>
 
         <div className="grid gap-6 lg:grid-cols-3">
-          <div className="lg:col-span-2 rounded-2xl border border-stone-200 bg-white p-6 shadow-sm dark:border-stone-700/50 dark:bg-stone-800/80">
+          <div className="lg:col-span-2 rounded-2xl border border-border bg-card p-6 shadow-sm dark:border-stone-700/50 dark:bg-stone-800/80">
             <div className="mb-4 flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-stone-800 dark:text-stone-100">
+              <h2 className="text-lg font-semibold text-foreground dark:text-stone-100">
                 {dictionary.adminDashboard.criticalValidations}
               </h2>
               <Link
@@ -115,7 +115,7 @@ export default async function ProfessionalDashboardPage() {
               </Link>
             </div>
             {pendingProfessionals.length === 0 ? (
-              <p className="text-sm text-stone-500 dark:text-stone-400">
+              <p className="text-sm text-muted-foreground dark:text-stone-400">
                 {dictionary.adminDashboard.noPendingProfessionals}
               </p>
             ) : (
@@ -123,7 +123,7 @@ export default async function ProfessionalDashboardPage() {
                 {pendingProfessionals.slice(0, 4).map((prof) => (
                   <li
                     key={prof.id}
-                    className="flex flex-col gap-3 rounded-xl border border-stone-200 bg-stone-50 p-4 sm:flex-row sm:items-center sm:justify-between dark:border-stone-700/50 dark:bg-stone-700/30"
+                    className="flex flex-col gap-3 rounded-xl border border-border bg-muted p-4 sm:flex-row sm:items-center sm:justify-between dark:border-stone-700/50 dark:bg-stone-700/30"
                   >
                     <div className="flex items-center gap-3">
                       <div className="h-10 w-10 overflow-hidden rounded-full bg-emerald-100">
@@ -140,10 +140,10 @@ export default async function ProfessionalDashboardPage() {
                         )}
                       </div>
                       <div>
-                        <p className="font-semibold text-stone-800 dark:text-stone-100">
+                        <p className="font-semibold text-foreground dark:text-stone-100">
                           {prof.user.name || dictionary.adminDashboard.noName}
                         </p>
-                        <p className="text-sm text-stone-500 dark:text-stone-400">
+                        <p className="text-sm text-muted-foreground dark:text-stone-400">
                           {prof.user.email}
                         </p>
                       </div>
@@ -165,8 +165,8 @@ export default async function ProfessionalDashboardPage() {
             )}
           </div>
 
-          <div className="rounded-2xl border border-stone-200 bg-white p-6 shadow-sm dark:border-stone-700/50 dark:bg-stone-800/80">
-            <h2 className="mb-4 text-lg font-semibold text-stone-800 dark:text-stone-100">
+          <div className="rounded-2xl border border-border bg-card p-6 shadow-sm dark:border-stone-700/50 dark:bg-stone-800/80">
+            <h2 className="mb-4 text-lg font-semibold text-foreground dark:text-stone-100">
               {dictionary.adminDashboard.globalMetrics}
             </h2>
             <div className="space-y-4">
@@ -199,12 +199,12 @@ export default async function ProfessionalDashboardPage() {
         </div>
 
         <div className="grid gap-6 lg:grid-cols-3">
-          <div className="rounded-2xl border border-stone-200 bg-white p-6 shadow-sm dark:border-stone-700/50 dark:bg-stone-800/80">
-            <h2 className="mb-4 text-lg font-semibold text-stone-800 dark:text-stone-100">
+          <div className="rounded-2xl border border-border bg-card p-6 shadow-sm dark:border-stone-700/50 dark:bg-stone-800/80">
+            <h2 className="mb-4 text-lg font-semibold text-foreground dark:text-stone-100">
               {dictionary.adminDashboard.reviewsToModerate}
             </h2>
             {reviewsToModerate.length === 0 ? (
-              <p className="text-sm text-stone-500 dark:text-stone-400">
+              <p className="text-sm text-muted-foreground dark:text-stone-400">
                 {dictionary.adminReviews.emptyTitle}
               </p>
             ) : (
@@ -212,7 +212,7 @@ export default async function ProfessionalDashboardPage() {
                 {reviewsToModerate.map((review) => (
                   <li
                     key={review.id}
-                    className="rounded-xl border border-stone-200 bg-stone-50 p-4 dark:border-stone-700/50 dark:bg-stone-700/30"
+                    className="rounded-xl border border-border bg-muted p-4 dark:border-stone-700/50 dark:bg-stone-700/30"
                   >
                     <div className="mb-2 flex items-center gap-2">
                       <div className="flex text-amber-400">
@@ -222,21 +222,21 @@ export default async function ProfessionalDashboardPage() {
                             className={`h-3.5 w-3.5 ${
                               i < review.rating
                                 ? "fill-current"
-                                : "text-stone-300 dark:text-stone-600"
+                                : "text-muted-foreground dark:text-stone-600"
                             }`}
                           />
                         ))}
                       </div>
-                      <span className="text-xs text-stone-500 dark:text-stone-400">
+                      <span className="text-xs text-muted-foreground dark:text-stone-400">
                         {review.patient.name || dictionary.adminDashboard.noName}
                       </span>
                     </div>
-                    <p className="mb-3 text-sm text-stone-700 dark:text-stone-200">
+                    <p className="mb-3 text-sm text-foreground dark:text-stone-200">
                       {review.comment || dictionary.adminReviews.noComment}
                     </p>
                     <button
                       type="button"
-                      className="rounded-full bg-stone-200 px-3 py-1 text-xs font-semibold text-stone-800 transition-colors hover:bg-stone-300 dark:bg-stone-700 dark:text-stone-200 dark:hover:bg-stone-600"
+                      className="rounded-full bg-muted px-3 py-1 text-xs font-semibold text-foreground transition-colors hover:bg-muted/80 dark:bg-stone-700 dark:text-stone-200 dark:hover:bg-stone-600"
                     >
                       {dictionary.adminDashboard.moderate}
                     </button>
@@ -246,8 +246,8 @@ export default async function ProfessionalDashboardPage() {
             )}
           </div>
 
-          <div className="rounded-2xl border border-stone-200 bg-white p-6 shadow-sm dark:border-stone-700/50 dark:bg-stone-800/80">
-            <h2 className="mb-4 text-lg font-semibold text-stone-800 dark:text-stone-100">
+          <div className="rounded-2xl border border-border bg-card p-6 shadow-sm dark:border-stone-700/50 dark:bg-stone-800/80">
+            <h2 className="mb-4 text-lg font-semibold text-foreground dark:text-stone-100">
               {dictionary.adminDashboard.systemActivity}
             </h2>
             <ul className="space-y-4">
@@ -261,14 +261,14 @@ export default async function ProfessionalDashboardPage() {
                 <div className="relative flex flex-col items-center">
                   <div className="h-2.5 w-2.5 rounded-full bg-emerald-500" />
                   {index !== arr.length - 1 && (
-                    <div className="mt-1 h-full w-px bg-stone-200 dark:bg-stone-700" />
+                    <div className="mt-1 h-full w-px bg-border dark:bg-stone-700" />
                   )}
                 </div>
                 <div className="pb-4">
-                  <p className="text-sm font-medium text-stone-800 dark:text-stone-100">
+                  <p className="text-sm font-medium text-foreground dark:text-stone-100">
                     {event.label}
                   </p>
-                  <p className="text-xs text-stone-500 dark:text-stone-400">
+                  <p className="text-xs text-muted-foreground dark:text-stone-400">
                     {event.count < 60
                       ? dictionary.adminDashboard.minutesAgo.replace("{count}", String(event.count))
                       : dictionary.adminDashboard.hoursAgo.replace("{count}", String(Math.floor(event.count / 60)))}
@@ -279,8 +279,8 @@ export default async function ProfessionalDashboardPage() {
             </ul>
           </div>
 
-          <div className="rounded-2xl border border-stone-200 bg-white p-6 shadow-sm dark:border-stone-700/50 dark:bg-stone-800/80">
-            <h2 className="mb-4 text-lg font-semibold text-stone-800 dark:text-stone-100">
+          <div className="rounded-2xl border border-border bg-card p-6 shadow-sm dark:border-stone-700/50 dark:bg-stone-800/80">
+            <h2 className="mb-4 text-lg font-semibold text-foreground dark:text-stone-100">
               {dictionary.adminDashboard.globalSubscriptions}
             </h2>
             <SubscriptionDonut
@@ -290,14 +290,14 @@ export default async function ProfessionalDashboardPage() {
             />
             <div className="mt-4 flex justify-center gap-4 text-sm">
               <div className="flex items-center gap-1.5">
-                <span className="h-3 w-3 rounded-full bg-stone-400" />
-                <span className="text-stone-600 dark:text-stone-400">
+                <span className="h-3 w-3 rounded-full bg-muted-foreground dark:bg-stone-400" />
+                <span className="text-muted-foreground dark:text-stone-400">
                   {dictionary.adminDashboard.freePlan} ({freeSubscriptions})
                 </span>
               </div>
               <div className="flex items-center gap-1.5">
-                <span className="h-3 w-3 rounded-full bg-emerald-500" />
-                <span className="text-stone-600 dark:text-stone-400">
+                <span className="h-3 w-3 rounded-full bg-accent-blue dark:bg-emerald-500" />
+                <span className="text-muted-foreground dark:text-stone-400">
                   {dictionary.adminDashboard.premiumPlan} ({premiumSubscriptions})
                 </span>
               </div>
@@ -383,7 +383,7 @@ export default async function ProfessionalDashboardPage() {
     <div data-role="professional" className="space-y-8">
       <header className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-stone-800 dark:text-stone-100 sm:text-3xl">
+          <h1 className="text-2xl font-bold text-foreground dark:text-stone-100 sm:text-3xl">
             {dictionary.professionalDashboard.greeting.replace("{name}", firstName)}
           </h1>
           <p className="mt-1 text-emerald-600 dark:text-emerald-400">
@@ -392,22 +392,22 @@ export default async function ProfessionalDashboardPage() {
         </div>
         <div className="flex items-center gap-3">
           <div className="relative hidden sm:block">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-stone-400" />
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground dark:text-stone-400" />
             <input
               type="text"
               placeholder={dictionary.common.search}
-              className="h-10 w-56 rounded-full bg-white/10 pl-9 pr-4 text-sm text-stone-800 shadow-sm outline-none ring-1 ring-stone-200 placeholder:text-stone-500 dark:bg-stone-800/50 dark:text-stone-200 dark:ring-stone-700"
+              className="h-10 w-56 rounded-full bg-card/10 pl-9 pr-4 text-sm text-foreground shadow-sm outline-none ring-1 ring-border placeholder:text-muted-foreground dark:bg-stone-800/50 dark:text-stone-200 dark:ring-stone-700"
             />
           </div>
           <button
             type="button"
-            className="relative rounded-full bg-white/10 p-2.5 shadow-sm ring-1 ring-stone-200 dark:bg-stone-800/50 dark:ring-stone-700"
+            className="relative rounded-full bg-card/10 p-2.5 shadow-sm ring-1 ring-border dark:bg-stone-800/50 dark:ring-stone-700"
             aria-label={dictionary.common.notifications}
           >
-            <Bell className="h-5 w-5 text-stone-600 dark:text-stone-300" />
+            <Bell className="h-5 w-5 text-muted-foreground dark:text-stone-300" />
             <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-rose-500" />
           </button>
-          <div className="flex items-center gap-2 rounded-full bg-white/10 p-1 pr-3 shadow-sm ring-1 ring-stone-200 dark:bg-stone-800/50 dark:ring-stone-700">
+          <div className="flex items-center gap-2 rounded-full bg-card/10 p-1 pr-3 shadow-sm ring-1 ring-border dark:bg-stone-800/50 dark:ring-stone-700">
             <div className="h-9 w-9 overflow-hidden rounded-full bg-emerald-100">
               {session!.user.image ? (
                 <Image
@@ -421,7 +421,7 @@ export default async function ProfessionalDashboardPage() {
                 <UserCircle className="h-9 w-9 text-emerald-600" />
               )}
             </div>
-            <span className="hidden text-sm font-medium text-stone-800 dark:text-stone-200 md:block">
+            <span className="hidden text-sm font-medium text-foreground dark:text-stone-200 md:block">
               {firstName}
             </span>
           </div>
@@ -467,9 +467,9 @@ export default async function ProfessionalDashboardPage() {
       )}
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <div className="rounded-2xl bg-white p-6 shadow-sm dark:bg-stone-800/80">
+        <div className="rounded-2xl bg-card p-6 shadow-sm dark:bg-stone-800/80">
           <div className="mb-4 flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-stone-800 dark:text-stone-100">
+            <h2 className="text-lg font-semibold text-foreground dark:text-stone-100">
               {dictionary.professionalDashboard.todaysAppointments}
             </h2>
             <Link
@@ -480,9 +480,9 @@ export default async function ProfessionalDashboardPage() {
             </Link>
           </div>
           {todaysAppointments.length === 0 ? (
-            <div className="flex h-40 flex-col items-center justify-center rounded-xl bg-stone-50 text-center dark:bg-stone-700/30">
-              <CalendarDays className="h-8 w-8 text-stone-400" />
-              <p className="mt-2 text-sm text-stone-500 dark:text-stone-400">
+            <div className="flex h-40 flex-col items-center justify-center rounded-xl bg-muted text-center dark:bg-stone-700/30">
+              <CalendarDays className="h-8 w-8 text-muted-foreground dark:text-stone-400" />
+              <p className="mt-2 text-sm text-muted-foreground dark:text-stone-400">
                 {dictionary.appointments.empty.professional}
               </p>
             </div>
@@ -491,7 +491,7 @@ export default async function ProfessionalDashboardPage() {
               {todaysAppointments.map((appointment) => (
                 <li
                   key={appointment.id}
-                  className="flex items-center justify-between rounded-xl bg-stone-50 p-3 dark:bg-stone-700/30"
+                  className="flex items-center justify-between rounded-xl bg-muted p-3 dark:bg-stone-700/30"
                 >
                   <div className="flex items-center gap-3">
                     <div className="h-10 w-10 overflow-hidden rounded-full bg-emerald-100">
@@ -508,10 +508,10 @@ export default async function ProfessionalDashboardPage() {
                       )}
                     </div>
                     <div>
-                      <p className="font-semibold text-stone-800 dark:text-stone-100">
+                      <p className="font-semibold text-foreground dark:text-stone-100">
                         {appointment.patient.name || dictionary.adminDashboard.noName}
                       </p>
-                      <p className="text-xs text-stone-500 dark:text-stone-400">
+                      <p className="text-xs text-muted-foreground dark:text-stone-400">
                         {appointment.scheduledAt.toLocaleTimeString(locale, {
                           hour: "2-digit",
                           minute: "2-digit",
@@ -531,16 +531,16 @@ export default async function ProfessionalDashboardPage() {
           )}
         </div>
 
-        <div className="rounded-2xl bg-white p-6 shadow-sm dark:bg-stone-800/80">
-          <h2 className="mb-4 text-lg font-semibold text-stone-800 dark:text-stone-100">
+        <div className="rounded-2xl bg-card p-6 shadow-sm dark:bg-stone-800/80">
+          <h2 className="mb-4 text-lg font-semibold text-foreground dark:text-stone-100">
             {dictionary.professionalDashboard.practiceSummary}
           </h2>
           <div className="grid gap-4 sm:grid-cols-3">
-            <div className="rounded-xl bg-stone-50 p-4 dark:bg-stone-700/30">
-              <p className="text-xs text-stone-500 dark:text-stone-400">
+            <div className="rounded-xl bg-muted p-4 dark:bg-stone-700/30">
+              <p className="text-xs text-muted-foreground dark:text-stone-400">
                 {dictionary.professionalDashboard.activeClients}
               </p>
-              <p className="mt-1 text-2xl font-bold text-stone-800 dark:text-stone-100">
+              <p className="mt-1 text-2xl font-bold text-foreground dark:text-stone-100">
                 {activePatientsCount}
               </p>
               <p className="mt-1 flex items-center text-xs text-emerald-600 dark:text-emerald-400">
@@ -548,11 +548,11 @@ export default async function ProfessionalDashboardPage() {
                 +4%
               </p>
             </div>
-            <div className="rounded-xl bg-stone-50 p-4 dark:bg-stone-700/30">
-              <p className="text-xs text-stone-500 dark:text-stone-400">
+            <div className="rounded-xl bg-muted p-4 dark:bg-stone-700/30">
+              <p className="text-xs text-muted-foreground dark:text-stone-400">
                 {dictionary.professionalDashboard.newClients}
               </p>
-              <p className="mt-1 text-2xl font-bold text-stone-800 dark:text-stone-100">
+              <p className="mt-1 text-2xl font-bold text-foreground dark:text-stone-100">
                 {upcomingAppointmentsCount}
               </p>
               <p className="mt-1 flex items-center text-xs text-emerald-600 dark:text-emerald-400">
@@ -560,11 +560,11 @@ export default async function ProfessionalDashboardPage() {
                 +12%
               </p>
             </div>
-            <div className="rounded-xl bg-stone-50 p-4 dark:bg-stone-700/30">
-              <p className="text-xs text-stone-500 dark:text-stone-400">
+            <div className="rounded-xl bg-muted p-4 dark:bg-stone-700/30">
+              <p className="text-xs text-muted-foreground dark:text-stone-400">
                 {dictionary.professionalDashboard.retentionRate}
               </p>
-              <p className="mt-1 text-2xl font-bold text-stone-800 dark:text-stone-100">
+              <p className="mt-1 text-2xl font-bold text-foreground dark:text-stone-100">
                 92%
               </p>
               <p className="mt-1 flex items-center text-xs text-emerald-600 dark:text-emerald-400">
@@ -575,14 +575,14 @@ export default async function ProfessionalDashboardPage() {
           </div>
         </div>
 
-        <div className="rounded-2xl bg-white p-6 shadow-sm dark:bg-stone-800/80">
-          <h2 className="mb-4 text-lg font-semibold text-stone-800 dark:text-stone-100">
+        <div className="rounded-2xl bg-card p-6 shadow-sm dark:bg-stone-800/80">
+          <h2 className="mb-4 text-lg font-semibold text-foreground dark:text-stone-100">
             {dictionary.professionalDashboard.recentMessages}
           </h2>
           {recentMessages.length === 0 ? (
-            <div className="flex h-40 flex-col items-center justify-center rounded-xl bg-stone-50 text-center dark:bg-stone-700/30">
-              <MessageSquare className="h-8 w-8 text-stone-400" />
-              <p className="mt-2 text-sm text-stone-500 dark:text-stone-400">
+            <div className="flex h-40 flex-col items-center justify-center rounded-xl bg-muted text-center dark:bg-stone-700/30">
+              <MessageSquare className="h-8 w-8 text-muted-foreground dark:text-stone-400" />
+              <p className="mt-2 text-sm text-muted-foreground dark:text-stone-400">
                 {dictionary.professionalMessages.empty}
               </p>
             </div>
@@ -596,7 +596,7 @@ export default async function ProfessionalDashboardPage() {
                 return (
                   <li
                     key={message.id}
-                    className="flex items-center gap-3 rounded-xl bg-stone-50 p-3 dark:bg-stone-700/30"
+                    className="flex items-center gap-3 rounded-xl bg-muted p-3 dark:bg-stone-700/30"
                   >
                     <div className="h-10 w-10 overflow-hidden rounded-full bg-emerald-100">
                       {partner.image ? (
@@ -612,10 +612,10 @@ export default async function ProfessionalDashboardPage() {
                       )}
                     </div>
                     <div className="min-w-0 flex-1">
-                      <p className="truncate text-sm font-semibold text-stone-800 dark:text-stone-100">
+                      <p className="truncate text-sm font-semibold text-foreground dark:text-stone-100">
                         {partner.name || dictionary.adminDashboard.noName}
                       </p>
-                      <p className="truncate text-xs text-stone-500 dark:text-stone-400">
+                      <p className="truncate text-xs text-muted-foreground dark:text-stone-400">
                         {message.content}
                       </p>
                     </div>
@@ -626,21 +626,21 @@ export default async function ProfessionalDashboardPage() {
           )}
         </div>
 
-        <div className="rounded-2xl bg-white p-6 shadow-sm dark:bg-stone-800/80">
-          <h2 className="mb-4 text-lg font-semibold text-stone-800 dark:text-stone-100">
+        <div className="rounded-2xl bg-card p-6 shadow-sm dark:bg-stone-800/80">
+          <h2 className="mb-4 text-lg font-semibold text-foreground dark:text-stone-100">
             {dictionary.professionalDashboard.pendingActions}
           </h2>
           <ul className="space-y-3">
-            <li className="flex items-center justify-between rounded-xl bg-stone-50 p-3 dark:bg-stone-700/30">
+            <li className="flex items-center justify-between rounded-xl bg-muted p-3 dark:bg-stone-700/30">
               <div className="flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-full bg-amber-100 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400">
                   <AlertCircle className="h-5 w-5" />
                 </div>
                 <div>
-                  <p className="font-semibold text-stone-800 dark:text-stone-100">
+                  <p className="font-semibold text-foreground dark:text-stone-100">
                     {dictionary.professionalDashboard.progressPhotoPending}
                   </p>
-                  <p className="text-xs text-stone-500 dark:text-stone-400">
+                  <p className="text-xs text-muted-foreground dark:text-stone-400">
                     Paciente: María G.
                   </p>
                 </div>
@@ -652,16 +652,16 @@ export default async function ProfessionalDashboardPage() {
                 {dictionary.professionalDashboard.remind}
               </button>
             </li>
-            <li className="flex items-center justify-between rounded-xl bg-stone-50 p-3 dark:bg-stone-700/30">
+            <li className="flex items-center justify-between rounded-xl bg-muted p-3 dark:bg-stone-700/30">
               <div className="flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-full bg-rose-100 text-rose-600 dark:bg-rose-900/30 dark:text-rose-400">
                   <ClipboardList className="h-5 w-5" />
                 </div>
                 <div>
-                  <p className="font-semibold text-stone-800 dark:text-stone-100">
+                  <p className="font-semibold text-foreground dark:text-stone-100">
                     {dictionary.professionalDashboard.mealLogPending}
                   </p>
-                  <p className="text-xs text-stone-500 dark:text-stone-400">
+                  <p className="text-xs text-muted-foreground dark:text-stone-400">
                     Paciente: Carlos R.
                   </p>
                 </div>
@@ -676,9 +676,9 @@ export default async function ProfessionalDashboardPage() {
           </ul>
         </div>
 
-        <div className="rounded-2xl bg-white p-6 shadow-sm dark:bg-stone-800/80">
+        <div className="rounded-2xl bg-card p-6 shadow-sm dark:bg-stone-800/80">
           <div className="mb-4 flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-stone-800 dark:text-stone-100">
+            <h2 className="text-lg font-semibold text-foreground dark:text-stone-100">
             {dictionary.professionalDashboard.subscriptionStatusTitle}
             </h2>
             <span
@@ -693,7 +693,7 @@ export default async function ProfessionalDashboardPage() {
                 : dictionary.professionalDashboard.inactive}
             </span>
           </div>
-          <p className="text-sm text-stone-600 dark:text-stone-300">
+          <p className="text-sm text-muted-foreground dark:text-stone-300">
             {dictionary.professionalDashboard.plan} {latestSubscription?.plan ?? "Free"} -{" "}
             {hasActiveSubscription
               ? dictionary.professionalDashboard.subscriptionStatus
@@ -710,11 +710,11 @@ export default async function ProfessionalDashboardPage() {
           </Link>
         </div>
 
-        <div className="rounded-2xl bg-white p-6 shadow-sm dark:bg-stone-800/80">
-          <h2 className="mb-4 text-lg font-semibold text-stone-800 dark:text-stone-100">
+        <div className="rounded-2xl bg-card p-6 shadow-sm dark:bg-stone-800/80">
+          <h2 className="mb-4 text-lg font-semibold text-foreground dark:text-stone-100">
             {dictionary.professionalDashboard.weeklyAppointments}
           </h2>
-          <div className="mb-3 grid grid-cols-7 gap-1 text-center text-xs text-stone-500 dark:text-stone-400">
+          <div className="mb-3 grid grid-cols-7 gap-1 text-center text-xs text-muted-foreground dark:text-stone-400">
             {["L", "M", "M", "J", "V", "S", "D"].map((day, i) => (
               <span key={i}>{day}</span>
             ))}
@@ -741,7 +741,7 @@ export default async function ProfessionalDashboardPage() {
                       ? "bg-emerald-500 text-white"
                       : pending
                       ? "bg-amber-400 text-white"
-                      : "bg-stone-100 text-stone-500 dark:bg-stone-700/30 dark:text-stone-400"
+                      : "bg-muted text-muted-foreground dark:bg-stone-700/30 dark:text-stone-400"
                   }`}
                 >
                   {dayDate.getDate()}
@@ -752,13 +752,13 @@ export default async function ProfessionalDashboardPage() {
           <div className="mt-4 flex items-center gap-4 text-xs">
             <div className="flex items-center gap-1.5">
               <span className="h-3 w-3 rounded-full bg-emerald-500" />
-              <span className="text-stone-600 dark:text-stone-400">
+              <span className="text-muted-foreground dark:text-stone-400">
                 {dictionary.professionalDashboard.confirmed}
               </span>
             </div>
             <div className="flex items-center gap-1.5">
               <span className="h-3 w-3 rounded-full bg-amber-400" />
-              <span className="text-stone-600 dark:text-stone-400">
+              <span className="text-muted-foreground dark:text-stone-400">
                 {dictionary.professionalDashboard.pending}
               </span>
             </div>
@@ -781,10 +781,10 @@ function MetricItem({
   positive: boolean;
 }) {
   return (
-    <div className="flex items-center justify-between rounded-xl border border-stone-200 bg-stone-50 p-4 dark:border-stone-700/50 dark:bg-stone-700/30">
+    <div className="flex items-center justify-between rounded-xl border border-border bg-muted p-4 dark:border-stone-700/50 dark:bg-stone-700/30">
       <div>
-        <p className="text-sm text-stone-500 dark:text-stone-400">{label}</p>
-        <p className="text-2xl font-bold text-stone-800 dark:text-stone-100">{value}</p>
+        <p className="text-sm text-muted-foreground dark:text-stone-400">{label}</p>
+        <p className="text-2xl font-bold text-foreground dark:text-stone-100">{value}</p>
       </div>
       <span
         className={`flex items-center rounded-full px-2 py-1 text-xs font-semibold ${

@@ -61,9 +61,9 @@ const navigation: Record<UserRole, NavItem[]> = {
 };
 
 const sidebarBgByRole: Record<UserRole, string> = {
-  ADMIN: "bg-emerald-900/10 dark:bg-emerald-950/40",
-  PROFESSIONAL: "bg-emerald-100/50 dark:bg-emerald-900/40",
-  PATIENT: "bg-emerald-100/50 dark:bg-emerald-900/20",
+  ADMIN: "bg-sidebar dark:bg-emerald-950/40",
+  PROFESSIONAL: "bg-sidebar dark:bg-emerald-900/40",
+  PATIENT: "bg-sidebar dark:bg-emerald-900/20",
 };
 
 const homeHrefByRole: Record<UserRole, string> = {
@@ -78,7 +78,7 @@ function Logo({ className }: { className?: string }) {
       <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-emerald-500 text-white">
         <Leaf className="h-5 w-5" />
       </div>
-      <span className="text-lg font-bold tracking-tight text-stone-800 dark:text-stone-100">
+      <span className="text-lg font-bold tracking-tight text-foreground">
         Consultorio
       </span>
     </div>
@@ -101,8 +101,8 @@ function NavLink({
       onClick={onClick}
       className={`flex items-center justify-between rounded-xl px-3 py-2.5 text-sm font-medium transition-colors ${
         isActive
-          ? "bg-emerald-200/60 text-emerald-900 dark:bg-emerald-800/40 dark:text-emerald-100"
-          : "text-stone-600 hover:bg-stone-200/50 hover:text-stone-900 dark:text-stone-400 dark:hover:bg-stone-800/40 dark:hover:text-stone-100"
+          ? "bg-sidebar-active text-sidebar-active-foreground dark:bg-emerald-800/40 dark:text-emerald-100"
+          : "text-muted-foreground hover:bg-muted hover:text-foreground dark:text-stone-400 dark:hover:bg-stone-800/40 dark:hover:text-stone-100"
       }`}
     >
       <span className="flex items-center gap-3">
@@ -213,7 +213,7 @@ export function MobileSidebar({ role, badge, open, onClose }: MobileSidebarProps
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg p-2 text-stone-600 hover:bg-stone-200/50 hover:text-stone-900 dark:text-stone-400 dark:hover:bg-stone-800/40 dark:hover:text-stone-100"
+            className="rounded-lg p-2 text-muted-foreground hover:bg-muted hover:text-foreground dark:text-stone-400 dark:hover:bg-stone-800/40 dark:hover:text-stone-100"
             aria-label={dictionary.common.closeMenu}
           >
             <X className="h-5 w-5" />

@@ -6,9 +6,9 @@ import { DashboardHeader } from "./dashboard-header";
 import { AppointmentsRealtimeListener } from "@/components/appointments/appointments-realtime-listener";
 
 const shellBgByRole: Record<UserRole, string> = {
-  ADMIN: "bg-stone-50 dark:bg-[#1C251F]",
-  PROFESSIONAL: "bg-stone-100 dark:bg-stone-900",
-  PATIENT: "bg-stone-50 dark:bg-stone-900",
+  ADMIN: "bg-background dark:bg-[#1C251F]",
+  PROFESSIONAL: "bg-background dark:bg-stone-900",
+  PATIENT: "bg-background dark:bg-stone-900",
 };
 
 interface DashboardShellProps {

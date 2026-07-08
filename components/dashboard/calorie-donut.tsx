@@ -1,7 +1,6 @@
 "use client";
 
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
-import { useResolvedTheme } from "@/components/theme-provider";
 
 interface CalorieDonutProps {
   calories: number;
@@ -9,7 +8,6 @@ interface CalorieDonutProps {
 }
 
 export function CalorieDonut({ calories, goal }: CalorieDonutProps) {
-  const resolvedTheme = useResolvedTheme();
   const consumed = Math.max(calories, 0);
   const remaining = Math.max(goal - consumed, 0);
   const data = [
@@ -18,7 +16,7 @@ export function CalorieDonut({ calories, goal }: CalorieDonutProps) {
   ];
   const colors = [
     "var(--role-patient-primary)",
-    resolvedTheme === "dark" ? "var(--muted)" : "#e7e5e4",
+    "var(--muted)",
   ];
 
   const percentage = goal > 0 ? Math.min((consumed / goal) * 100, 100) : 0;
@@ -53,10 +51,10 @@ export function CalorieDonut({ calories, goal }: CalorieDonutProps) {
         </PieChart>
       </ResponsiveContainer>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <span className="text-3xl font-bold text-stone-800 dark:text-stone-100">
+        <span className="text-3xl font-bold text-foreground dark:text-stone-100">
           {consumed}
         </span>
-        <span className="text-sm text-stone-500 dark:text-stone-400">
+        <span className="text-sm text-muted-foreground dark:text-stone-400">
           / {goal} kcal
         </span>
       </div>

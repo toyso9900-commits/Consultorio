@@ -2,25 +2,35 @@
 
 :root,
 .light {
-  --background: #f8f5f2;
-  --foreground: #1c1917;
+  --background: #F5F5EC;
+  --foreground: #1C1917;
 
-  --card: #ffffff;
-  --card-foreground: #1c1917;
+  --card: #FFFFFF;
+  --card-foreground: #1C1917;
 
-  --muted: #f2efe9;
-  --muted-foreground: #78716c;
+  --muted: #E8E8DE;
+  --muted-foreground: #78716C;
 
-  --border: #e7e5e4;
+  --border: #DCDACA;
 
-  --primary: #4f46e5;
-  --primary-foreground: #ffffff;
+  --primary: #7C907E;
+  --primary-foreground: #FFFFFF;
 
-  --accent: #0d9488;
-  --accent-foreground: #ffffff;
+  --secondary: #C4D1C3;
+  --secondary-foreground: #1C1917;
 
-  --destructive: #e11d48;
-  --destructive-foreground: #ffffff;
+  --accent: #E8B89C;
+  --accent-foreground: #1C1917;
+
+  --destructive: #E11D48;
+  --destructive-foreground: #FFFFFF;
+
+  --sidebar: #C4D1C3;
+  --sidebar-active: #7C907E;
+  --sidebar-active-foreground: #FFFFFF;
+  --sidebar-foreground: #1C1917;
+
+  --accent-blue: #5C7C89;
 
   --role-patient-primary: #10b981;
   --role-patient-secondary: #0d9488;
@@ -45,11 +55,21 @@
   --primary: #818cf8;
   --primary-foreground: #020617;
 
+  --secondary: #1e293b;
+  --secondary-foreground: #f8fafc;
+
   --accent: #2dd4bf;
   --accent-foreground: #020617;
 
   --destructive: #fb7185;
   --destructive-foreground: #020617;
+
+  --sidebar: #0f172a;
+  --sidebar-active: #334155;
+  --sidebar-active-foreground: #f8fafc;
+  --sidebar-foreground: #f8fafc;
+
+  --accent-blue: #7C9DAA;
 
   --role-patient-primary: #34d399;
   --role-patient-secondary: #2dd4bf;
@@ -74,11 +94,20 @@
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
 
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
 
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
+
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-active: var(--sidebar-active);
+  --color-sidebar-active-foreground: var(--sidebar-active-foreground);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-accent-blue: var(--accent-blue);
 
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);

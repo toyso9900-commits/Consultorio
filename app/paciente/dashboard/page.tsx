@@ -137,31 +137,31 @@ export default async function PatientDashboardPage() {
 
       <header className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <p className="text-sm text-stone-500 dark:text-stone-400">
+          <p className="text-sm text-muted-foreground dark:text-stone-400">
             {formattedDate}
           </p>
-          <h1 className="text-2xl font-bold text-stone-800 dark:text-stone-100 sm:text-3xl">
+          <h1 className="text-2xl font-bold text-foreground dark:text-stone-100 sm:text-3xl">
             {dictionary.patientHome.greeting.replace("{name}", firstName)}
           </h1>
         </div>
         <div className="flex items-center gap-3">
           <div className="relative hidden sm:block">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-stone-400" />
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground dark:text-stone-400" />
             <input
               type="text"
               placeholder={dictionary.common.search}
-              className="h-10 w-56 rounded-full bg-white pl-9 pr-4 text-sm text-stone-800 shadow-sm outline-none ring-1 ring-stone-200 placeholder:text-stone-400 dark:bg-stone-800 dark:text-stone-200 dark:ring-stone-700"
+              className="h-10 w-56 rounded-full bg-card pl-9 pr-4 text-sm text-foreground shadow-sm outline-none ring-1 ring-border placeholder:text-muted-foreground dark:bg-stone-800 dark:text-stone-200 dark:ring-stone-700"
             />
           </div>
           <button
             type="button"
-            className="relative rounded-full bg-white p-2.5 shadow-sm ring-1 ring-stone-200 dark:bg-stone-800 dark:ring-stone-700"
+            className="relative rounded-full bg-card p-2.5 shadow-sm ring-1 ring-border dark:bg-stone-800 dark:ring-stone-700"
             aria-label={dictionary.common.notifications}
           >
-            <Bell className="h-5 w-5 text-stone-600 dark:text-stone-300" />
+            <Bell className="h-5 w-5 text-muted-foreground dark:text-stone-300" />
             <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-rose-500" />
           </button>
-          <div className="flex items-center gap-2 rounded-full bg-white p-1 pr-3 shadow-sm ring-1 ring-stone-200 dark:bg-stone-800 dark:ring-stone-700">
+          <div className="flex items-center gap-2 rounded-full bg-card p-1 pr-3 shadow-sm ring-1 ring-border dark:bg-stone-800 dark:ring-stone-700">
             <div className="h-9 w-9 overflow-hidden rounded-full bg-emerald-100">
               {session!.user.image ? (
                 <Image
@@ -175,7 +175,7 @@ export default async function PatientDashboardPage() {
                 <UserCircle className="h-9 w-9 text-emerald-600" />
               )}
             </div>
-            <span className="hidden text-sm font-medium text-stone-800 dark:text-stone-200 md:block">
+            <span className="hidden text-sm font-medium text-foreground dark:text-stone-200 md:block">
               {firstName}
             </span>
           </div>
@@ -183,16 +183,16 @@ export default async function PatientDashboardPage() {
       </header>
 
       <div className="grid gap-6 lg:grid-cols-3">
-        <div className="rounded-2xl bg-white p-6 shadow-sm dark:bg-stone-800">
-          <h2 className="mb-2 text-lg font-semibold text-stone-800 dark:text-stone-100">
+        <div className="rounded-2xl bg-card p-6 shadow-sm dark:bg-stone-800">
+          <h2 className="mb-2 text-lg font-semibold text-foreground dark:text-stone-100">
             Meta de Calorías Hoy
           </h2>
           <CalorieDonut calories={todayMacros.calories} goal={2000} />
         </div>
 
-        <div className="rounded-2xl bg-white p-6 shadow-sm dark:bg-stone-800">
+        <div className="rounded-2xl bg-card p-6 shadow-sm dark:bg-stone-800">
           <div className="mb-4 flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-stone-800 dark:text-stone-100">
+            <h2 className="text-lg font-semibold text-foreground dark:text-stone-100">
               {dictionary.patientHome.nextAppointment}
             </h2>
             <span className="rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-semibold text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300">
@@ -216,27 +216,27 @@ export default async function PatientDashboardPage() {
                   )}
                 </div>
                 <div>
-                  <p className="font-semibold text-stone-800 dark:text-stone-100">
+                  <p className="font-semibold text-foreground dark:text-stone-100">
                     {upcomingAppointment.professional.name || dictionary.adminDashboard.noName}
                   </p>
-                  <p className="text-sm text-stone-500 dark:text-stone-400">
+                  <p className="text-sm text-muted-foreground dark:text-stone-400">
                     {dictionary.patientHome.nutritionist}
                   </p>
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-3">
-                <div className="rounded-xl bg-stone-50 p-3 dark:bg-stone-700/30">
-                  <p className="text-xs text-stone-500 dark:text-stone-400">{dictionary.patientHome.date}</p>
-                  <p className="font-semibold text-stone-800 dark:text-stone-100">
+                <div className="rounded-xl bg-muted p-3 dark:bg-stone-700/30">
+                  <p className="text-xs text-muted-foreground dark:text-stone-400">{dictionary.patientHome.date}</p>
+                  <p className="font-semibold text-foreground dark:text-stone-100">
                     {upcomingAppointment.scheduledAt.toLocaleDateString(locale, {
                       day: "numeric",
                       month: "short",
                     })}
                   </p>
                 </div>
-                <div className="rounded-xl bg-stone-50 p-3 dark:bg-stone-700/30">
-                  <p className="text-xs text-stone-500 dark:text-stone-400">{dictionary.patientHome.time}</p>
-                  <p className="font-semibold text-stone-800 dark:text-stone-100">
+                <div className="rounded-xl bg-muted p-3 dark:bg-stone-700/30">
+                  <p className="text-xs text-muted-foreground dark:text-stone-400">{dictionary.patientHome.time}</p>
+                  <p className="font-semibold text-foreground dark:text-stone-100">
                     {upcomingAppointment.scheduledAt.toLocaleTimeString(locale, {
                       hour: "2-digit",
                       minute: "2-digit",
@@ -246,18 +246,18 @@ export default async function PatientDashboardPage() {
               </div>
             </div>
           ) : (
-            <div className="flex h-40 flex-col items-center justify-center rounded-xl bg-stone-50 text-center dark:bg-stone-700/30">
-              <CalendarDays className="h-8 w-8 text-stone-400" />
-              <p className="mt-2 text-sm text-stone-500 dark:text-stone-400">
+            <div className="flex h-40 flex-col items-center justify-center rounded-xl bg-muted text-center dark:bg-stone-700/30">
+              <CalendarDays className="h-8 w-8 text-muted-foreground dark:text-stone-400" />
+              <p className="mt-2 text-sm text-muted-foreground dark:text-stone-400">
                 {dictionary.patientHome.noAppointments}
               </p>
             </div>
           )}
         </div>
 
-        <div className="rounded-2xl bg-white p-6 shadow-sm dark:bg-stone-800">
+        <div className="rounded-2xl bg-card p-6 shadow-sm dark:bg-stone-800">
           <div className="mb-4 flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-stone-800 dark:text-stone-100">
+            <h2 className="text-lg font-semibold text-foreground dark:text-stone-100">
               {dictionary.patientHome.photos}
             </h2>
             <Link
@@ -269,7 +269,7 @@ export default async function PatientDashboardPage() {
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-2">
-              <div className="relative aspect-[4/5] overflow-hidden rounded-xl bg-stone-100">
+              <div className="relative aspect-[4/5] overflow-hidden rounded-xl bg-muted">
                 <Image
                   src="https://placehold.co/400x500/e7e5e4/78716c?text=Hace+1+mes"
                   alt="Hace 1 mes"
@@ -277,12 +277,12 @@ export default async function PatientDashboardPage() {
                   className="object-cover"
                 />
               </div>
-              <p className="text-center text-xs text-stone-500 dark:text-stone-400">
+              <p className="text-center text-xs text-muted-foreground dark:text-stone-400">
                 {dictionary.patientHome.monthAgo}
               </p>
             </div>
             <div className="space-y-2">
-              <div className="relative aspect-[4/5] overflow-hidden rounded-xl bg-stone-100">
+              <div className="relative aspect-[4/5] overflow-hidden rounded-xl bg-muted">
                 <Image
                   src="https://placehold.co/400x500/d1fae5/065f46?text=Hoy"
                   alt="Hoy"
@@ -290,16 +290,16 @@ export default async function PatientDashboardPage() {
                   className="object-cover"
                 />
               </div>
-              <p className="text-center text-xs text-stone-500 dark:text-stone-400">
+              <p className="text-center text-xs text-muted-foreground dark:text-stone-400">
                 {dictionary.patientHome.today}
               </p>
             </div>
           </div>
         </div>
 
-        <div className="rounded-2xl bg-white p-6 shadow-sm dark:bg-stone-800">
+        <div className="rounded-2xl bg-card p-6 shadow-sm dark:bg-stone-800">
           <div className="mb-4 flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-stone-800 dark:text-stone-100">
+            <h2 className="text-lg font-semibold text-foreground dark:text-stone-100">
               {dictionary.patientHome.expertGuide}
             </h2>
             <Link
@@ -310,7 +310,7 @@ export default async function PatientDashboardPage() {
             </Link>
           </div>
           {experts.length === 0 ? (
-            <p className="text-sm text-stone-500 dark:text-stone-400">
+            <p className="text-sm text-muted-foreground dark:text-stone-400">
               {dictionary.patientExperts.noResults}
             </p>
           ) : (
@@ -318,7 +318,7 @@ export default async function PatientDashboardPage() {
               {experts.map((expert) => (
                 <li
                   key={expert.id}
-                  className="flex items-center justify-between gap-3 rounded-xl bg-stone-50 p-3 dark:bg-stone-700/30"
+                  className="flex items-center justify-between gap-3 rounded-xl bg-muted p-3 dark:bg-stone-700/30"
                 >
                   <div className="flex items-center gap-3">
                     <div className="h-10 w-10 overflow-hidden rounded-full bg-emerald-100">
@@ -335,10 +335,10 @@ export default async function PatientDashboardPage() {
                       )}
                     </div>
                     <div>
-                      <p className="text-sm font-semibold text-stone-800 dark:text-stone-100">
+                      <p className="text-sm font-semibold text-foreground dark:text-stone-100">
                         {expert.user.name || dictionary.adminDashboard.noName}
                       </p>
-                      <p className="text-xs text-stone-500 dark:text-stone-400 capitalize">
+                      <p className="text-xs text-muted-foreground dark:text-stone-400 capitalize">
                         {specialtyLabel(expert.specialty, dictionary)}
                       </p>
                     </div>
@@ -355,8 +355,8 @@ export default async function PatientDashboardPage() {
           )}
         </div>
 
-        <div className="rounded-2xl bg-white p-6 shadow-sm dark:bg-stone-800">
-          <h2 className="mb-4 text-lg font-semibold text-stone-800 dark:text-stone-100">
+        <div className="rounded-2xl bg-card p-6 shadow-sm dark:bg-stone-800">
+          <h2 className="mb-4 text-lg font-semibold text-foreground dark:text-stone-100">
             {dictionary.patientHome.recentActivity}
           </h2>
           <ul className="space-y-4">
@@ -369,14 +369,14 @@ export default async function PatientDashboardPage() {
                     <activity.icon className="h-5 w-5" />
                   </div>
                   {index !== recentActivities.length - 1 && (
-                    <div className="mt-1 h-full w-px bg-stone-200 dark:bg-stone-700" />
+                    <div className="mt-1 h-full w-px bg-border dark:bg-stone-700" />
                   )}
                 </div>
                 <div className="pb-4">
-                  <p className="font-medium text-stone-800 dark:text-stone-100">
+                  <p className="font-medium text-foreground dark:text-stone-100">
                     {activity.label}
                   </p>
-                  <p className="text-sm text-stone-500 dark:text-stone-400">
+                  <p className="text-sm text-muted-foreground dark:text-stone-400">
                     {activity.time}
                   </p>
                 </div>
@@ -385,9 +385,9 @@ export default async function PatientDashboardPage() {
           </ul>
         </div>
 
-        <div className="rounded-2xl bg-white p-6 shadow-sm dark:bg-stone-800">
+        <div className="rounded-2xl bg-card p-6 shadow-sm dark:bg-stone-800">
           <div className="mb-4 flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-stone-800 dark:text-stone-100">
+            <h2 className="text-lg font-semibold text-foreground dark:text-stone-100">
               {dictionary.patientHome.messages}
             </h2>
             <Link
@@ -398,9 +398,9 @@ export default async function PatientDashboardPage() {
             </Link>
           </div>
           {recentMessages.length === 0 ? (
-            <div className="flex h-40 flex-col items-center justify-center rounded-xl bg-stone-50 text-center dark:bg-stone-700/30">
-              <MessageSquare className="h-8 w-8 text-stone-400" />
-              <p className="mt-2 text-sm text-stone-500 dark:text-stone-400">
+            <div className="flex h-40 flex-col items-center justify-center rounded-xl bg-muted text-center dark:bg-stone-700/30">
+              <MessageSquare className="h-8 w-8 text-muted-foreground dark:text-stone-400" />
+              <p className="mt-2 text-sm text-muted-foreground dark:text-stone-400">
                 {dictionary.patientHome.noMessages}
               </p>
             </div>
@@ -412,7 +412,7 @@ export default async function PatientDashboardPage() {
                 return (
                   <li
                     key={message.id}
-                    className="flex items-center gap-3 rounded-xl bg-stone-50 p-3 dark:bg-stone-700/30"
+                    className="flex items-center gap-3 rounded-xl bg-muted p-3 dark:bg-stone-700/30"
                   >
                     <div className="h-10 w-10 overflow-hidden rounded-full bg-emerald-100">
                       {partner.image ? (
@@ -428,14 +428,14 @@ export default async function PatientDashboardPage() {
                       )}
                     </div>
                     <div className="min-w-0 flex-1">
-                      <p className="truncate text-sm font-semibold text-stone-800 dark:text-stone-100">
+                      <p className="truncate text-sm font-semibold text-foreground dark:text-stone-100">
                         {partner.name || dictionary.adminDashboard.noName}
                       </p>
-                      <p className="truncate text-xs text-stone-500 dark:text-stone-400">
+                      <p className="truncate text-xs text-muted-foreground dark:text-stone-400">
                         {message.content}
                       </p>
                     </div>
-                    <span className="text-xs text-stone-400">
+                    <span className="text-xs text-muted-foreground dark:text-stone-400">
                       {message.createdAt.toLocaleTimeString(locale, {
                         hour: "2-digit",
                         minute: "2-digit",
@@ -449,13 +449,13 @@ export default async function PatientDashboardPage() {
         </div>
       </div>
 
-      <div className="rounded-2xl bg-white p-6 shadow-sm dark:bg-stone-800">
+      <div className="rounded-2xl bg-card p-6 shadow-sm dark:bg-stone-800">
         <div className="mb-4 flex items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/30">
               <TrendingUp className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
             </div>
-            <h2 className="text-lg font-semibold text-stone-800 dark:text-stone-100">
+            <h2 className="text-lg font-semibold text-foreground dark:text-stone-100">
               {dictionary.patientHome.weightHistory}
             </h2>
           </div>
@@ -468,12 +468,12 @@ export default async function PatientDashboardPage() {
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2">
-          <div className="rounded-xl bg-stone-50 p-4 dark:bg-stone-700/30">
-            <p className="text-sm text-stone-500 dark:text-stone-400">
+          <div className="rounded-xl bg-muted p-4 dark:bg-stone-700/30">
+            <p className="text-sm text-muted-foreground dark:text-stone-400">
               {dictionary.patientHome.currentWeight}
             </p>
             <div className="flex items-end gap-2">
-              <p className="text-2xl font-bold text-stone-800 dark:text-stone-100">
+              <p className="text-2xl font-bold text-foreground dark:text-stone-100">
                 {currentWeight ? `${currentWeight} kg` : "-- kg"}
               </p>
               {weightTrend != null && (
@@ -494,11 +494,11 @@ export default async function PatientDashboardPage() {
               )}
             </div>
           </div>
-          <div className="rounded-xl bg-stone-50 p-4 dark:bg-stone-700/30">
-            <p className="text-sm text-stone-500 dark:text-stone-400">
+          <div className="rounded-xl bg-muted p-4 dark:bg-stone-700/30">
+            <p className="text-sm text-muted-foreground dark:text-stone-400">
               {dictionary.patientHome.height}
             </p>
-            <p className="text-lg font-semibold text-stone-800 dark:text-stone-100">
+            <p className="text-lg font-semibold text-foreground dark:text-stone-100">
               {patientProfile?.height
                 ? `${patientProfile.height} cm`
                 : dictionary.patientHome.notCompleted}
@@ -510,7 +510,7 @@ export default async function PatientDashboardPage() {
           {weightChartData.length > 0 ? (
             <WeightChart data={weightChartData} />
           ) : (
-            <p className="rounded-xl bg-stone-50 p-4 text-sm text-stone-500 dark:bg-stone-700/30 dark:text-stone-400">
+            <p className="rounded-xl bg-muted p-4 text-sm text-muted-foreground dark:bg-stone-700/30 dark:text-stone-400">
               {dictionary.patientHome.weightEmpty}
             </p>
           )}

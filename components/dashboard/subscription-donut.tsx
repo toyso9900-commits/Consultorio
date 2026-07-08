@@ -1,6 +1,7 @@
 "use client";
 
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
+import { useResolvedTheme } from "@/components/theme-provider";
 import { useI18n } from "@/lib/i18n/client";
 
 interface SubscriptionDonutProps {
@@ -11,11 +12,15 @@ interface SubscriptionDonutProps {
 
 export function SubscriptionDonut({ free, premium, totalLabel }: SubscriptionDonutProps) {
   const { dictionary } = useI18n();
+  const resolvedTheme = useResolvedTheme();
   const data = [
     { name: dictionary.adminDashboard?.freePlan ?? "Free", value: free },
     { name: dictionary.adminDashboard?.premiumPlan ?? "Premium", value: premium },
   ];
-  const colors = ["#a8a29e", "var(--role-patient-primary)"];
+  const colors = [
+    "var(--muted-foreground)",
+    resolvedTheme === "dark" ? "var(--role-patient-primary)" : "var(--accent-blue)",
+  ];
 
   return (
     <div className="relative h-56 w-full">
@@ -47,10 +52,10 @@ export function SubscriptionDonut({ free, premium, totalLabel }: SubscriptionDon
         </PieChart>
       </ResponsiveContainer>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <span className="text-3xl font-bold text-stone-800 dark:text-stone-100">
+        <span className="text-3xl font-bold text-foreground dark:text-stone-100">
           {free + premium}
         </span>
-        <span className="text-sm text-stone-500 dark:text-stone-400">
+        <span className="text-sm text-muted-foreground dark:text-stone-400">
           {totalLabel ?? "subscriptions"}
         </span>
       </div>
