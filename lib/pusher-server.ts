@@ -4,6 +4,7 @@ import {
   userChannel,
   AdminUpdateEvent,
   NewMessagePayload,
+  AppointmentUpdatePayload,
 } from "@/lib/pusher-shared";
 
 const appId = process.env.PUSHER_APP_ID;
@@ -73,4 +74,38 @@ export async function triggerMessage(message: NewMessagePayload) {
   }
 
   await pusherServer.trigger(userChannel(message.receiverId), "new-message", message);
+}
+
+export async function triggerAppointmentCreated(payload: AppointmentUpdatePayload) {
+  if (!pusherServer) {
+    return;
+  }
+
+  await pusherServer.trigger(
+    userChannel(payload.professionalId),
+    "appointment-created",
+    payload
+  );
+  await pusherServer.trigger(
+    userChannel(payload.patientId),
+    "appointment-created",
+    payload
+  );
+}
+
+export async function triggerAppointmentUpdated(payload: AppointmentUpdatePayload) {
+  if (!pusherServer) {
+    return;
+  }
+
+  await pusherServer.trigger(
+    userChannel(payload.professionalId),
+    "appointment-updated",
+    payload
+  );
+  await pusherServer.trigger(
+    userChannel(payload.patientId),
+    "appointment-updated",
+    payload
+  );
 }

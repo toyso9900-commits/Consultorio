@@ -1,5 +1,8 @@
+import { cache } from "react";
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
+
+export const getSession = cache(auth);
 
 type SessionWithUser = {
   user: {

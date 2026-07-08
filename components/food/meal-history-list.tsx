@@ -20,11 +20,11 @@ export function MealHistoryList({ dictionary, entries }: MealHistoryListProps) {
 
   if (entries.length === 0) {
     return (
-      <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-        <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
+      <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
+        <h3 className="text-lg font-semibold text-card-foreground">
           {dictionary.nutrition.historyTitle}
         </h3>
-        <p className="mt-2 text-slate-600 dark:text-slate-400">
+        <p className="mt-2 text-muted-foreground">
           {dictionary.nutrition.emptyHistory}
         </p>
       </div>
@@ -32,8 +32,8 @@ export function MealHistoryList({ dictionary, entries }: MealHistoryListProps) {
   }
 
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-      <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
+    <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
+      <h3 className="text-lg font-semibold text-card-foreground">
         {dictionary.nutrition.historyTitle}
       </h3>
 
@@ -41,13 +41,13 @@ export function MealHistoryList({ dictionary, entries }: MealHistoryListProps) {
         {entries.map((entry) => (
           <li
             key={entry.id}
-            className="flex items-center justify-between rounded-xl border border-slate-100 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-800"
+            className="flex items-center justify-between rounded-xl border border-border bg-muted p-4"
           >
             <div className="min-w-0">
-              <p className="truncate font-medium text-slate-900 dark:text-slate-100">
+              <p className="truncate font-medium text-card-foreground">
                 {entry.description}
               </p>
-              <p className="mt-0.5 flex items-center gap-1 text-xs text-slate-500 dark:text-slate-400">
+              <p className="mt-0.5 flex items-center gap-1 text-xs text-muted-foreground">
                 <Clock className="h-3 w-3" />
                 {mealTypeLabels[entry.mealType]} ·{" "}
                 {entry.consumedAt.toLocaleTimeString([], {

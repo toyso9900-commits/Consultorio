@@ -24,15 +24,15 @@ export function NutritionPageClient({
   return (
     <div className="mx-auto max-w-3xl space-y-8">
       <div>
-        <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100">
+        <h1 className="text-2xl font-bold text-card-foreground sm:text-3xl">
           {dictionary.nutrition.title}
         </h1>
-        <p className="mt-2 text-slate-600 dark:text-slate-400">
+        <p className="mt-2 text-muted-foreground">
           {dictionary.nutrition.subtitle}
         </p>
       </div>
 
-      <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+      <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
         <FoodPhotoUpload dictionary={dictionary} onAnalysis={setAnalysis} />
       </div>
 

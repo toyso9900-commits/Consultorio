@@ -2,7 +2,7 @@
 
 import { signOut } from "next-auth/react";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
-import { LogOut, Settings, UserCircle } from "lucide-react";
+import { LogOut, Settings, UserCircle, LayoutDashboard } from "lucide-react";
 import Link from "next/link";
 import { useI18n } from "@/lib/i18n/client";
 import { markUserOffline } from "@/lib/actions/presence";
@@ -35,6 +35,13 @@ export function UserAvatarMenu({ name, image, role }: UserAvatarMenuProps) {
       ? "/paciente/dashboard/perfil"
       : role === "PROFESSIONAL"
       ? "/profesional/dashboard/perfil"
+      : null;
+
+  const dashboardHref =
+    role === "PATIENT"
+      ? "/paciente/dashboard"
+      : role === "PROFESSIONAL" || role === "ADMIN"
+      ? "/profesional/dashboard"
       : null;
 
   const roleLabel =
@@ -77,6 +84,18 @@ export function UserAvatarMenu({ name, image, role }: UserAvatarMenuProps) {
           </div>
 
           <DropdownMenu.Separator className="my-1 h-px bg-border" />
+
+          {dashboardHref ? (
+            <DropdownMenu.Item asChild>
+              <Link
+                href={dashboardHref}
+                className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-foreground outline-none transition-colors hover:bg-muted focus:bg-muted"
+              >
+                <LayoutDashboard className="h-4 w-4" />
+                {dictionary.header.dashboard}
+              </Link>
+            </DropdownMenu.Item>
+          ) : null}
 
           {editProfileHref ? (
             <DropdownMenu.Item asChild>

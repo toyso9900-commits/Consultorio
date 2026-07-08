@@ -39,68 +39,68 @@ export default async function AdminUsersPage() {
   return (
     <div className="space-y-6">
       <AdminRealtimeListener />
-      <div className="flex items-center gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-indigo-100 dark:bg-indigo-950">
+      <div className="flex flex-wrap items-center gap-3">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-indigo-100 dark:bg-indigo-950">
           <Shield className="h-5 w-5 text-indigo-600" />
         </div>
         <div>
-          <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">
+          <h1 className="text-2xl font-bold text-card-foreground">
             {dictionary.adminUsers.title}
           </h1>
-          <p className="text-slate-600 dark:text-slate-400">
+          <p className="text-muted-foreground">
             {dictionary.adminUsers.description}
           </p>
         </div>
       </div>
 
       {users.length === 0 ? (
-        <div className="rounded-2xl border border-slate-200 bg-white p-12 text-center shadow-sm dark:border-slate-800 dark:bg-slate-900">
-          <p className="text-slate-600 dark:text-slate-400">
+        <div className="rounded-2xl border border-border bg-card p-12 text-center shadow-sm">
+          <p className="text-muted-foreground">
             {dictionary.adminUsers.noUsers}
           </p>
         </div>
       ) : (
-        <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
+        <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
-              <thead className="border-b border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-950">
+              <thead className="border-b border-border bg-muted">
                 <tr>
-                  <th className="px-4 py-3 font-semibold text-slate-700 dark:text-slate-300">
+                  <th className="px-4 py-3 font-semibold text-card-foreground">
                     {dictionary.adminUsers.nameHeader}
                   </th>
-                  <th className="px-4 py-3 font-semibold text-slate-700 dark:text-slate-300">
+                  <th className="px-4 py-3 font-semibold text-card-foreground">
                     {dictionary.adminUsers.emailHeader}
                   </th>
-                  <th className="px-4 py-3 font-semibold text-slate-700 dark:text-slate-300">
+                  <th className="px-4 py-3 font-semibold text-card-foreground">
                     {dictionary.adminUsers.roleHeader}
                   </th>
-                  <th className="px-4 py-3 font-semibold text-slate-700 dark:text-slate-300">
+                  <th className="px-4 py-3 font-semibold text-card-foreground">
                     {dictionary.adminUsers.statusHeader}
                   </th>
-                  <th className="px-4 py-3 font-semibold text-slate-700 dark:text-slate-300">
+                  <th className="px-4 py-3 font-semibold text-card-foreground">
                     {dictionary.adminUsers.registeredHeader}
                   </th>
-                  <th className="px-4 py-3 font-semibold text-slate-700 dark:text-slate-300">
+                  <th className="px-4 py-3 font-semibold text-card-foreground">
                     {dictionary.adminUsers.actionsHeader}
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+              <tbody className="divide-y divide-border">
                 {users.map((user) => {
                   const isProfessional = user.role === "PROFESSIONAL";
                   const profile = user.professionalProfile;
                   const isValidated = profile?.isValidated ?? false;
 
                   return (
-                    <tr key={user.id} className="hover:bg-slate-50 dark:hover:bg-slate-900">
-                      <td className="px-4 py-3 font-medium text-slate-900 dark:text-slate-100">
+                    <tr key={user.id} className="hover:bg-muted">
+                      <td className="px-4 py-3 font-medium text-card-foreground">
                         {user.name || dictionary.adminUsers.noName}
                       </td>
-                      <td className="px-4 py-3 text-slate-600 dark:text-slate-400">
+                      <td className="px-4 py-3 text-muted-foreground">
                         {user.email || dictionary.adminUsers.noEmail}
                       </td>
                       <td className="px-4 py-3">
-                        <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-700 dark:bg-slate-800 dark:text-slate-300">
+                        <span className="rounded-full bg-muted px-2.5 py-1 text-xs font-medium text-muted-foreground">
                           {formatRole(user.role, dictionary)}
                         </span>
                       </td>
@@ -118,12 +118,12 @@ export default async function AdminUsersPage() {
                               : dictionary.adminUsers.pending}
                           </span>
                         ) : (
-                          <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600 dark:bg-slate-800 dark:text-slate-400">
+                          <span className="rounded-full bg-muted px-2.5 py-1 text-xs font-medium text-muted-foreground">
                             {dictionary.adminUsers.active}
                           </span>
                         )}
                       </td>
-                      <td className="px-4 py-3 text-slate-500 dark:text-slate-400">
+                      <td className="px-4 py-3 text-muted-foreground">
                         {formatDate(user.createdAt, locale) ||
                           dictionary.adminUsers.dateNotRegistered}
                       </td>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useTransition } from "react";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { CheckCircle, XCircle } from "lucide-react";
 import {
@@ -15,6 +16,7 @@ interface ValidationActionsProps {
 
 export function ValidationActions({ profileId }: ValidationActionsProps) {
   const { dictionary } = useI18n();
+  const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
   function handleValidate(formData: FormData) {
@@ -22,6 +24,7 @@ export function ValidationActions({ profileId }: ValidationActionsProps) {
       const result = await validateProfessional(formData);
       if (result.success) {
         toast.success(dictionary.validationActions.approvedToast);
+        router.refresh();
       } else {
         toast.error(result.error || dictionary.validationActions.approveError);
       }
@@ -33,6 +36,7 @@ export function ValidationActions({ profileId }: ValidationActionsProps) {
       const result = await rejectProfessional(formData);
       if (result.success) {
         toast.success(dictionary.validationActions.rejectedToast);
+        router.refresh();
       } else {
         toast.error(result.error || dictionary.validationActions.rejectError);
       }

@@ -158,13 +158,13 @@ export function FoodAnalysisResult({
   ] as const;
 
   return (
-    <div className="space-y-4 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-      <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
+    <div className="space-y-4 rounded-2xl border border-border bg-card p-6 shadow-sm">
+      <h3 className="text-lg font-semibold text-card-foreground">
         {dictionary.nutrition.title}
       </h3>
 
       {imageUrl && (
-        <div className="relative h-48 overflow-hidden rounded-xl border border-slate-200 dark:border-slate-800">
+        <div className="relative h-48 overflow-hidden rounded-xl border border-border">
           <Image
             src={imageUrl}
             alt="Analyzed meal"
@@ -206,7 +206,7 @@ export function FoodAnalysisResult({
 
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="sm:col-span-2">
-          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
+          <label className="block text-sm font-medium text-muted-foreground">
             {dictionary.nutrition.description}
           </label>
           <input
@@ -219,7 +219,7 @@ export function FoodAnalysisResult({
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
+          <label className="block text-sm font-medium text-muted-foreground">
             {dictionary.nutrition.mealType}
           </label>
           <select
@@ -240,16 +240,16 @@ export function FoodAnalysisResult({
       </div>
 
       <div>
-        <h4 className="mb-2 text-sm font-medium text-slate-700 dark:text-slate-300">
+        <h4 className="mb-2 text-sm font-medium text-muted-foreground">
           {dictionary.nutrition.ingredients}
         </h4>
         <ul className="space-y-2">
           {ingredients.map((ingredient, index) => (
             <li
               key={index}
-              className="grid grid-cols-12 items-center gap-2 rounded-xl border border-slate-100 bg-slate-50 p-3 dark:border-slate-800 dark:bg-slate-800"
+              className="grid grid-cols-1 items-start gap-2 rounded-xl border border-border bg-muted p-3 sm:grid-cols-12 sm:items-center"
             >
-              <div className="col-span-5">
+              <div className="sm:col-span-5">
                 <input
                   type="text"
                   value={ingredient.name}
@@ -258,7 +258,7 @@ export function FoodAnalysisResult({
                   className="block w-full rounded-md border border-slate-300 bg-white px-2 py-1.5 text-sm text-slate-900 focus:border-emerald-500 focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
                 />
               </div>
-              <div className="col-span-3">
+              <div className="sm:col-span-3">
                 <div className="relative">
                   <input
                     type="number"
@@ -276,19 +276,19 @@ export function FoodAnalysisResult({
                   </span>
                 </div>
               </div>
-              <div className="col-span-3 text-right text-xs text-slate-600 dark:text-slate-400">
+              <div className="col-span-1 flex items-center justify-between text-xs text-muted-foreground sm:col-span-3 sm:block sm:text-right">
                 <p>{ingredient.calories} kcal</p>
                 <p>
                   P {formatMacro(ingredient.proteinG)} · C {formatMacro(ingredient.carbsG)} · F{" "}
                   {formatMacro(ingredient.fatG)}
                 </p>
               </div>
-              <div className="col-span-1 flex justify-end">
+              <div className="col-span-1 flex justify-end sm:col-span-1">
                 <button
                   type="button"
                   onClick={() => removeIngredient(index)}
                   disabled={isPending}
-                  className="rounded-md p-1 text-slate-400 hover:bg-red-100 hover:text-red-600 disabled:opacity-60 dark:hover:bg-red-950 dark:hover:text-red-300"
+                  className="rounded-md p-1 text-muted-foreground hover:bg-red-100 hover:text-red-600 disabled:opacity-60 dark:hover:bg-red-950 dark:hover:text-red-300"
                   aria-label={dictionary.nutrition.removeIngredient}
                 >
                   <Trash2 className="h-4 w-4" />
@@ -299,16 +299,16 @@ export function FoodAnalysisResult({
         </ul>
       </div>
 
-      <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-900">
+      <div className="rounded-xl border border-border bg-muted p-4">
         <div className="flex items-center justify-between">
-          <p className="text-sm font-medium text-slate-700 dark:text-slate-300">
+          <p className="text-sm font-medium text-card-foreground">
             {dictionary.nutrition.calories}
           </p>
-          <p className="text-lg font-semibold text-slate-900 dark:text-slate-100">
+          <p className="text-lg font-semibold text-card-foreground">
             {totals.calories} kcal
           </p>
         </div>
-        <div className="mt-2 grid grid-cols-3 gap-2 text-sm text-slate-600 dark:text-slate-400">
+        <div className="mt-2 grid grid-cols-3 gap-2 text-sm text-muted-foreground">
           <p>
             {dictionary.nutrition.protein}: {formatMacro(totals.proteinG)} g
           </p>
@@ -321,7 +321,7 @@ export function FoodAnalysisResult({
         </div>
       </div>
 
-      <p className="text-xs text-slate-500 dark:text-slate-400">
+      <p className="text-xs text-muted-foreground">
         {dictionary.nutrition.disclaimer}
       </p>
 

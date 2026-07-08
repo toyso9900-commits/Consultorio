@@ -25,6 +25,8 @@ export async function validateProfessional(formData: FormData): Promise<{ succes
 
     revalidatePath("/profesional/dashboard");
     revalidatePath("/profesional/dashboard/usuarios");
+    revalidatePath("/profesional/dashboard/validaciones");
+    revalidatePath("/profesional/dashboard/profesionales");
     revalidatePath("/paciente/dashboard/expertos");
 
     triggerAdminUpdate({
@@ -52,6 +54,8 @@ export async function rejectProfessional(formData: FormData): Promise<{ success:
 
     revalidatePath("/profesional/dashboard");
     revalidatePath("/profesional/dashboard/usuarios");
+    revalidatePath("/profesional/dashboard/validaciones");
+    revalidatePath("/profesional/dashboard/profesionales");
     revalidatePath("/paciente/dashboard/expertos");
 
     triggerAdminUpdate({

@@ -1,4 +1,4 @@
-import { auth } from "@/lib/auth";
+import { getSession } from "@/lib/session";
 import { DashboardShell } from "@/components/layout/dashboard-shell";
 
 export default async function PatientDashboardLayout({
@@ -6,14 +6,10 @@ export default async function PatientDashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const session = await auth();
+  const session = await getSession();
 
   return (
-    <DashboardShell
-      role="PATIENT"
-      name={session?.user?.name}
-      image={session?.user?.image}
-    >
+    <DashboardShell role="PATIENT" userId={session?.user?.id}>
       {children}
     </DashboardShell>
   );

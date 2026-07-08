@@ -77,9 +77,11 @@ function MacroBar({
   color: string;
 }) {
   return (
-    <div className="rounded-xl bg-muted p-3 text-center">
-      <p className="text-xs font-medium text-muted-foreground">{label}</p>
-      <p className="mt-1 text-lg font-semibold text-card-foreground">
+    <div className="flex flex-col items-center justify-center rounded-xl bg-muted p-3 text-center">
+      <p className="min-h-[1rem] text-xs font-medium leading-tight text-muted-foreground">
+        {label}
+      </p>
+      <p className="mt-1.5 text-lg font-semibold leading-tight text-card-foreground">
         {value.toFixed(1)} g
       </p>
       <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-background">

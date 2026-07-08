@@ -14,29 +14,29 @@ export default async function ProfessionalClientsPage() {
 
   return (
     <div className="space-y-6" data-role="professional">
-      <div className="flex items-center gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-indigo-100 dark:bg-indigo-950">
+      <div className="flex flex-wrap items-center gap-3">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-indigo-100 dark:bg-indigo-950">
           <Users className="h-5 w-5 text-indigo-600" />
         </div>
         <div>
-          <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">
-            {dictionary.professionalClients.title}
-          </h1>
-          <p className="text-slate-600 dark:text-slate-400">
-            {dictionary.professionalClients.description}
-          </p>
+            <h1 className="text-2xl font-bold text-card-foreground">
+              {dictionary.professionalClients.title}
+            </h1>
+            <p className="text-muted-foreground">
+              {dictionary.professionalClients.description}
+            </p>
+          </div>
         </div>
-      </div>
 
       {clients.length === 0 ? (
-        <div className="rounded-2xl border border-slate-200 bg-white p-12 text-center shadow-sm dark:border-slate-800 dark:bg-slate-900">
-          <p className="text-slate-600 dark:text-slate-400">
+        <div className="rounded-2xl border border-border bg-card p-12 text-center shadow-sm">
+          <p className="text-muted-foreground">
             {dictionary.professionalClients.empty}
           </p>
         </div>
       ) : (
-        <div className="rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
-          <ul className="divide-y divide-slate-200 dark:divide-slate-800">
+        <div className="rounded-2xl border border-border bg-card shadow-sm">
+          <ul className="divide-y divide-border">
             {clients.map((client) => {
               const messageHref = `/profesional/dashboard/mensajes?paciente=${encodeURIComponent(
                 client.patientId
@@ -52,10 +52,10 @@ export default async function ProfessionalClientsPage() {
                       {(client.name || "P").slice(0, 1).toUpperCase()}
                     </div>
                     <div>
-                      <p className="font-medium text-slate-900 dark:text-slate-100">
+                      <p className="font-medium text-card-foreground">
                         {client.name || dictionary.professionalClients.noName}
                       </p>
-                      <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-slate-500 dark:text-slate-400">
+                      <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground">
                         <span className="flex items-center gap-1">
                           <CalendarDays className="h-3.5 w-3.5" />
                           {client.lastAppointment
@@ -70,7 +70,7 @@ export default async function ProfessionalClientsPage() {
                           className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium ${
                             client.hasActivePaidSubscription
                               ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300"
-                              : "bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400"
+                              : "bg-muted text-muted-foreground"
                           }`}
                         >
                           <Crown className="h-3 w-3" />

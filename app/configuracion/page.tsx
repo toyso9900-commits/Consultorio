@@ -18,7 +18,7 @@ export default async function SettingsPage() {
   return (
     <div className="mx-auto max-w-2xl px-6 py-10">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold tracking-tight text-foreground">
+        <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
           {dictionary.settings.title}
         </h1>
         <p className="mt-2 text-muted-foreground">

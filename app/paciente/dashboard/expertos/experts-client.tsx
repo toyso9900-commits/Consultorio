@@ -44,7 +44,7 @@ export function PatientExpertsClient({ professionals }: PatientExpertsPageProps)
         >
           {dictionary.patientExperts.backToDashboard}
         </Link>
-        <h1 className="mt-4 text-3xl font-bold text-slate-900 dark:text-slate-100">
+        <h1 className="mt-4 text-2xl font-bold text-slate-900 dark:text-slate-100 sm:text-3xl">
           {dictionary.patientExperts.title}
         </h1>
         <p className="mt-2 text-slate-600 dark:text-slate-400">

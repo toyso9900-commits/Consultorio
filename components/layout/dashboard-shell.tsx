@@ -1,14 +1,22 @@
-import { ReactNode } from "react";
-import { Sidebar, UserRole } from "./sidebar";
+"use client";
+
+import { ReactNode, useState } from "react";
+import { Sidebar, UserRole, MobileSidebar } from "./sidebar";
 import { DashboardHeader } from "./dashboard-header";
+import { AppointmentsRealtimeListener } from "@/components/appointments/appointments-realtime-listener";
+
+const shellBgByRole: Record<UserRole, string> = {
+  ADMIN: "bg-stone-50 dark:bg-[#1C251F]",
+  PROFESSIONAL: "bg-stone-100 dark:bg-stone-900",
+  PATIENT: "bg-stone-50 dark:bg-stone-900",
+};
 
 interface DashboardShellProps {
   children: ReactNode;
   role: UserRole;
   title?: string;
   subtitle?: string;
-  name?: string | null;
-  image?: string | null;
+  userId?: string;
   badge?: number;
 }
 
@@ -17,16 +25,40 @@ export function DashboardShell({
   role,
   title,
   subtitle,
-  name,
-  image,
+  userId,
   badge,
 }: DashboardShellProps) {
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  const bgClass = shellBgByRole[role];
+
   return (
-    <div className="min-h-screen bg-background lg:pl-64">
+    <div className={`min-h-screen lg:pl-64 ${bgClass}`}>
+      {userId && <AppointmentsRealtimeListener userId={userId} />}
       <Sidebar role={role} badge={badge} />
+      <MobileSidebar
+        role={role}
+        badge={badge}
+        open={mobileOpen}
+        onClose={() => setMobileOpen(false)}
+      />
       <div className="flex min-h-screen flex-col">
-        <DashboardHeader title={title} subtitle={subtitle} name={name} image={image} role={role} />
-        <main className="flex-1 p-6">{children}</main>
+        {title || subtitle ? (
+          <DashboardHeader
+            title={title}
+            subtitle={subtitle}
+            onMenuClick={() => setMobileOpen(true)}
+          />
+        ) : (
+          <div className="lg:hidden">
+            <DashboardHeader
+              title={title}
+              subtitle={subtitle}
+              onMenuClick={() => setMobileOpen(true)}
+            />
+          </div>
+        )}
+        <main className="flex-1 p-4 sm:p-6">{children}</main>
       </div>
     </div>
   );

@@ -5,6 +5,7 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { AppointmentStatus } from "@prisma/client";
 import { isValidTransition } from "@/lib/appointments-status";
+import { triggerAppointmentUpdated } from "@/lib/pusher-server";
 
 export type AppointmentActionResult =
   | { success: true }
@@ -43,12 +44,26 @@ async function transitionAppointment(
       return { success: false, error: "unauthorized" };
     }
 
+    const appointment = await prisma.appointment.findUnique({
+      where: { id: appointmentId },
+    });
+
     revalidatePath("/profesional/dashboard/citas");
     revalidatePath("/profesional/dashboard");
 
     if (to === AppointmentStatus.CANCELLED || to === AppointmentStatus.COMPLETED) {
       revalidatePath("/paciente/dashboard/citas");
       revalidatePath("/paciente/dashboard");
+    }
+
+    if (appointment) {
+      triggerAppointmentUpdated({
+        appointmentId: appointment.id,
+        patientId: appointment.patientId,
+        professionalId: appointment.professionalId,
+        status: appointment.status,
+        scheduledAt: appointment.scheduledAt.toISOString(),
+      }).catch(() => {});
     }
 
     return { success: true };
@@ -121,6 +136,14 @@ export async function cancelAppointment(
     revalidatePath("/profesional/dashboard");
     revalidatePath("/paciente/dashboard/citas");
     revalidatePath("/paciente/dashboard");
+
+    triggerAppointmentUpdated({
+      appointmentId: appointment.id,
+      patientId: appointment.patientId,
+      professionalId: appointment.professionalId,
+      status: AppointmentStatus.CANCELLED,
+      scheduledAt: appointment.scheduledAt.toISOString(),
+    }).catch(() => {});
 
     return { success: true };
   } catch {

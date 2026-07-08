@@ -25,3 +25,11 @@ export interface NewMessagePayload {
     image: string | null;
   };
 }
+
+export type AppointmentUpdatePayload = {
+  appointmentId: string;
+  patientId: string;
+  professionalId: string;
+  status: string;
+  scheduledAt: string;
+};

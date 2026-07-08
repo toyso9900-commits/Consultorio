@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Link from "next/link";
-import { auth } from "@/lib/auth";
+import { getSession } from "@/lib/session";
 import { Toaster } from "sonner";
 import { Providers } from "./providers";
 import { getLocale, getDictionary } from "@/lib/i18n/server";
@@ -33,6 +33,7 @@ const themeScript = `
     const saved = localStorage.getItem('consultorio-theme');
     const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     const resolved = saved === 'dark' || (saved === 'system' && systemDark) || (!saved && systemDark) ? 'dark' : 'light';
+    document.documentElement.classList.remove('light', 'dark');
     document.documentElement.classList.add(resolved);
   })();
 `;
@@ -42,10 +43,17 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = await auth();
+  const session = await getSession();
   const locale = await getLocale(session?.user?.id);
   const dictionary = await getDictionary(locale);
   const currentYear = new Date().getFullYear();
+
+  const homeHref =
+    session?.user?.role === "PATIENT"
+      ? "/paciente/dashboard"
+      : session?.user?.role === "PROFESSIONAL" || session?.user?.role === "ADMIN"
+      ? "/profesional/dashboard"
+      : "/";
 
   return (
     <html
@@ -61,10 +69,10 @@ export default async function RootLayout({
         suppressHydrationWarning
       >
         <Providers locale={locale} dictionary={dictionary}>
-          <header className="sticky top-0 z-50 border-b border-border bg-card/80 backdrop-blur">
+          <header className="sticky top-0 z-40 border-b border-border bg-card/80 backdrop-blur">
             <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
               <Link
-                href="/"
+                href={homeHref}
                 className="flex items-center gap-2 text-xl font-bold tracking-tight text-primary"
               >
                 <svg

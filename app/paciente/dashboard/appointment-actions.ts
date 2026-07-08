@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { AppointmentStatus } from "@prisma/client";
+import { triggerAppointmentCreated } from "@/lib/pusher-server";
 
 const requestSchema = z.object({
   professionalId: z.string().min(1),
@@ -55,7 +56,7 @@ export async function requestAppointment(
       return { success: false, error: "El profesional no está disponible." };
     }
 
-    await prisma.appointment.create({
+    const appointment = await prisma.appointment.create({
       data: {
         patientId: session.user.id,
         professionalId,
@@ -67,6 +68,16 @@ export async function requestAppointment(
 
     revalidatePath("/paciente/dashboard/citas");
     revalidatePath("/paciente/dashboard");
+    revalidatePath("/profesional/dashboard/citas");
+    revalidatePath("/profesional/dashboard");
+
+    triggerAppointmentCreated({
+      appointmentId: appointment.id,
+      patientId: appointment.patientId,
+      professionalId: appointment.professionalId,
+      status: appointment.status,
+      scheduledAt: appointment.scheduledAt.toISOString(),
+    }).catch(() => {});
 
     return { success: true };
   } catch {

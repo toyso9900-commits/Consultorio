@@ -29,7 +29,7 @@ export function ThemeToggle() {
           aria-pressed={theme === value}
         >
           <Icon className="h-4 w-4" />
-          {dictionary.settings.theme[value]}
+          <span className="hidden sm:inline">{dictionary.settings.theme[value]}</span>
         </button>
       ))}
     </div>

@@ -53,9 +53,9 @@ export default function ProfessionalChatPage({
 
   if (!targetPatientId) {
     return (
-      <div className="flex h-full flex-col items-center justify-center rounded-2xl border border-slate-200 bg-white p-12 text-center shadow-sm dark:border-slate-800 dark:bg-slate-900">
-        <MessageSquare className="mx-auto mb-4 h-10 w-10 text-slate-300 dark:text-slate-700" />
-        <p className="text-slate-600 dark:text-slate-400">
+      <div className="flex h-full flex-col items-center justify-center rounded-2xl border border-border bg-card p-12 text-center shadow-sm">
+        <MessageSquare className="mx-auto mb-4 h-10 w-10 text-muted-foreground" />
+        <p className="text-muted-foreground">
           {dictionary.professionalMessages.empty}
         </p>
       </div>

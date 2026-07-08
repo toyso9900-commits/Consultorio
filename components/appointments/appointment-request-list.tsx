@@ -50,8 +50,8 @@ export function AppointmentRequestList({
 
   if (appointments.length === 0) {
     return (
-      <div className="rounded-2xl border border-slate-200 bg-white p-12 text-center shadow-sm dark:border-slate-800 dark:bg-slate-900">
-        <p className="text-slate-600 dark:text-slate-400">
+      <div className="rounded-2xl border border-border bg-card p-12 text-center shadow-sm">
+        <p className="text-muted-foreground">
           {dictionary.appointments.empty.professional}
         </p>
       </div>
@@ -81,7 +81,7 @@ export function AppointmentRequestList({
               type="button"
               disabled={isPending}
               onClick={() => handleAction(appointment.id, "reject")}
-              className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
+              className="rounded-xl border border-border bg-card px-4 py-2 text-sm font-semibold text-card-foreground transition-colors hover:bg-muted disabled:opacity-60"
             >
               {dictionary.appointments.actions.reject}
             </button>

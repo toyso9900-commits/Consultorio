@@ -15,7 +15,7 @@ export function Providers({ children, locale, dictionary }: ProvidersProps) {
   return (
     <SessionProvider basePath="/api/auth" refetchInterval={0}>
       <I18nProvider locale={locale} dictionary={dictionary}>
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider attribute="class">{children}</ThemeProvider>
       </I18nProvider>
     </SessionProvider>
   );

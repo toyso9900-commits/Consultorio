@@ -4,14 +4,14 @@ import { mkdir, writeFile } from "fs/promises";
 import path from "path";
 import { randomUUID } from "crypto";
 import { z } from "zod";
-import { GoogleGenAI } from "@google/genai";
+import { GoogleGenAI, ApiError } from "@google/genai";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { computeIngredient } from "@/lib/nutrition-data";
 import type { MealType, MealSource } from "@prisma/client";
 
-const GEMINI_MODEL = "gemini-flash-latest";
+const GEMINI_MODEL = "gemini-2.5-flash";
 
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"];
 const MAX_SIZE_MB = 5;
@@ -93,6 +93,30 @@ function recordRequest(userId: string): void {
   requestTimestamps.set(userId, timestamps);
 }
 
+function getErrorKeyForApiError(error: unknown): string {
+  if (error instanceof ApiError) {
+    if (error.status === 429) return "errorAnalysisQuota";
+    if (error.status === 401 || error.status === 403) return "errorAnalysisAuth";
+  }
+  return "errorAnalysis";
+}
+
+function logAnalysisError(
+  error: unknown,
+  context: { model: string; hasApiKey: boolean; fileType: string; fileSize: number }
+): void {
+  const status = error instanceof ApiError ? error.status : undefined;
+  const message = error instanceof Error ? error.message : String(error);
+  console.error("[analyzeFoodImage] Food analysis failed", {
+    error: message,
+    status,
+    model: context.model,
+    hasApiKey: context.hasApiKey,
+    fileType: context.fileType,
+    fileSize: context.fileSize,
+  });
+}
+
 function recomputeIngredient(
   ingredient: z.infer<typeof ingredientSchema>
 ): z.infer<typeof ingredientSchema> {
@@ -123,21 +147,21 @@ export async function analyzeFoodImage(
   const userId = session?.user?.id;
 
   if (!userId) {
-    return { success: false, error: "errors.unauthorized" };
+    return { success: false, error: "unauthorized" };
   }
 
   const file = formData.get("image") as File | null;
 
   if (!file || !ALLOWED_TYPES.includes(file.type) || file.size === 0) {
-    return { success: false, error: "nutrition.errorInvalidFile" };
+    return { success: false, error: "errorInvalidFile" };
   }
 
   if (file.size > MAX_SIZE_MB * 1024 * 1024) {
-    return { success: false, error: "nutrition.errorInvalidFile" };
+    return { success: false, error: "errorInvalidFile" };
   }
 
   if (isRateLimited(userId)) {
-    return { success: false, error: "nutrition.errorRateLimited" };
+    return { success: false, error: "errorRateLimited" };
   }
 
   try {
@@ -156,7 +180,7 @@ export async function analyzeFoodImage(
 
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
-      return { success: false, error: "nutrition.errorAnalysis" };
+      return { success: false, error: "errorAnalysisNoKey" };
     }
 
     const base64 = Buffer.from(bytes).toString("base64");
@@ -212,14 +236,14 @@ export async function analyzeFoodImage(
 
     const rawText = response.text;
     if (!rawText) {
-      return { success: false, error: "nutrition.errorAnalysis" };
+      return { success: false, error: "errorAnalysisResponse" };
     }
 
     const parsedJson = JSON.parse(rawText);
     const parsed = foodAnalysisSchema.safeParse(parsedJson);
 
     if (!parsed.success) {
-      return { success: false, error: "nutrition.errorAnalysis" };
+      return { success: false, error: "errorAnalysisResponse" };
     }
 
     const recomputedIngredients = parsed.data.ingredients.map(recomputeIngredient);
@@ -249,8 +273,14 @@ export async function analyzeFoodImage(
       imageUrl,
       needsReferenceWarning: !finalData.referenceScale.detected,
     };
-  } catch {
-    return { success: false, error: "nutrition.errorAnalysis" };
+  } catch (error) {
+    logAnalysisError(error, {
+      model: GEMINI_MODEL,
+      hasApiKey: !!process.env.GEMINI_API_KEY,
+      fileType: file.type,
+      fileSize: file.size,
+    });
+    return { success: false, error: getErrorKeyForApiError(error) };
   }
 }
 
@@ -288,7 +318,7 @@ export async function saveMealEntry(
 
   const parsed = saveMealEntrySchema.safeParse(data);
   if (!parsed.success) {
-    return { success: false, error: "nutrition.errorAnalysis" };
+    return { success: false, error: "errorAnalysis" };
   }
 
   const {

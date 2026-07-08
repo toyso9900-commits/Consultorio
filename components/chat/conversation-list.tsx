@@ -25,6 +25,7 @@ interface ConversationListProps {
   selectedUserId?: string;
   emptyMessage?: string;
   hrefPrefix?: string;
+  partnerParam?: string;
   initialOnlineStatus?: Record<string, boolean>;
 }
 
@@ -55,8 +56,9 @@ export function ConversationList({
   initialConversations,
   currentUserId,
   selectedUserId,
-  emptyMessage = "No tenés conversaciones todavía.",
+  emptyMessage = "No ten\u00e9s conversaciones todav\u00eda.",
   hrefPrefix = "/profesional/dashboard/mensajes",
+  partnerParam = "paciente",
   initialOnlineStatus = {},
 }: ConversationListProps) {
   const [conversations, setConversations] = useState(initialConversations);
@@ -150,14 +152,14 @@ export function ConversationList({
 
   if (conversations.length === 0) {
     return (
-      <p className="p-4 text-sm text-slate-500 dark:text-slate-400">{emptyMessage}</p>
+      <p className="p-4 text-sm text-muted-foreground">{emptyMessage}</p>
     );
   }
 
   return (
     <ul className="space-y-1">
       {conversations.map((user) => {
-        const href = `${hrefPrefix}?paciente=${encodeURIComponent(
+        const href = `${hrefPrefix}?${partnerParam}=${encodeURIComponent(
           user.id
         )}&nombre=${encodeURIComponent(user.name || "Paciente")}`;
         const isActive = user.id === selectedUserId;
@@ -169,7 +171,7 @@ export function ConversationList({
               className={`block rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
                 isActive
                   ? "bg-indigo-50 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300"
-                  : "text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800"
+                  : "text-card-foreground hover:bg-muted"
               }`}
             >
               <div className="flex items-center justify-between gap-2">
@@ -187,13 +189,13 @@ export function ConversationList({
                         />
                       )}
                     </p>
-                    <p className="truncate text-xs text-slate-500 dark:text-slate-400">
+                    <p className="truncate text-xs text-muted-foreground">
                       {truncatePreview(user.lastMessage, MAX_PREVIEW_LENGTH)}
                     </p>
                   </div>
                 </div>
                 <div className="flex shrink-0 flex-col items-end gap-0.5">
-                  <span className="text-[10px] text-slate-400 dark:text-slate-500">
+                  <span className="text-[10px] text-muted-foreground">
                     {formatMessageTime(user.lastMessageAt)}
                   </span>
                   {user.unreadCount > 0 ? (

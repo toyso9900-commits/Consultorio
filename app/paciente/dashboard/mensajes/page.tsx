@@ -46,13 +46,13 @@ export default async function PatientMessagesPage({ searchParams }: PageProps) {
   const onlineStatus = await getUsersOnlineStatus(conversations.map((c) => c.id));
 
   return (
-    <div className="grid h-[calc(100vh-8rem)] gap-6 lg:grid-cols-3">
+    <div className="grid h-[calc(100vh-8rem)] grid-rows-[auto_1fr] gap-6 lg:grid-cols-3 lg:grid-rows-1">
       <PresenceHeartbeat />
-      <div className="hidden flex-col rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900 lg:flex">
-        <div className="border-b border-slate-200 p-4 dark:border-slate-800">
+      <div className="flex h-full max-h-[40vh] flex-col rounded-2xl border border-border bg-card shadow-sm lg:col-span-1 lg:max-h-full lg:flex">
+        <div className="border-b border-border p-4">
           <div className="flex items-center gap-2">
             <MessageSquare className="h-5 w-5 text-rose-600" />
-            <h2 className="font-semibold text-slate-900 dark:text-slate-100">
+            <h2 className="font-semibold text-card-foreground">
               {dictionary.patientMessages.conversations}
             </h2>
           </div>
@@ -64,6 +64,7 @@ export default async function PatientMessagesPage({ searchParams }: PageProps) {
             currentUserId={session!.user.id ?? ""}
             selectedUserId={professionalId}
             hrefPrefix="/paciente/dashboard/mensajes"
+            partnerParam="profesional"
             initialOnlineStatus={Object.fromEntries(onlineStatus)}
           />
         </div>
@@ -72,22 +73,23 @@ export default async function PatientMessagesPage({ searchParams }: PageProps) {
       <div className="lg:col-span-2">
         {professionalId ? (
           <ChatPanel
+            key={professionalId}
             initialMessages={initialMessages}
             professionalId={professionalId}
             professionalName={professionalName}
             patientId={session!.user.id ?? ""}
           />
         ) : (
-          <div className="flex h-full flex-col items-center justify-center rounded-2xl border border-slate-200 bg-white p-12 text-center shadow-sm dark:border-slate-800 dark:bg-slate-900">
-            <MessageSquare className="mx-auto mb-4 h-10 w-10 text-slate-300 dark:text-slate-700" />
-            <p className="text-slate-600 dark:text-slate-400">
+          <div className="flex h-full flex-col items-center justify-center rounded-2xl border border-border bg-card p-12 text-center shadow-sm">
+            <MessageSquare className="mx-auto mb-4 h-10 w-10 text-muted-foreground" />
+            <p className="text-muted-foreground">
               {dictionary.patientMessages.empty.split("{link}").map((part, i, arr) => (
                 <span key={i}>
                   {part}
                   {i < arr.length - 1 && (
                     <Link
                       href="/paciente/dashboard/expertos"
-                      className="text-indigo-600 hover:underline dark:text-indigo-400"
+                      className="text-primary hover:underline"
                     >
                       {dictionary.patientMessages.emptyLink}
                     </Link>

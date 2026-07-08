@@ -76,8 +76,8 @@ export function DateGroupedAppointments({
 
   if (appointments.length === 0) {
     return (
-      <div className="rounded-2xl border border-slate-200 bg-white p-12 text-center shadow-sm dark:border-slate-800 dark:bg-slate-900">
-        <p className="text-slate-600 dark:text-slate-400">
+      <div className="rounded-2xl border border-border bg-card p-12 text-center shadow-sm">
+        <p className="text-muted-foreground">
           {role === "patient"
             ? dictionary.appointments.empty.patient
             : dictionary.appointments.empty.professional}
@@ -99,7 +99,7 @@ export function DateGroupedAppointments({
 
         return (
           <section key={dateKey} className="space-y-4">
-            <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
+            <h3 className="text-lg font-semibold text-card-foreground">
               {dateLabel}
             </h3>
             <div className="space-y-4">

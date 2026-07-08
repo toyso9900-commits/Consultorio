@@ -8,6 +8,7 @@ import {
   useLayoutEffect,
   useState,
   useCallback,
+  useSyncExternalStore,
   ReactNode,
 } from "react";
 
@@ -33,8 +34,14 @@ function getSystemTheme(): "light" | "dark" {
     : "light";
 }
 
-function resolveTheme(theme: Theme): "light" | "dark" {
-  if (theme === "system") return getSystemTheme();
+function subscribeToSystemTheme(callback: () => void) {
+  const media = window.matchMedia("(prefers-color-scheme: dark)");
+  media.addEventListener("change", callback);
+  return () => media.removeEventListener("change", callback);
+}
+
+function resolveTheme(theme: Theme, systemTheme: "light" | "dark"): "light" | "dark" {
+  if (theme === "system") return systemTheme;
   return theme;
 }
 
@@ -60,49 +67,42 @@ function readStoredTheme(fallback: Theme): Theme {
 interface ThemeProviderProps {
   children: ReactNode;
   defaultTheme?: Theme;
+  attribute?: "class";
 }
 
 export function ThemeProvider({
   children,
   defaultTheme = "system",
+  attribute = "class",
 }: ThemeProviderProps) {
+  const systemTheme = useSyncExternalStore<"light" | "dark">(
+    subscribeToSystemTheme,
+    getSystemTheme,
+    () => "light"
+  );
   const [theme, setThemeState] = useState<Theme>(() =>
     readStoredTheme(defaultTheme)
   );
-  const [resolvedTheme, setResolvedTheme] = useState<"light" | "dark">(() =>
-    resolveTheme(readStoredTheme(defaultTheme))
-  );
+  const resolvedTheme = resolveTheme(theme, systemTheme);
   const pathname = usePathname();
 
   useIsomorphicLayoutEffect(() => {
-    applyTheme(resolvedTheme);
-  }, [resolvedTheme, pathname]);
+    if (attribute === "class") {
+      applyTheme(resolvedTheme);
+    }
+  }, [resolvedTheme, pathname, attribute]);
 
   useEffect(() => {
     const root = document.documentElement;
     const observer = new MutationObserver(() => {
-      if (!root.classList.contains(resolvedTheme)) {
+      if (attribute === "class" && !root.classList.contains(resolvedTheme)) {
         applyTheme(resolvedTheme);
       }
     });
 
     observer.observe(root, { attributes: true, attributeFilter: ["class"] });
     return () => observer.disconnect();
-  }, [resolvedTheme]);
-
-  useEffect(() => {
-    const media = window.matchMedia("(prefers-color-scheme: dark)");
-    const handleChange = () => {
-      if (theme === "system") {
-        const resolved = getSystemTheme();
-        setResolvedTheme(resolved);
-        applyTheme(resolved);
-      }
-    };
-
-    media.addEventListener("change", handleChange);
-    return () => media.removeEventListener("change", handleChange);
-  }, [theme]);
+  }, [resolvedTheme, attribute]);
 
   const setTheme = useCallback((next: Theme) => {
     try {
@@ -111,9 +111,6 @@ export function ThemeProvider({
       // Storage may be disabled in private mode; ignore.
     }
     setThemeState(next);
-    const resolved = resolveTheme(next);
-    setResolvedTheme(resolved);
-    applyTheme(resolved);
   }, []);
 
   return (

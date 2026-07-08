@@ -99,12 +99,12 @@ export default function ProfessionalSubscriptionPage() {
             <Crown className="h-5 w-5 text-teal-600" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">
-              {dictionary.subscription.title}
-            </h1>
-            <p className="text-slate-600 dark:text-slate-400">
-              {dictionary.subscription.subtitle}
-            </p>
+          <h1 className="text-2xl font-bold text-card-foreground">
+            {dictionary.subscription.title}
+          </h1>
+          <p className="text-muted-foreground">
+            {dictionary.subscription.subtitle}
+          </p>
           </div>
         </div>
 
@@ -118,10 +118,10 @@ export default function ProfessionalSubscriptionPage() {
         {PLANS.map((plan) => (
           <div
             key={plan.id}
-            className={`relative flex flex-col rounded-2xl border p-6 shadow-sm transition-all hover:shadow-md dark:border-slate-800 dark:bg-slate-900 ${
+            className={`relative flex flex-col rounded-2xl border p-6 shadow-sm transition-all hover:shadow-md ${
               plan.highlighted
                 ? "border-indigo-300 bg-indigo-50/50 dark:border-indigo-800 dark:bg-indigo-950/20"
-                : "border-slate-200 bg-white"
+                : "border-border bg-card"
             }`}
           >
             {plan.highlighted && (
@@ -134,19 +134,19 @@ export default function ProfessionalSubscriptionPage() {
             )}
 
             <div className="mb-4">
-              <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100">
+              <h2 className="text-xl font-bold text-card-foreground">
                 {plan.name}
               </h2>
-              <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
+              <p className="mt-1 text-sm text-muted-foreground">
                 {plan.description}
               </p>
             </div>
 
             <div className="mb-6">
-              <span className="text-4xl font-bold text-slate-900 dark:text-slate-100">
+              <span className="text-4xl font-bold text-card-foreground">
                 ${plan.price}
               </span>
-              <span className="text-sm text-slate-500 dark:text-slate-400">
+              <span className="text-sm text-muted-foreground">
                 {" "}
                 {plan.period}
               </span>
@@ -156,7 +156,7 @@ export default function ProfessionalSubscriptionPage() {
               {plan.features.map((feature) => (
                 <li key={feature} className="flex items-start gap-2 text-sm">
                   <Check className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
-                  <span className="text-slate-700 dark:text-slate-300">{feature}</span>
+                  <span className="text-muted-foreground">{feature}</span>
                 </li>
               ))}
             </ul>
@@ -168,7 +168,7 @@ export default function ProfessionalSubscriptionPage() {
               className={`w-full rounded-full px-5 py-2.5 text-sm font-semibold transition-colors ${
                 plan.highlighted
                   ? "bg-indigo-600 text-white hover:bg-indigo-700 disabled:opacity-70"
-                  : "border border-slate-300 bg-white text-slate-700 hover:bg-slate-50 disabled:opacity-70 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800"
+                  : "border border-border bg-card text-card-foreground hover:bg-muted disabled:opacity-70"
               }`}
             >
               {isProcessing === plan.id
@@ -179,11 +179,11 @@ export default function ProfessionalSubscriptionPage() {
         ))}
       </div>
 
-      <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-        <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
+      <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
+        <h2 className="text-lg font-semibold text-card-foreground">
           {dictionary.subscription.paymentSimulatorTitle}
         </h2>
-        <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
+        <p className="mt-2 text-sm text-muted-foreground">
           {dictionary.subscription.paymentSimulatorDescription}
         </p>
       </div>

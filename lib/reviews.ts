@@ -1,6 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
+import { ReviewType } from "@prisma/client";
 import { z } from "zod";
 
 export interface RatingSummary {
@@ -115,6 +116,7 @@ export async function submitReview(
   await prisma.$transaction(async (tx) => {
     await tx.review.create({
       data: {
+        type: ReviewType.PROFESSIONAL,
         appointmentId: parsed.data.appointmentId,
         patientId: parsed.data.patientId,
         professionalId: appointment.professionalId,
@@ -124,7 +126,7 @@ export async function submitReview(
     });
 
     const reviews = await tx.review.findMany({
-      where: { professionalId: appointment.professionalId },
+      where: { professionalId: appointment.professionalId, type: ReviewType.PROFESSIONAL },
       select: { rating: true },
     });
 
@@ -144,24 +146,41 @@ export async function submitReview(
   return { success: true };
 }
 
-export async function getReviewsForViewer(
-  viewerId: string,
-  role: "ADMIN" | "PROFESSIONAL"
-): Promise<
-  {
-    id: string;
-    rating: number;
-    comment: string | null;
-    createdAt: Date;
-    patient: { name: string | null; image: string | null };
-    professional: { name: string | null; image: string | null };
-  }[]
-> {
-  const where =
-    role === "ADMIN" ? undefined : { professionalId: viewerId };
+export interface ReviewListItem {
+  id: string;
+  type: ReviewType;
+  rating: number;
+  comment: string | null;
+  createdAt: Date;
+  patient: { name: string | null; image: string | null };
+  professional: { name: string | null; image: string | null } | null;
+}
 
+function mapReviewToListItem(review: {
+  id: string;
+  type: ReviewType;
+  rating: number;
+  comment: string | null;
+  createdAt: Date;
+  patient: { name: string | null; image: string | null };
+  professional: { name: string | null; image: string | null } | null;
+}): ReviewListItem {
+  return {
+    id: review.id,
+    type: review.type,
+    rating: review.rating,
+    comment: review.comment,
+    createdAt: review.createdAt,
+    patient: review.patient,
+    professional: review.professional,
+  };
+}
+
+export async function getAdminReviews(): Promise<{
+  platformReviews: ReviewListItem[];
+  professionalReviews: ReviewListItem[];
+}> {
   const reviews = await prisma.review.findMany({
-    where,
     include: {
       patient: {
         select: { name: true, image: true },
@@ -173,12 +192,39 @@ export async function getReviewsForViewer(
     orderBy: { createdAt: "desc" },
   });
 
-  return reviews.map((review) => ({
-    id: review.id,
-    rating: review.rating,
-    comment: review.comment,
-    createdAt: review.createdAt,
-    patient: review.patient,
-    professional: review.professional,
-  }));
+  const platformReviews: ReviewListItem[] = [];
+  const professionalReviews: ReviewListItem[] = [];
+
+  for (const review of reviews) {
+    const item = mapReviewToListItem(review);
+    if (review.type === ReviewType.PLATFORM) {
+      platformReviews.push(item);
+    } else {
+      professionalReviews.push(item);
+    }
+  }
+
+  return { platformReviews, professionalReviews };
+}
+
+export async function getProfessionalReviews(
+  professionalId: string
+): Promise<ReviewListItem[]> {
+  const reviews = await prisma.review.findMany({
+    where: {
+      professionalId,
+      type: ReviewType.PROFESSIONAL,
+    },
+    include: {
+      patient: {
+        select: { name: true, image: true },
+      },
+      professional: {
+        select: { name: true, image: true },
+      },
+    },
+    orderBy: { createdAt: "desc" },
+  });
+
+  return reviews.map(mapReviewToListItem);
 }

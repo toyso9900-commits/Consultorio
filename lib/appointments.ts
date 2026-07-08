@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { AppointmentStatus } from "@prisma/client";
+import { AppointmentStatus, UserRole } from "@prisma/client";
 
 const appointmentWithUsers = {
   patient: {
@@ -122,29 +122,61 @@ export interface ProfessionalClient {
 export async function getProfessionalClients(
   professionalId: string
 ): Promise<ProfessionalClient[]> {
-  const appointments = await prisma.appointment.findMany({
-    where: { professionalId },
-    select: {
-      patientId: true,
-      scheduledAt: true,
-      patient: {
-        select: {
-          id: true,
-          name: true,
-          image: true,
-          subscriptions: {
-            where: {
-              status: "ACTIVE",
-              plan: "PREMIUM",
-            },
-            select: { id: true },
-            take: 1,
+  const subscriptionSelection = {
+    where: {
+      status: "ACTIVE",
+      plan: "PREMIUM",
+    },
+    select: { id: true },
+    take: 1,
+  } as const;
+
+  const [appointments, messages] = await Promise.all([
+    prisma.appointment.findMany({
+      where: { professionalId },
+      select: {
+        patientId: true,
+        scheduledAt: true,
+        patient: {
+          select: {
+            id: true,
+            name: true,
+            image: true,
+            subscriptions: subscriptionSelection,
           },
         },
       },
-    },
-    orderBy: { scheduledAt: "desc" },
-  });
+      orderBy: { scheduledAt: "desc" },
+    }),
+    prisma.message.findMany({
+      where: {
+        OR: [{ senderId: professionalId }, { receiverId: professionalId }],
+      },
+      select: {
+        senderId: true,
+        receiverId: true,
+        sender: {
+          select: {
+            id: true,
+            name: true,
+            image: true,
+            role: true,
+            subscriptions: subscriptionSelection,
+          },
+        },
+        receiver: {
+          select: {
+            id: true,
+            name: true,
+            image: true,
+            role: true,
+            subscriptions: subscriptionSelection,
+          },
+        },
+      },
+      orderBy: { createdAt: "desc" },
+    }),
+  ]);
 
   const clientMap = new Map<string, ProfessionalClient>();
 
@@ -158,6 +190,8 @@ export async function getProfessionalClients(
       ) {
         existing.lastAppointment = appointment.scheduledAt;
       }
+      existing.hasActivePaidSubscription ||=
+        appointment.patient.subscriptions.length > 0;
     } else {
       clientMap.set(appointment.patientId, {
         patientId: appointment.patient.id,
@@ -166,6 +200,30 @@ export async function getProfessionalClients(
         hasActivePaidSubscription:
           appointment.patient.subscriptions.length > 0,
         lastAppointment: appointment.scheduledAt,
+      });
+    }
+  }
+
+  for (const message of messages) {
+    const partner =
+      message.senderId === professionalId ? message.receiver : message.sender;
+
+    if (partner.role !== UserRole.PATIENT) {
+      continue;
+    }
+
+    const existing = clientMap.get(partner.id);
+
+    if (existing) {
+      existing.hasActivePaidSubscription ||=
+        partner.subscriptions.length > 0;
+    } else {
+      clientMap.set(partner.id, {
+        patientId: partner.id,
+        name: partner.name,
+        image: partner.image,
+        hasActivePaidSubscription: partner.subscriptions.length > 0,
+        lastAppointment: null,
       });
     }
   }
