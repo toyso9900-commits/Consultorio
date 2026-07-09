@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { sendMessage } from "@/app/messages/actions";
+import { toast } from "sonner";
 import type { Dictionary } from "@/lib/i18n/server";
 
 interface PendingActionModalProps {
@@ -40,7 +41,19 @@ export function PendingActionModal({
       });
 
       if (result.success) {
+        toast.success(
+          action === "progress-photo"
+            ? "Recordatorio de foto enviado"
+            : "Recordatorio de comida enviado"
+        );
         setOpen(false);
+        setMessage(
+          action === "progress-photo"
+            ? `Hola ${patientName}, recordá subir tu foto de progreso para seguir tu evolución.`
+            : `Hola ${patientName}, ¿cómo venís con la alimentación? Recordá registrar tus comidas.`
+        );
+      } else {
+        toast.error(result.error || "No se pudo enviar el recordatorio");
       }
     });
   }

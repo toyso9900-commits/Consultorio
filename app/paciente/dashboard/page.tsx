@@ -469,9 +469,10 @@ export default async function PatientDashboardPage() {
                 const partner =
                   message.senderId === userId ? message.receiver : message.sender;
                 return (
-                  <li
+                  <Link
                     key={message.id}
-                    className="flex items-center gap-3 rounded-xl bg-muted p-3 dark:bg-stone-700/30"
+                    href={`/paciente/dashboard/mensajes?profesional=${encodeURIComponent(partner.id)}&nombre=${encodeURIComponent(partner.name || "")}`}
+                    className="flex items-center gap-3 rounded-xl bg-muted p-3 transition-colors hover:bg-muted/80 dark:bg-stone-700/30 dark:hover:bg-stone-600/40"
                   >
                     <div className="h-10 w-10 overflow-hidden rounded-full bg-emerald-100">
                       {partner.image ? (
@@ -500,7 +501,7 @@ export default async function PatientDashboardPage() {
                         minute: "2-digit",
                       })}
                     </span>
-                  </li>
+                  </Link>
                 );
               })}
             </ul>
