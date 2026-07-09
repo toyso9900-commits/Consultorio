@@ -51,7 +51,7 @@ async function transitionAppointment(
     revalidatePath("/profesional/dashboard/citas");
     revalidatePath("/profesional/dashboard");
 
-    if (to === AppointmentStatus.CANCELLED || to === AppointmentStatus.COMPLETED) {
+    if (to !== AppointmentStatus.REQUESTED) {
       revalidatePath("/paciente/dashboard/citas");
       revalidatePath("/paciente/dashboard");
     }

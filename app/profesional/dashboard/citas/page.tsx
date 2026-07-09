@@ -1,11 +1,11 @@
+import { CalendarDays } from "lucide-react";
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
-import { CalendarDays } from "lucide-react";
 import { getLocale, getDictionary } from "@/lib/i18n/server";
-import { getAppointmentsForProfessional } from "@/lib/appointments";
+import { getAppointmentsForProfessional, startOfToday } from "@/lib/appointments";
+import { AppointmentStatus } from "@prisma/client";
 import { AppointmentRequestList } from "@/components/appointments/appointment-request-list";
 import { DateGroupedAppointments } from "@/components/appointments/date-grouped-appointments";
-import { AppointmentStatus } from "@prisma/client";
 
 export default async function ProfessionalAppointmentsPage() {
   const session = await auth();
@@ -22,14 +22,15 @@ export default async function ProfessionalAppointmentsPage() {
     redirect("/profesional/dashboard");
   }
 
+  const today = startOfToday();
   const appointments = await getAppointmentsForProfessional(session.user.id);
   const requests = appointments.filter(
-    (appointment) => appointment.status === "REQUESTED"
+    (appointment) => appointment.status === AppointmentStatus.REQUESTED
   );
   const upcoming = appointments.filter(
     (appointment) =>
-      appointment.status === AppointmentStatus.CONFIRMED ||
-      appointment.status === AppointmentStatus.COMPLETED
+      appointment.status === AppointmentStatus.CONFIRMED &&
+      appointment.scheduledAt >= today
   );
 
   return (

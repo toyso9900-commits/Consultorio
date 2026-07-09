@@ -1,6 +1,6 @@
 import { getSession } from "@/lib/session";
 import { prisma } from "@/lib/prisma";
-import { getAppointmentDashboardCounts, startOfTodayUtc, endOfTodayUtc } from "@/lib/appointments";
+import { getAppointmentDashboardCounts, startOfToday, endOfToday } from "@/lib/appointments";
 import {
   CalendarDays,
   Crown,
@@ -410,8 +410,8 @@ export default async function ProfessionalDashboardPage() {
         take: 1,
       });
 
-  const startOfDay = startOfTodayUtc();
-  const endOfDay = endOfTodayUtc();
+  const startOfDay = startOfToday();
+  const endOfDay = endOfToday();
 
   const todaysAppointments = await prisma.appointment.findMany({
     where: {

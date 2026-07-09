@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import {
   acceptAppointment,
   rejectAppointment,
@@ -20,6 +21,7 @@ export function AppointmentRequestList({
   locale,
   dictionary,
 }: AppointmentRequestListProps) {
+  const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [feedback, setFeedback] = useState<{ id: string; error: string } | null>(
     null
@@ -44,6 +46,8 @@ export function AppointmentRequestList({
             dictionary.appointments.errors[key] ||
             dictionary.errors.generic,
         });
+      } else {
+        router.refresh();
       }
     });
   }

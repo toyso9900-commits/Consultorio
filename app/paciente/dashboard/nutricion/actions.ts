@@ -388,6 +388,7 @@ export async function saveMealEntry(
 
     revalidatePath("/paciente/dashboard/nutricion");
     revalidatePath("/paciente/dashboard");
+    revalidatePath("/profesional/dashboard/clientes");
 
     return { success: true, id: entry.id };
   } catch {

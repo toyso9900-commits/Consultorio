@@ -22,15 +22,17 @@ export type AppointmentWithUsers = Awaited<
   ReturnType<typeof getAppointmentsForPatient>
 >[number];
 
-export function startOfTodayUtc(): Date {
+export function startOfToday(): Date {
   const now = new Date();
   return new Date(
-    Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate()
   );
 }
 
-export function endOfTodayUtc(): Date {
-  const start = startOfTodayUtc();
+export function endOfToday(): Date {
+  const start = startOfToday();
   return new Date(start.getTime() + 24 * 60 * 60 * 1000 - 1);
 }
 
@@ -59,7 +61,7 @@ export async function getAppointmentDashboardCounts(
   userId: string,
   role: "PATIENT" | "PROFESSIONAL" | "ADMIN"
 ): Promise<AppointmentDashboardCounts> {
-  const today = startOfTodayUtc();
+  const today = startOfToday();
 
   if (role === "ADMIN") {
     return { upcoming: 0 };
@@ -94,7 +96,7 @@ export async function getAppointmentDashboardCounts(
 }
 
 export async function getActivePatients(professionalId: string): Promise<number> {
-  const today = startOfTodayUtc();
+  const today = startOfToday();
 
   const activePatientGroups = await prisma.appointment.groupBy({
     by: ["patientId"],

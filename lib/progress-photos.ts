@@ -57,6 +57,7 @@ export async function uploadProgressPhoto(
     });
 
     revalidatePath("/paciente/dashboard");
+    revalidatePath("/profesional/dashboard/clientes");
 
     return { success: true, photo };
   } catch {
