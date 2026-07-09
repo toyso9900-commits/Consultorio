@@ -30,7 +30,7 @@ export function isSameLocalDate(a: Date, b: Date): boolean {
   );
 }
 
-export function getWeekDayLabels(_locale: string): string[] {
+export function getWeekDayLabels(): string[] {
   // Spanish short labels used by the existing UI.
   return ["L", "M", "M", "J", "V", "S", "D"];
 }

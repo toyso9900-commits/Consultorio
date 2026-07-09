@@ -1,6 +1,6 @@
 import { getSession } from "@/lib/session";
 import { prisma } from "@/lib/prisma";
-import { getAppointmentDashboardCounts } from "@/lib/appointments";
+import { getAppointmentDashboardCounts, startOfTodayUtc, endOfTodayUtc } from "@/lib/appointments";
 import {
   CalendarDays,
   Crown,
@@ -41,9 +41,6 @@ export default async function ProfessionalDashboardPage() {
 
   const professionalCount = await prisma.user.count({
     where: { role: "PROFESSIONAL" },
-  });
-  const pendingValidations = await prisma.professionalProfile.count({
-    where: { isValidated: false, rejectedAt: null },
   });
 
   const pendingProfessionals = isAdmin
@@ -413,9 +410,8 @@ export default async function ProfessionalDashboardPage() {
         take: 1,
       });
 
-  const dayNow = new Date();
-  const startOfDay = new Date(dayNow.setHours(0, 0, 0, 0));
-  const endOfDay = new Date(dayNow.setHours(23, 59, 59, 999));
+  const startOfDay = startOfTodayUtc();
+  const endOfDay = endOfTodayUtc();
 
   const todaysAppointments = await prisma.appointment.findMany({
     where: {

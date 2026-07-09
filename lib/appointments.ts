@@ -22,11 +22,16 @@ export type AppointmentWithUsers = Awaited<
   ReturnType<typeof getAppointmentsForPatient>
 >[number];
 
-function startOfTodayUtc(): Date {
+export function startOfTodayUtc(): Date {
   const now = new Date();
   return new Date(
     Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())
   );
+}
+
+export function endOfTodayUtc(): Date {
+  const start = startOfTodayUtc();
+  return new Date(start.getTime() + 24 * 60 * 60 * 1000 - 1);
 }
 
 export async function getAppointmentsForPatient(patientId: string) {

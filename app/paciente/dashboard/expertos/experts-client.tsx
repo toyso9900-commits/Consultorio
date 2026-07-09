@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { MapPin, Video, Search, SlidersHorizontal } from "lucide-react";
@@ -25,10 +25,6 @@ export function PatientExpertsClient({ professionals }: PatientExpertsPageProps)
   const searchParams = useSearchParams();
   const [query, setQuery] = useState(searchParams.get("search") || "");
   const [specialty, setSpecialty] = useState("Todas");
-
-  useEffect(() => {
-    setQuery(searchParams.get("search") || "");
-  }, [searchParams]);
 
   const filtered = useMemo(() => {
     return professionals.filter((prof) => {

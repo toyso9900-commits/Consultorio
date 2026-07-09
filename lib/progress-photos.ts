@@ -3,7 +3,6 @@
 import { mkdir, writeFile } from "fs/promises";
 import path from "path";
 import { randomUUID } from "crypto";
-import { z } from "zod";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
@@ -11,10 +10,6 @@ import { revalidatePath } from "next/cache";
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"];
 const MAX_SIZE_MB = 5;
 const UPLOAD_DIR = path.join(process.cwd(), "public", "uploads", "progress");
-
-const uploadSchema = z.object({
-  url: z.string().min(1),
-});
 
 export interface ProgressPhoto {
   id: string;

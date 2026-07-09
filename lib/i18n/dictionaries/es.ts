@@ -560,6 +560,12 @@ export const es = {
     activeSubscription: "Suscripción activa",
     noActiveSubscription: "Sin suscripción activa",
     message: "Mensaje",
+    progressPhotos: "Fotos de progreso",
+    meals: "Comidas",
+    noPhotos: "Este cliente no tiene fotos de progreso.",
+    noMeals: "Este cliente no tiene comidas registradas.",
+    selectClient: "Seleccioná un cliente para ver sus fotos y comidas.",
+    viewData: "Ver registros",
   },
   professionalMessages: {
     conversations: "Conversaciones",

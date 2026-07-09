@@ -18,6 +18,7 @@ import { UserAvatarMenu } from "@/components/user-avatar-menu";
 import { getLocale, getDictionary } from "@/lib/i18n/server";
 import type { Dictionary } from "@/lib/i18n/server";
 import { getNotifications } from "@/lib/notifications";
+import { getUserConversations } from "@/app/messages/actions";
 import { Search, UserCircle, CalendarDays, MessageSquare, ChevronRight, TrendingUp, TrendingDown, Activity, Utensils, Camera, Scale } from "lucide-react";
 import type { ElementType } from "react";
 
@@ -87,15 +88,11 @@ export default async function PatientDashboardPage() {
     take: 4,
   });
 
-  const recentMessages = await prisma.message.findMany({
-    where: { OR: [{ senderId: userId }, { receiverId: userId }] },
-    include: {
-      sender: { select: { id: true, name: true, image: true } },
-      receiver: { select: { id: true, name: true, image: true } },
-    },
-    orderBy: { createdAt: "desc" },
-    take: 3,
-  });
+  const conversationsResult = await getUserConversations(userId);
+  const contacts =
+    conversationsResult.success && "users" in conversationsResult
+      ? conversationsResult.users
+      : [];
 
   const progressPhotos = await getProgressPhotos(userId, 4);
 
@@ -456,7 +453,7 @@ export default async function PatientDashboardPage() {
               {dictionary.patientHome.viewAll}
             </Link>
           </div>
-          {recentMessages.length === 0 ? (
+          {contacts.length === 0 ? (
             <div className="flex h-40 flex-col items-center justify-center rounded-xl bg-muted text-center dark:bg-stone-700/30">
               <MessageSquare className="h-8 w-8 text-muted-foreground dark:text-stone-400" />
               <p className="mt-2 text-sm text-muted-foreground dark:text-stone-400">
@@ -465,19 +462,16 @@ export default async function PatientDashboardPage() {
             </div>
           ) : (
             <ul className="space-y-3">
-              {recentMessages.map((message) => {
-                const partner =
-                  message.senderId === userId ? message.receiver : message.sender;
-                return (
+              {contacts.slice(0, 3).map((contact) => (
+                <li key={contact.id}>
                   <Link
-                    key={message.id}
-                    href={`/paciente/dashboard/mensajes?profesional=${encodeURIComponent(partner.id)}&nombre=${encodeURIComponent(partner.name || "")}`}
+                    href={`/paciente/dashboard/mensajes?profesional=${encodeURIComponent(contact.id)}&nombre=${encodeURIComponent(contact.name || "")}`}
                     className="flex items-center gap-3 rounded-xl bg-muted p-3 transition-colors hover:bg-muted/80 dark:bg-stone-700/30 dark:hover:bg-stone-600/40"
                   >
                     <div className="h-10 w-10 overflow-hidden rounded-full bg-emerald-100">
-                      {partner.image ? (
+                      {contact.image ? (
                         <Image
-                          src={partner.image}
+                          src={contact.image}
                           alt=""
                           width={40}
                           height={40}
@@ -489,21 +483,15 @@ export default async function PatientDashboardPage() {
                     </div>
                     <div className="min-w-0 flex-1">
                       <p className="truncate text-sm font-semibold text-foreground dark:text-stone-100">
-                        {partner.name || dictionary.adminDashboard.noName}
+                        {contact.name || dictionary.adminDashboard.noName}
                       </p>
                       <p className="truncate text-xs text-muted-foreground dark:text-stone-400">
-                        {message.content}
+                        {dictionary.roles.professional}
                       </p>
                     </div>
-                    <span className="text-xs text-muted-foreground dark:text-stone-400">
-                      {message.createdAt.toLocaleTimeString(locale, {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
-                    </span>
                   </Link>
-                );
-              })}
+                </li>
+              ))}
             </ul>
           )}
         </div>

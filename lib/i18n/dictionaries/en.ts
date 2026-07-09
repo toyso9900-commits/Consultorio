@@ -558,6 +558,12 @@ export const en = {
     activeSubscription: "Active subscription",
     noActiveSubscription: "No active subscription",
     message: "Message",
+    progressPhotos: "Progress photos",
+    meals: "Meals",
+    noPhotos: "This client has no progress photos.",
+    noMeals: "This client has no meals logged.",
+    selectClient: "Select a client to view their photos and meals.",
+    viewData: "View records",
   },
   professionalMessages: {
     conversations: "Conversations",
