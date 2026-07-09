@@ -1,33 +1,28 @@
-import { auth } from "@/lib/auth";
+import { getSession } from "@/lib/session";
 import Link from "next/link";
 import Image from "next/image";
 import { prisma } from "@/lib/prisma";
 import { getAppointmentDashboardCounts } from "@/lib/appointments";
 import { getWeightHistory } from "@/lib/weight";
 import { getPendingReviewsForPatient } from "@/lib/reviews";
+import { getProgressPhotos } from "@/lib/progress-photos";
 import { getTodayMacros } from "./nutricion/get-today-macros";
 import { CalorieDonut } from "@/components/dashboard/calorie-donut";
 import { WeightChart } from "@/components/dashboard/weight-chart";
 import { OnboardingModal } from "./onboarding-modal";
 import { WeightEntryForm } from "./weight-entry-form";
+import { ProgressPhotoUpload } from "@/components/photos/progress-photo-upload";
+import { NotificationBell } from "@/components/notifications/notification-bell";
 import { RatingPrompt } from "@/components/rating/rating-prompt";
+import { UserAvatarMenu } from "@/components/user-avatar-menu";
 import { getLocale, getDictionary } from "@/lib/i18n/server";
 import type { Dictionary } from "@/lib/i18n/server";
-import {
-  Search,
-  Bell,
-  UserCircle,
-  CalendarDays,
-  MessageSquare,
-  ChevronRight,
-  TrendingUp,
-  TrendingDown,
-  Activity,
-  Utensils,
-} from "lucide-react";
+import { getNotifications } from "@/lib/notifications";
+import { Search, UserCircle, CalendarDays, MessageSquare, ChevronRight, TrendingUp, TrendingDown, Activity, Utensils, Camera, Scale } from "lucide-react";
+import type { ElementType } from "react";
 
 export default async function PatientDashboardPage() {
-  const session = await auth();
+  const session = await getSession();
   const locale = await getLocale(session?.user?.id);
   const dictionary = await getDictionary(locale);
 
@@ -102,6 +97,30 @@ export default async function PatientDashboardPage() {
     take: 3,
   });
 
+  const progressPhotos = await getProgressPhotos(userId, 4);
+
+  const notifications = await getNotifications(userId, "PATIENT");
+
+  const [latestMealEntry, latestWeightEntry, latestAppointmentActivity] = await Promise.all([
+    prisma.mealEntry.findFirst({
+      where: { userId },
+      orderBy: { consumedAt: "desc" },
+      select: { id: true, consumedAt: true, description: true },
+    }),
+    patientProfile
+      ? prisma.weightEntry.findFirst({
+          where: { patientProfileId: patientProfile.id },
+          orderBy: { recordedAt: "desc" },
+          select: { id: true, recordedAt: true, weight: true },
+        })
+      : Promise.resolve(null),
+    prisma.appointment.findFirst({
+      where: { patientId: userId },
+      orderBy: { createdAt: "desc" },
+      select: { id: true, createdAt: true, status: true },
+    }),
+  ]);
+
   const today = new Date();
   const formattedDate = today.toLocaleDateString(locale, {
     weekday: "long",
@@ -109,26 +128,74 @@ export default async function PatientDashboardPage() {
     month: "long",
   });
 
-  const recentActivities = [
-    {
-      icon: Activity,
-      label: dictionary.patientHome.weightLogged,
-      time: "08:30",
+  const recentActivities: {
+    icon: ElementType;
+    label: string;
+    time: string;
+    color: string;
+  }[] = [];
+
+  if (latestWeightEntry) {
+    recentActivities.push({
+      icon: Scale,
+      label: `${dictionary.patientHome.weightLogged}: ${latestWeightEntry.weight.toFixed(1)} kg`,
+      time: latestWeightEntry.recordedAt.toLocaleDateString(locale, {
+        day: "numeric",
+        month: "short",
+      }),
       color: "bg-emerald-100 text-emerald-600 dark:bg-emerald-950 dark:text-emerald-400",
-    },
-    {
+    });
+  }
+
+  if (latestAppointmentActivity) {
+    const statusLabel =
+      latestAppointmentActivity.status === "CONFIRMED"
+        ? dictionary.patientHome.appointmentConfirmed
+        : dictionary.appointments.status[latestAppointmentActivity.status] ||
+          latestAppointmentActivity.status;
+    recentActivities.push({
       icon: CalendarDays,
-      label: dictionary.patientHome.appointmentConfirmed,
-      time: "Ayer",
+      label: statusLabel,
+      time: latestAppointmentActivity.createdAt.toLocaleDateString(locale, {
+        day: "numeric",
+        month: "short",
+      }),
       color: "bg-amber-100 text-amber-600 dark:bg-amber-950 dark:text-amber-400",
-    },
-    {
+    });
+  }
+
+  if (latestMealEntry) {
+    recentActivities.push({
       icon: Utensils,
-      label: dictionary.patientHome.mealLogged,
-      time: "Hace 2 días",
+      label: `${dictionary.patientHome.mealLogged}: ${latestMealEntry.description}`,
+      time: latestMealEntry.consumedAt.toLocaleDateString(locale, {
+        day: "numeric",
+        month: "short",
+      }),
       color: "bg-rose-100 text-rose-600 dark:bg-rose-950 dark:text-rose-400",
-    },
-  ];
+    });
+  }
+
+  if (progressPhotos.length > 0) {
+    recentActivities.push({
+      icon: Camera,
+      label: "Foto de progreso subida",
+      time: progressPhotos[0].createdAt.toLocaleDateString(locale, {
+        day: "numeric",
+        month: "short",
+      }),
+      color: "bg-indigo-100 text-indigo-600 dark:bg-indigo-950 dark:text-indigo-400",
+    });
+  }
+
+  if (recentActivities.length === 0) {
+    recentActivities.push({
+      icon: Activity,
+      label: "No hay actividad reciente",
+      time: "—",
+      color: "bg-emerald-100 text-emerald-600 dark:bg-emerald-950 dark:text-emerald-400",
+    });
+  }
 
   return (
     <div data-role="patient" className="space-y-8">
@@ -145,40 +212,30 @@ export default async function PatientDashboardPage() {
           </h1>
         </div>
         <div className="flex items-center gap-3">
-          <div className="relative hidden sm:block">
+          <form
+            action="/paciente/dashboard/expertos"
+            method="get"
+            className="relative hidden sm:block"
+          >
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground dark:text-stone-400" />
             <input
               type="text"
+              name="search"
               placeholder={dictionary.common.search}
               className="h-10 w-56 rounded-full bg-card pl-9 pr-4 text-sm text-foreground shadow-sm outline-none ring-1 ring-border placeholder:text-muted-foreground dark:bg-stone-800 dark:text-stone-200 dark:ring-stone-700"
             />
-          </div>
-          <button
-            type="button"
-            className="relative rounded-full bg-card p-2.5 shadow-sm ring-1 ring-border dark:bg-stone-800 dark:ring-stone-700"
-            aria-label={dictionary.common.notifications}
-          >
-            <Bell className="h-5 w-5 text-muted-foreground dark:text-stone-300" />
-            <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-rose-500" />
-          </button>
-          <div className="flex items-center gap-2 rounded-full bg-card p-1 pr-3 shadow-sm ring-1 ring-border dark:bg-stone-800 dark:ring-stone-700">
-            <div className="h-9 w-9 overflow-hidden rounded-full bg-emerald-100">
-              {session!.user.image ? (
-                <Image
-                  src={session!.user.image}
-                  alt=""
-                  width={36}
-                  height={36}
-                  className="h-full w-full rounded-full object-cover"
-                />
-              ) : (
-                <UserCircle className="h-9 w-9 text-emerald-600" />
-              )}
-            </div>
-            <span className="hidden text-sm font-medium text-foreground dark:text-stone-200 md:block">
-              {firstName}
-            </span>
-          </div>
+          </form>
+          <NotificationBell
+            userId={userId}
+            role="PATIENT"
+            initialNotifications={notifications}
+            dictionary={dictionary}
+          />
+          <UserAvatarMenu
+            name={session?.user.name}
+            image={session?.user.image}
+            role={session?.user.role}
+          />
         </div>
       </header>
 
@@ -267,34 +324,36 @@ export default async function PatientDashboardPage() {
               {dictionary.patientHome.viewAll}
             </Link>
           </div>
-          <div className="grid grid-cols-2 gap-3">
-            <div className="space-y-2">
-              <div className="relative aspect-[4/5] overflow-hidden rounded-xl bg-muted">
-                <Image
-                  src="https://placehold.co/400x500/e7e5e4/78716c?text=Hace+1+mes"
-                  alt="Hace 1 mes"
-                  fill
-                  className="object-cover"
-                />
-              </div>
-              <p className="text-center text-xs text-muted-foreground dark:text-stone-400">
-                {dictionary.patientHome.monthAgo}
+          {progressPhotos.length === 0 ? (
+            <div className="mb-4 flex h-40 flex-col items-center justify-center rounded-xl bg-muted text-center dark:bg-stone-700/30">
+              <Camera className="h-8 w-8 text-muted-foreground dark:text-stone-400" />
+              <p className="mt-2 px-4 text-sm text-muted-foreground dark:text-stone-400">
+                {dictionary.patientHome.noPhotos}
               </p>
             </div>
-            <div className="space-y-2">
-              <div className="relative aspect-[4/5] overflow-hidden rounded-xl bg-muted">
-                <Image
-                  src="https://placehold.co/400x500/d1fae5/065f46?text=Hoy"
-                  alt="Hoy"
-                  fill
-                  className="object-cover"
-                />
-              </div>
-              <p className="text-center text-xs text-muted-foreground dark:text-stone-400">
-                {dictionary.patientHome.today}
-              </p>
+          ) : (
+            <div className="mb-4 grid grid-cols-2 gap-3">
+              {progressPhotos.slice(0, 2).map((photo) => (
+                <div key={photo.id} className="space-y-2">
+                  <div className="relative aspect-[4/5] overflow-hidden rounded-xl bg-muted">
+                    <Image
+                      src={photo.url}
+                      alt={dictionary.patientHome.photos}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                  <p className="text-center text-xs text-muted-foreground dark:text-stone-400">
+                    {photo.createdAt.toLocaleDateString(locale, {
+                      day: "numeric",
+                      month: "short",
+                    })}
+                  </p>
+                </div>
+              ))}
             </div>
-          </div>
+          )}
+          <ProgressPhotoUpload dictionary={dictionary} />
         </div>
 
         <div className="rounded-2xl bg-card p-6 shadow-sm dark:bg-stone-800">
@@ -344,7 +403,7 @@ export default async function PatientDashboardPage() {
                     </div>
                   </div>
                   <Link
-                    href={`/paciente/dashboard/mensajes?to=${expert.user.id}`}
+                    href={`/paciente/dashboard/mensajes?profesional=${encodeURIComponent(expert.user.id)}&nombre=${encodeURIComponent(expert.user.name || "")}`}
                     className="rounded-full bg-emerald-600 px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-emerald-700"
                   >
                     {dictionary.patientHome.contact}

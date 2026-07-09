@@ -66,6 +66,7 @@ export interface Dictionary {
   rating: Record<keyof typeof es.rating, string>;
   professionalDashboard: Record<keyof typeof es.professionalDashboard, string>;
   adminDashboard: Record<keyof typeof es.adminDashboard, string>;
+  notifications: Record<keyof typeof es.notifications, string>;
   adminUsers: Record<keyof typeof es.adminUsers, string>;
   adminProfessionals: Record<keyof typeof es.adminProfessionals, string>;
   adminSubscriptions: Record<keyof typeof es.adminSubscriptions, string>;

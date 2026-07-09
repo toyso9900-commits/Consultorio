@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { MapPin, Video, Search, SlidersHorizontal } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 import { Professional } from "@/lib/professionals";
 import { StarRating } from "@/components/ui/star-rating";
 import { useI18n } from "@/lib/i18n/client";
@@ -21,8 +22,13 @@ interface PatientExpertsPageProps {
 
 export function PatientExpertsClient({ professionals }: PatientExpertsPageProps) {
   const { dictionary } = useI18n();
-  const [query, setQuery] = useState("");
+  const searchParams = useSearchParams();
+  const [query, setQuery] = useState(searchParams.get("search") || "");
   const [specialty, setSpecialty] = useState("Todas");
+
+  useEffect(() => {
+    setQuery(searchParams.get("search") || "");
+  }, [searchParams]);
 
   const filtered = useMemo(() => {
     return professionals.filter((prof) => {

@@ -66,6 +66,7 @@ model User {
   receivedReviews Review[] @relation("ProfessionalReviews")
   givenReviews    Review[] @relation("PatientReviews")
   preference     UserPreference?
+  progressPhotos ProgressPhoto[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -192,6 +193,20 @@ model Document {
   url  String
 
   createdAt DateTime @default(now())
+}
+
+// Progress photos uploaded by patients
+model ProgressPhoto {
+  id        String   @id @default(cuid())
+  patientId String
+  patient   User     @relation(fields: [patientId], references: [id], onDelete: Cascade)
+
+  url       String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([patientId, createdAt])
 }
 
 // Appointments between patients and professionals
@@ -330,6 +345,7 @@ model Subscription {
 enum Plan {
   FREE
   PREMIUM
+  PRO
 }
 
 enum SubscriptionStatus {

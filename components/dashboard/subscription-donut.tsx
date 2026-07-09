@@ -7,19 +7,23 @@ import { useI18n } from "@/lib/i18n/client";
 interface SubscriptionDonutProps {
   free: number;
   premium: number;
+  pro?: number;
   totalLabel?: string;
 }
 
-export function SubscriptionDonut({ free, premium, totalLabel }: SubscriptionDonutProps) {
+export function SubscriptionDonut({ free, premium, pro = 0, totalLabel }: SubscriptionDonutProps) {
   const { dictionary } = useI18n();
   const resolvedTheme = useResolvedTheme();
-  const data = [
+  const allData = [
     { name: dictionary.adminDashboard?.freePlan ?? "Free", value: free },
     { name: dictionary.adminDashboard?.premiumPlan ?? "Premium", value: premium },
+    { name: dictionary.adminDashboard?.proPlan ?? "Pro", value: pro },
   ];
+  const data = allData.filter((d) => d.value > 0 || allData.every((item) => item.value === 0));
   const colors = [
     "var(--muted-foreground)",
     resolvedTheme === "dark" ? "var(--role-patient-primary)" : "var(--accent-blue)",
+    "var(--role-professional-primary)",
   ];
 
   return (
@@ -53,7 +57,7 @@ export function SubscriptionDonut({ free, premium, totalLabel }: SubscriptionDon
       </ResponsiveContainer>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
         <span className="text-3xl font-bold text-foreground dark:text-stone-100">
-          {free + premium}
+          {free + premium + pro}
         </span>
         <span className="text-sm text-muted-foreground dark:text-stone-400">
           {totalLabel ?? "subscriptions"}

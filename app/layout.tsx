@@ -6,7 +6,6 @@ import { getSession } from "@/lib/session";
 import { Toaster } from "sonner";
 import { Providers } from "./providers";
 import { getLocale, getDictionary } from "@/lib/i18n/server";
-import { HeaderAuth } from "@/components/layout/header-auth";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -69,31 +68,25 @@ export default async function RootLayout({
         suppressHydrationWarning
       >
         <Providers locale={locale} dictionary={dictionary}>
-          <header className="sticky top-0 z-40 border-b border-border bg-card/80 backdrop-blur">
-            <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-              <Link
-                href={homeHref}
-                className="flex items-center gap-2 text-xl font-bold tracking-tight text-primary"
-              >
-                <svg
-                  className="h-7 w-7"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
+          {!session?.user && (
+            <header className="sticky top-0 z-40 border-b border-border bg-card/80 backdrop-blur">
+              <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+                <Link
+                  href={homeHref}
+                  className="flex items-center gap-2 text-xl font-bold tracking-tight text-primary"
                 >
-                  <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
-                </svg>
-                Consultorio
-              </Link>
-              <div className="flex items-center gap-4 text-sm font-medium">
-                {session?.user ? (
-                  <HeaderAuth
-                    name={session.user.name}
-                    image={session.user.image}
-                    role={session.user.role}
-                  />
-                ) : (
+                  <svg
+                    className="h-7 w-7"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
+                    <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+                  </svg>
+                  Consultorio
+                </Link>
+                <div className="flex items-center gap-4 text-sm font-medium">
                   <div className="flex items-center gap-4">
                     <Link
                       href="/login"
@@ -108,10 +101,10 @@ export default async function RootLayout({
                       {dictionary.header.register}
                     </Link>
                   </div>
-                )}
-              </div>
-            </nav>
-          </header>
+                </div>
+              </nav>
+            </header>
+          )}
           {children}
           <Toaster position="top-right" richColors />
           <footer className="mt-auto border-t border-border bg-card py-10 text-center text-sm text-muted-foreground">

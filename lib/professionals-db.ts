@@ -74,7 +74,7 @@ async function fetchActivePremiumUserIds(userIds: string[]): Promise<Set<string>
   const subscriptions = await prisma.subscription.findMany({
     where: {
       userId: { in: userIds },
-      plan: "PREMIUM",
+      plan: { in: ["PREMIUM", "PRO"] },
       status: "ACTIVE",
       OR: [{ expiresAt: { gt: new Date() } }, { expiresAt: null }],
     },

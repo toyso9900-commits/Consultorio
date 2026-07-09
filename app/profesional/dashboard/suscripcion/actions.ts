@@ -9,13 +9,13 @@ export async function activateSubscription(userId: string, planId: string) {
   }
 
   try {
-    const plan = planId === "pro" ? "PREMIUM" : planId.toUpperCase();
+    const plan = planId === "pro" ? "PRO" : planId.toUpperCase();
 
-    if (plan !== "FREE" && plan !== "PREMIUM") {
+    if (plan !== "FREE" && plan !== "PREMIUM" && plan !== "PRO") {
       return { success: false, error: "Plan no válido." };
     }
 
-    const isPaid = plan === "PREMIUM";
+    const isPaid = plan === "PREMIUM" || plan === "PRO";
     const expiresAt = isPaid
       ? new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
       : null;
@@ -25,12 +25,12 @@ export async function activateSubscription(userId: string, planId: string) {
         where: {
           userId_plan: {
             userId,
-            plan: plan as "FREE" | "PREMIUM",
+            plan: plan as "FREE" | "PREMIUM" | "PRO",
           },
         },
         create: {
           userId,
-          plan: plan as "FREE" | "PREMIUM",
+          plan: plan as "FREE" | "PREMIUM" | "PRO",
           status: "ACTIVE",
           expiresAt,
         },
