@@ -40,14 +40,14 @@ export default async function ProfessionalAppointmentsPage() {
           <CalendarDays className="h-5 w-5 text-rose-600" />
         </div>
         <div>
-            <h1 className="text-2xl font-bold text-card-foreground">
-              {dictionary.professionalAppointments.title}
-            </h1>
-            <p className="text-muted-foreground">
-              {dictionary.professionalAppointments.description}
-            </p>
-          </div>
+          <h1 className="text-2xl font-bold text-card-foreground">
+            {dictionary.professionalAppointments.title}
+          </h1>
+          <p className="text-muted-foreground">
+            {dictionary.professionalAppointments.description}
+          </p>
         </div>
+      </div>
 
       <section className="space-y-4">
         <h2 className="text-lg font-semibold text-card-foreground">
