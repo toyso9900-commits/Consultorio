@@ -417,7 +417,7 @@ export default async function ProfessionalDashboardPage() {
     where: {
       professionalId: session!.user.id,
       scheduledAt: { gte: startOfDay, lte: endOfDay },
-      status: { not: "CANCELLED" },
+      status: { notIn: ["CANCELLED", "COMPLETED"] },
     },
     include: {
       patient: { select: { id: true, name: true, image: true } },
