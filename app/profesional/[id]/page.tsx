@@ -1,12 +1,14 @@
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { ArrowLeft, Calendar, Shield } from "lucide-react";
+import { ArrowLeft, Calendar, Shield, Sparkles, Leaf } from "lucide-react";
 import { auth } from "@/lib/auth";
 import { getApprovedProfessionalById } from "@/lib/professionals-db";
+import { hasActivePatientSubscription } from "@/lib/patient-subscriptions";
 import { getLocale, getDictionary } from "@/lib/i18n/server";
 import { ChatButton } from "@/components/chat/chat-button";
 import { AppointmentRequestModal } from "@/components/appointments/appointment-request-modal";
+import { SubscribeButton } from "./subscribe-button";
 
 export default async function ProfessionalDetailPage({
   params,
@@ -24,6 +26,12 @@ export default async function ProfessionalDetailPage({
   }
 
   const isPatient = session?.user?.role === "PATIENT";
+  const hasPaidPlan = prof.planPrice != null && prof.planPrice > 0;
+  const alreadySubscribed =
+    isPatient && session?.user?.id
+      ? await hasActivePatientSubscription(session.user.id, prof.id)
+      : false;
+  const t = dictionary.patientSubscription;
 
   return (
     <main className="mx-auto max-w-4xl flex-1 px-6 py-12">
@@ -106,6 +114,55 @@ export default async function ProfessionalDetailPage({
                 </button>
               )}
             </div>
+          </div>
+
+          <div className="mt-8 grid gap-4 sm:grid-cols-2">
+            <div className="rounded-2xl border border-slate-200 bg-slate-50 p-6 dark:border-slate-800 dark:bg-slate-800/50">
+              <div className="flex items-center gap-2">
+                <Leaf className="h-5 w-5 text-emerald-600" />
+                <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
+                  {t.freePlanTitle}
+                </h2>
+              </div>
+              <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
+                {t.freePlanBody}
+              </p>
+            </div>
+
+            {hasPaidPlan && (
+              <div className="rounded-2xl border border-indigo-300 bg-indigo-50/50 p-6 dark:border-indigo-800 dark:bg-indigo-950/20">
+                <div className="flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-2">
+                    <Sparkles className="h-5 w-5 text-indigo-600" />
+                    <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
+                      {t.paidPlanTitle}
+                    </h2>
+                  </div>
+                  <span className="inline-flex items-center rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-semibold text-amber-700 dark:bg-amber-950 dark:text-amber-300">
+                    {t.testModeBadge}
+                  </span>
+                </div>
+                <p className="mt-3 text-3xl font-bold text-slate-900 dark:text-slate-100">
+                  ${prof.planPrice}{" "}
+                  <span className="text-base font-medium text-slate-500 dark:text-slate-400">
+                    {prof.planDuration ?? ""}
+                  </span>
+                </p>
+                <div className="mt-4">
+                  {!isPatient ? (
+                    <p className="text-sm text-slate-500 dark:text-slate-400">
+                      {t.loginToSubscribe}
+                    </p>
+                  ) : alreadySubscribed ? (
+                    <div className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-emerald-300 bg-emerald-50 px-5 py-2.5 text-sm font-semibold text-emerald-700 dark:border-emerald-800 dark:bg-emerald-950/30 dark:text-emerald-300">
+                      {t.alreadySubscribedBadge}
+                    </div>
+                  ) : (
+                    <SubscribeButton professionalId={prof.id} />
+                  )}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

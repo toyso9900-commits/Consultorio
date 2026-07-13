@@ -109,15 +109,19 @@ export default async function ProfessionalClientsPage({
                         </span>
                         <span
                           className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium ${
-                            client.hasActivePaidSubscription
+                            client.subscriptionStatus === "active"
                               ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300"
-                              : "bg-muted text-muted-foreground"
+                              : client.subscriptionStatus === "expired"
+                                ? "bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300"
+                                : "bg-muted text-muted-foreground"
                           }`}
                         >
                           <Crown className="h-3 w-3" />
-                          {client.hasActivePaidSubscription
+                          {client.subscriptionStatus === "active"
                             ? dictionary.professionalClients.activeSubscription
-                            : dictionary.professionalClients.noActiveSubscription}
+                            : client.subscriptionStatus === "expired"
+                              ? dictionary.professionalClients.expiredSubscription
+                              : dictionary.professionalClients.noActiveSubscription}
                         </span>
                       </div>
                     </div>

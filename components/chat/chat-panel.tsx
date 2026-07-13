@@ -54,7 +54,16 @@ export function ChatPanel(props: ChatPanelProps) {
     );
   }
 
-  return <ChatPanelInner {...props} userId={userId} />;
+  // `ChatPanelInner` seeds its `messages` state from `initialMessages` via
+  // `useState`, which only reads the prop on first mount. Without a stable
+  // `key` bound to the active conversation, switching conversations would
+  // reconcile the same inner instance and the message list would keep
+  // showing the previous conversation's messages while the header (driven
+  // by `professionalName` props) updates. Keying on `professionalId`
+  // forces a remount on conversation change so state, effects, and the
+  // Pusher subscription all reset together. Callers do not need to add
+  // their own `key`.
+  return <ChatPanelInner key={props.professionalId} {...props} userId={userId} />;
 }
 
 interface ChatPanelInnerProps extends ChatPanelProps {

@@ -23,6 +23,8 @@ interface ProfessionalProfileFormProps {
     specialty: "NUTRITION" | "TRAINING" | "BOTH";
     price: string;
     licenseNumber: string;
+    planPrice: string;
+    planDuration: string;
   };
 }
 
@@ -77,6 +79,8 @@ export function ProfessionalProfileForm({
         specialty: form.specialty,
         price: form.price ? Number(form.price) : undefined,
         licenseNumber: form.licenseNumber || undefined,
+        planPrice: form.planPrice ? Number(form.planPrice) : null,
+        planDuration: form.planDuration || null,
       };
 
       const result = await updateProfessionalProfile(payload);
@@ -254,6 +258,41 @@ export function ProfessionalProfileForm({
           placeholder={dictionary.professionalProfile.bioPlaceholder}
           className="mt-1 block w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
         />
+      </div>
+
+      <div className="grid gap-4 sm:grid-cols-2">
+        <div>
+          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
+            {dictionary.professionalProfile.planPrice}
+          </label>
+          <input
+            type="number"
+            name="planPrice"
+            value={form.planPrice}
+            onChange={handleChange}
+            min={0}
+            step="0.01"
+            className="mt-1 block w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
+            {dictionary.professionalProfile.planDuration}
+          </label>
+          <input
+            type="text"
+            name="planDuration"
+            value={form.planDuration}
+            onChange={handleChange}
+            className="mt-1 block w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
+          />
+        </div>
+      </div>
+
+      <div className="rounded-lg border border-slate-200 bg-slate-50 p-4 dark:border-slate-700 dark:bg-slate-800/50">
+        <p className="text-sm text-slate-500 dark:text-slate-400">
+          {dictionary.professionalProfile.freePlanReadonly}
+        </p>
       </div>
 
       <button

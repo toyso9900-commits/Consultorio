@@ -48,11 +48,11 @@ model User {
   password      String?
   lastSeenAt    DateTime?
 
-  accounts      Account[]
-  sessions      Session[]
+  accounts Account[]
+  sessions Session[]
 
-  patientProfile       PatientProfile?
-  professionalProfile  ProfessionalProfile?
+  patientProfile      PatientProfile?
+  professionalProfile ProfessionalProfile?
 
   sentMessages     Message[] @relation("SentMessages")
   receivedMessages Message[] @relation("ReceivedMessages")
@@ -60,13 +60,20 @@ model User {
   appointmentsAsPatient      Appointment[] @relation("PatientAppointments")
   appointmentsAsProfessional Appointment[] @relation("ProfessionalAppointments")
 
-  calorieEntries CalorieEntry[]
-  mealEntries    MealEntry[]
-  subscriptions  Subscription[]
-  receivedReviews Review[] @relation("ProfessionalReviews")
-  givenReviews    Review[] @relation("PatientReviews")
-  preference     UserPreference?
-  progressPhotos ProgressPhoto[]
+  calorieEntries  CalorieEntry[]
+  mealEntries     MealEntry[]
+  subscriptions   Subscription[]
+  receivedReviews Review[]        @relation("ProfessionalReviews")
+  givenReviews    Review[]        @relation("PatientReviews")
+  preference      UserPreference?
+  progressPhotos  ProgressPhoto[]
+
+  patientSubscriptionsAsPatient      PatientSubscription[] @relation("PatientSubsAsPatient")
+  patientSubscriptionsAsProfessional PatientSubscription[] @relation("PatientSubsAsProfessional")
+  routinesAsPatient                  Routine[]             @relation("RoutinesAsPatient")
+  routinesAsProfessional             Routine[]             @relation("RoutinesAsProfessional")
+  paymentsAsPayer                    Payment[]             @relation("PaymentsAsPayer")
+  paymentsAsPayee                    Payment[]             @relation("PaymentsAsPayee")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -88,18 +95,18 @@ enum UserRole {
 
 // Patient-specific health record
 model PatientProfile {
-  id           String   @id @default(cuid())
-  userId       String   @unique
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id     String @id @default(cuid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   weight       Float?
   height       Float?
   gender       String?
   bloodType    String?
   birthDate    DateTime?
-  allergies    String?  @db.Text
-  restrictions String?  @db.Text
-  goals        String?  @db.Text
+  allergies    String?   @db.Text
+  restrictions String?   @db.Text
+  goals        String?   @db.Text
 
   documents     Document[]
   weightEntries WeightEntry[]
@@ -110,22 +117,24 @@ model PatientProfile {
 
 // Public professional profile shown in the Guia de Expertos
 model ProfessionalProfile {
-  id          String   @id @default(cuid())
-  userId      String   @unique
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id     String @id @default(cuid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  specialty      Specialty @default(NUTRITION)
-  title          String?
-  bio            String?   @db.Text
-  licenseNumber  String?
-  location       String?
-  modality       Modality  @default(ONLINE)
-  price          Float?
-  isPremium      Boolean   @default(false)
-  isValidated    Boolean   @default(false)
-  rejectedAt     DateTime?
-  averageRating  Float     @default(0)
-  reviewCount    Int       @default(0)
+  specialty     Specialty @default(NUTRITION)
+  title         String?
+  bio           String?   @db.Text
+  licenseNumber String?
+  location      String?
+  modality      Modality  @default(ONLINE)
+  price         Float?
+  planPrice     Float?
+  planDuration  String?
+  isPremium     Boolean   @default(false)
+  isValidated   Boolean   @default(false)
+  rejectedAt    DateTime?
+  averageRating Float     @default(0)
+  reviewCount   Int       @default(0)
 
   validations ProfessionalValidation[]
 
@@ -162,13 +171,13 @@ enum Modality {
 
 // Documents uploaded by professionals for admin validation
 model ProfessionalValidation {
-  id             String   @id @default(cuid())
+  id             String              @id @default(cuid())
   professionalId String
   professional   ProfessionalProfile @relation(fields: [professionalId], references: [id], onDelete: Cascade)
 
   documentUrl   String
   documentType  String
-  extractedData String?  @db.Text
+  extractedData String?          @db.Text
   status        ValidationStatus @default(PENDING)
   reviewedById  String?
   reviewedAt    DateTime?
@@ -185,7 +194,7 @@ enum ValidationStatus {
 
 // Medical documents uploaded by patients
 model Document {
-  id        String   @id @default(cuid())
+  id        String         @id @default(cuid())
   patientId String
   patient   PatientProfile @relation(fields: [patientId], references: [id], onDelete: Cascade)
 
@@ -197,11 +206,11 @@ model Document {
 
 // Progress photos uploaded by patients
 model ProgressPhoto {
-  id        String   @id @default(cuid())
+  id        String @id @default(cuid())
   patientId String
-  patient   User     @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  patient   User   @relation(fields: [patientId], references: [id], onDelete: Cascade)
 
-  url       String
+  url String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -211,15 +220,15 @@ model ProgressPhoto {
 
 // Appointments between patients and professionals
 model Appointment {
-  id             String   @id @default(cuid())
+  id             String @id @default(cuid())
   patientId      String
-  patient        User     @relation("PatientAppointments", fields: [patientId], references: [id], onDelete: Cascade)
+  patient        User   @relation("PatientAppointments", fields: [patientId], references: [id], onDelete: Cascade)
   professionalId String
-  professional   User     @relation("ProfessionalAppointments", fields: [professionalId], references: [id], onDelete: Cascade)
+  professional   User   @relation("ProfessionalAppointments", fields: [professionalId], references: [id], onDelete: Cascade)
 
   scheduledAt DateTime
   status      AppointmentStatus @default(REQUESTED)
-  notes       String?  @db.Text
+  notes       String?           @db.Text
   review      Review?
 
   createdAt DateTime @default(now())
@@ -240,13 +249,13 @@ enum ReviewType {
 
 // Basic internal chat
 model Message {
-  id         String   @id @default(cuid())
+  id         String @id @default(cuid())
   senderId   String
-  sender     User     @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
+  sender     User   @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
   receiverId String
-  receiver   User     @relation("ReceivedMessages", fields: [receiverId], references: [id], onDelete: Cascade)
+  receiver   User   @relation("ReceivedMessages", fields: [receiverId], references: [id], onDelete: Cascade)
 
-  content String @db.Text
+  content String    @db.Text
   readAt  DateTime?
 
   createdAt DateTime @default(now())
@@ -257,9 +266,9 @@ model Message {
 
 // Patient calorie tracker (beta: one free entry per day)
 model CalorieEntry {
-  id          String   @id @default(cuid())
-  userId      String
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   description String
   calories    Int
@@ -268,26 +277,26 @@ model CalorieEntry {
 
 // AI-assisted meal entries with optional photo and macros
 model MealEntry {
-  id            String     @id @default(cuid())
-  userId        String
-  user          User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  imageUrl      String?
-  description   String
-  mealType      MealType   @default(OTHER)
+  imageUrl    String?
+  description String
+  mealType    MealType @default(OTHER)
 
-  calories      Int
-  proteinG      Float?
-  carbsG        Float?
-  fatG          Float?
+  calories Int
+  proteinG Float?
+  carbsG   Float?
+  fatG     Float?
 
-  aiModel       String?
-  aiConfidence  Float?
-  source        MealSource @default(AI)
+  aiModel      String?
+  aiConfidence Float?
+  source       MealSource @default(AI)
 
-  consumedAt    DateTime   @default(now())
-  createdAt     DateTime   @default(now())
-  updatedAt     DateTime   @updatedAt
+  consumedAt DateTime @default(now())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
   ingredients MealIngredient[]
 
@@ -333,7 +342,7 @@ model Subscription {
   plan   Plan               @default(FREE)
   status SubscriptionStatus @default(ACTIVE)
 
-  startedAt DateTime @default(now())
+  startedAt DateTime  @default(now())
   expiresAt DateTime?
 
   createdAt DateTime @default(now())
@@ -354,6 +363,83 @@ enum SubscriptionStatus {
   EXPIRED
 }
 
+// Patient's paid subscription to a specific professional (patient→professional axis)
+model PatientSubscription {
+  id             String @id @default(cuid())
+  patientId      String
+  patient        User   @relation("PatientSubsAsPatient", fields: [patientId], references: [id], onDelete: Cascade)
+  professionalId String
+  professional   User   @relation("PatientSubsAsProfessional", fields: [professionalId], references: [id], onDelete: Cascade)
+
+  status    SubscriptionStatus @default(ACTIVE)
+  startedAt DateTime           @default(now())
+  expiresAt DateTime
+
+  pricePaid Float
+  currency  String @default("MXN")
+
+  payment Payment?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([patientId, professionalId])
+  @@index([professionalId, expiresAt])
+}
+
+// One personalized routine per patient–professional pair, replaced in place
+model Routine {
+  id             String @id @default(cuid())
+  patientId      String
+  patient        User   @relation("RoutinesAsPatient", fields: [patientId], references: [id], onDelete: Cascade)
+  professionalId String
+  professional   User   @relation("RoutinesAsProfessional", fields: [professionalId], references: [id], onDelete: Cascade)
+
+  title   String
+  content String @db.Text
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([patientId, professionalId])
+}
+
+// Audit trail for simulated (V1) or real (future) payments
+model Payment {
+  id      String @id @default(cuid())
+  payerId String
+  payer   User   @relation("PaymentsAsPayer", fields: [payerId], references: [id], onDelete: Cascade)
+  payeeId String
+  payee   User   @relation("PaymentsAsPayee", fields: [payeeId], references: [id], onDelete: Cascade)
+
+  amount      Float
+  currency    String          @default("MXN")
+  status      PaymentStatus   @default(PAID)
+  provider    PaymentProvider @default(TEST)
+  providerRef String?
+
+  patientSubscriptionId String?              @unique
+  patientSubscription   PatientSubscription? @relation(fields: [patientSubscriptionId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+
+  @@index([payerId, createdAt])
+  @@index([payeeId, createdAt])
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+}
+
+enum PaymentProvider {
+  TEST
+  STRIPE
+  MERCADOPAGO
+}
+
 model UserPreference {
   id        String   @id @default(cuid())
   userId    String   @unique
@@ -364,17 +450,17 @@ model UserPreference {
 }
 
 model Review {
-  id             String   @id @default(cuid())
-  type           ReviewType @default(PROFESSIONAL)
-  appointmentId  String?   @unique
+  id             String       @id @default(cuid())
+  type           ReviewType   @default(PROFESSIONAL)
+  appointmentId  String?      @unique
   appointment    Appointment? @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
   professionalId String?
-  professional   User? @relation("ProfessionalReviews", fields: [professionalId], references: [id], onDelete: Cascade)
+  professional   User?        @relation("ProfessionalReviews", fields: [professionalId], references: [id], onDelete: Cascade)
   patientId      String
-  patient        User @relation("PatientReviews", fields: [patientId], references: [id], onDelete: Cascade)
+  patient        User         @relation("PatientReviews", fields: [patientId], references: [id], onDelete: Cascade)
   rating         Int
-  comment        String?  @db.Text
-  createdAt      DateTime @default(now())
+  comment        String?      @db.Text
+  createdAt      DateTime     @default(now())
 
   @@index([professionalId])
   @@index([patientId])

@@ -103,7 +103,12 @@ export interface Dictionary {
     paymentSuccess: string;
     subscriptionConfirmation: string;
     paymentError: string;
+    alreadySubscribed: string;
+    planPriceMissing: string;
   };
+  patientSubscription: Record<keyof typeof es.patientSubscription, string>;
+  patientRoutine: Record<keyof typeof es.patientRoutine, string>;
+  professionalRoutines: Record<keyof typeof es.professionalRoutines, string>;
   specialties: Record<keyof typeof es.specialties, string>;
   modalities: Record<keyof typeof es.modalities, string>;
   userActions: Record<keyof typeof es.userActions, string>;

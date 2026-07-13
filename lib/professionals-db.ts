@@ -44,6 +44,8 @@ function mapProfessional(
     modality: string;
     price: number | null;
     isPremium: boolean;
+    planPrice: number | null;
+    planDuration: string | null;
   },
   averageRating: number,
   reviewCount: number,
@@ -65,6 +67,8 @@ function mapProfessional(
     averageRating,
     reviewCount,
     isPremiumActive,
+    planPrice: profile.planPrice,
+    planDuration: profile.planDuration,
   };
 }
 

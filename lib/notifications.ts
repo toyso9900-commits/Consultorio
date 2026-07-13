@@ -3,7 +3,7 @@ import { UserRole } from "@prisma/client";
 
 export interface NotificationItem {
   id: string;
-  type: "message" | "appointment" | "validation" | "subscription" | "review" | "photo" | "meal";
+  type: "message" | "appointment" | "validation" | "subscription" | "review" | "photo" | "meal" | "patient-subscription" | "routine";
   title: string;
   description: string;
   href: string;
@@ -26,7 +26,7 @@ export async function getNotifications(
 }
 
 async function getPatientNotifications(userId: string): Promise<NotificationItem[]> {
-  const [unreadMessages, upcomingAppointments, pendingReviews] = await Promise.all([
+  const [unreadMessages, upcomingAppointments, pendingReviews, recentRoutines] = await Promise.all([
     prisma.message.findMany({
       where: { receiverId: userId, readAt: null },
       include: { sender: { select: { id: true, name: true } } },
@@ -51,6 +51,12 @@ async function getPatientNotifications(userId: string): Promise<NotificationItem
       },
       include: { professional: { select: { id: true, name: true } } },
       orderBy: { scheduledAt: "desc" },
+      take: 3,
+    }),
+    prisma.routine.findMany({
+      where: { patientId: userId },
+      include: { professional: { select: { id: true, name: true } } },
+      orderBy: { updatedAt: "desc" },
       take: 3,
     }),
   ]);
@@ -90,13 +96,24 @@ async function getPatientNotifications(userId: string): Promise<NotificationItem
     });
   }
 
+  for (const routine of recentRoutines) {
+    notifications.push({
+      id: `routine-${routine.id}`,
+      type: "routine",
+      title: "Rutina actualizada",
+      description: `${routine.professional.name || "Tu especialista"} publicó "${routine.title}"`,
+      href: "/paciente/dashboard/rutina",
+      createdAt: routine.updatedAt,
+    });
+  }
+
   return notifications
     .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
     .slice(0, 10);
 }
 
 async function getProfessionalNotifications(userId: string): Promise<NotificationItem[]> {
-  const [unreadMessages, requestedAppointments, clients] = await Promise.all([
+  const [unreadMessages, requestedAppointments, clients, recentPatientSubs] = await Promise.all([
     prisma.message.findMany({
       where: { receiverId: userId, readAt: null },
       include: { sender: { select: { id: true, name: true } } },
@@ -113,6 +130,12 @@ async function getProfessionalNotifications(userId: string): Promise<Notificatio
       take: 5,
     }),
     getProfessionalClientsWithMissingActivity(userId),
+    prisma.patientSubscription.findMany({
+      where: { professionalId: userId },
+      include: { patient: { select: { id: true, name: true } } },
+      orderBy: { createdAt: "desc" },
+      take: 3,
+    }),
   ]);
 
   const notifications: NotificationItem[] = [];
@@ -160,6 +183,18 @@ async function getProfessionalNotifications(userId: string): Promise<Notificatio
         createdAt: new Date(),
       });
     }
+  }
+
+  for (const sub of recentPatientSubs) {
+    const isActive = sub.status !== "EXPIRED" && sub.expiresAt > new Date();
+    notifications.push({
+      id: `patient-sub-${sub.id}`,
+      type: "patient-subscription",
+      title: isActive ? "Nuevo suscriptor" : "Suscripción de paciente actualizada",
+      description: sub.patient.name || "Paciente sin nombre",
+      href: "/profesional/dashboard/clientes",
+      createdAt: sub.createdAt,
+    });
   }
 
   return notifications

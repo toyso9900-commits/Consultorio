@@ -33,3 +33,24 @@ export type AppointmentUpdatePayload = {
   status: string;
   scheduledAt: string;
 };
+
+export type PatientSubscribedPayload = {
+  patientId: string;
+  patientName: string | null;
+  professionalId: string;
+  expiresAt: string;
+};
+
+export type RoutinePublishedPayload = {
+  patientId: string;
+  professionalId: string;
+  professionalName: string | null;
+  title: string;
+};
+
+export type SubscriptionCancelledPayload = {
+  patientId: string;
+  patientName: string | null;
+  professionalId: string;
+  expiresAt: string;
+};

@@ -52,6 +52,8 @@ export default async function ProfessionalProfilePage() {
               specialty: professional?.specialty || "NUTRITION",
               price: professional?.price?.toString() || "",
               licenseNumber: professional?.licenseNumber || "",
+              planPrice: professional?.planPrice?.toString() || "",
+              planDuration: professional?.planDuration || "",
             }}
           />
         </div>

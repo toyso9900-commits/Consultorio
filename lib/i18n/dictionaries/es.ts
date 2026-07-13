@@ -59,6 +59,9 @@ export const es = {
     account: "Mi Cuenta",
     clients: "Clientes",
     subscription: "Suscripción",
+    routines: "Rutinas",
+    myRoutine: "Mi Rutina",
+    mySubscriptions: "Mis Suscripciones",
     users: "Usuarios",
     professionals: "Profesionales registrados",
     validations: "Validaciones pendientes",
@@ -547,6 +550,10 @@ export const es = {
     saving: "Guardando...",
     updated: "Perfil actualizado",
     updateError: "No se pudo actualizar el perfil",
+    planPrice: "Precio del plan personalizado (MXN/mes)",
+    planDuration: "Duración del plan (texto, ej: por mes)",
+    freePlanReadonly:
+      "El plan FREE es contenido genérico predefinido y no se puede editar.",
   },
   professionalClients: {
     title: "Clientes",
@@ -558,6 +565,7 @@ export const es = {
     noName: "Sin nombre",
     noAppointment: "Sin citas",
     activeSubscription: "Suscripción activa",
+    expiredSubscription: "Suscripción expirada",
     noActiveSubscription: "Sin suscripción activa",
     message: "Mensaje",
     progressPhotos: "Fotos de progreso",
@@ -615,6 +623,68 @@ export const es = {
     paymentSuccess: "Pago simulado exitoso",
     subscriptionConfirmation: "Te suscribiste al plan {plan}.",
     paymentError: "No se pudo procesar el pago.",
+    alreadySubscribed:
+      "Ya tenés una suscripción activa para este profesional.",
+    planPriceMissing:
+      "Este profesional todavía no configuró un precio para su plan personalizado.",
+  },
+  patientSubscription: {
+    title: "Mis Suscripciones",
+    subtitle: "Gestioná tus suscripciones a profesionales.",
+    empty: "Todavía no estás suscrito a ningún profesional.",
+    browseExperts: "Explorar la Guía de Expertos",
+    professionalLabel: "Profesional",
+    priceLabel: "Precio pagado",
+    expiresLabel: "Acceso hasta",
+    statusActive: "Activa",
+    statusCancelled: "Cancelada",
+    statusExpired: "Expirada",
+    cancelCta: "Cancelar suscripción",
+    cancelConfirm:
+      "¿Estás seguro de que querés cancelar? Mantendrás acceso hasta el fin del periodo.",
+    cancelSuccess:
+      "Suscripción cancelada. Mantenés acceso hasta el fin del periodo.",
+    cancelError: "No se pudo cancelar la suscripción.",
+    freePlanTitle: "Plan FREE",
+    freePlanBody:
+      "Contenido básico gratuito disponible para todos los pacientes.",
+    paidPlanTitle: "Plan Personalizado",
+    subscribeCta: "Suscribirme al plan personalizado",
+    subscribing: "Procesando...",
+    subscribeSuccess: "Te suscribiste al plan personalizado.",
+    subscribeError: "No se pudo procesar la suscripción.",
+    alreadySubscribedBadge: "Ya estás suscrito",
+    testModeBadge: "Modo prueba",
+    loginToSubscribe: "Iniciá sesión como paciente para suscribirte.",
+  },
+  patientRoutine: {
+    title: "Mi Rutina",
+    freePlanTitle: "Plan general (FREE)",
+    freePlanBody:
+      "Rutina general: 30 minutos de caminata diaria, 8 vasos de agua y 3 comidas balanceadas al día.",
+    paywallTitle: "Desbloqueá tu rutina personalizada",
+    paywallBody:
+      "Suscribite al plan personalizado de un profesional para recibir una rutina hecha a tu medida.",
+    paywallCta: "Explorar la Guía de Expertos",
+    noRoutineYet:
+      "Tu profesional todavía no publicó tu rutina personalizada. Te avisaremos cuando esté lista.",
+    publishedBy: "Publicada por {name}",
+    updatedAt: "Actualizada el {date}",
+  },
+  professionalRoutines: {
+    title: "Rutinas",
+    subtitle:
+      "Publicá y editá rutinas personalizadas para tus pacientes suscriptos.",
+    empty: "Todavía no tenés pacientes. Los pacientes con citas aparecerán acá.",
+    lockedRow:
+      "Este paciente no tiene una suscripción activa. Solo podés publicar rutinas para suscriptores.",
+    titleLabel: "Título de la rutina",
+    contentLabel: "Contenido",
+    publishCta: "Publicar rutina",
+    updateCta: "Actualizar rutina",
+    saveSuccess: "Rutina publicada.",
+    saveError: "No se pudo guardar la rutina.",
+    notSubscribedError: "El paciente no está suscripto.",
   },
   specialties: {
     nutrition: "Nutrición",

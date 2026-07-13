@@ -118,26 +118,19 @@ export async function getActivePatients(professionalId: string): Promise<number>
   return activePatientGroups.length;
 }
 
+export type PatientSubscriptionStatus = "active" | "expired" | "none";
+
 export interface ProfessionalClient {
   patientId: string;
   name: string | null;
   image: string | null;
-  hasActivePaidSubscription: boolean;
+  subscriptionStatus: PatientSubscriptionStatus;
   lastAppointment: Date | null;
 }
 
 export async function getProfessionalClients(
   professionalId: string
 ): Promise<ProfessionalClient[]> {
-  const subscriptionSelection = {
-    where: {
-      status: "ACTIVE",
-      plan: "PREMIUM",
-    },
-    select: { id: true },
-    take: 1,
-  } as const;
-
   const [appointments, messages] = await Promise.all([
     prisma.appointment.findMany({
       where: { professionalId },
@@ -149,7 +142,6 @@ export async function getProfessionalClients(
             id: true,
             name: true,
             image: true,
-            subscriptions: subscriptionSelection,
           },
         },
       },
@@ -168,7 +160,6 @@ export async function getProfessionalClients(
             name: true,
             image: true,
             role: true,
-            subscriptions: subscriptionSelection,
           },
         },
         receiver: {
@@ -177,7 +168,6 @@ export async function getProfessionalClients(
             name: true,
             image: true,
             role: true,
-            subscriptions: subscriptionSelection,
           },
         },
       },
@@ -197,15 +187,12 @@ export async function getProfessionalClients(
       ) {
         existing.lastAppointment = appointment.scheduledAt;
       }
-      existing.hasActivePaidSubscription ||=
-        appointment.patient.subscriptions.length > 0;
     } else {
       clientMap.set(appointment.patientId, {
         patientId: appointment.patient.id,
         name: appointment.patient.name,
         image: appointment.patient.image,
-        hasActivePaidSubscription:
-          appointment.patient.subscriptions.length > 0,
+        subscriptionStatus: "none",
         lastAppointment: appointment.scheduledAt,
       });
     }
@@ -219,20 +206,37 @@ export async function getProfessionalClients(
       continue;
     }
 
-    const existing = clientMap.get(partner.id);
-
-    if (existing) {
-      existing.hasActivePaidSubscription ||=
-        partner.subscriptions.length > 0;
-    } else {
+    if (!clientMap.has(partner.id)) {
       clientMap.set(partner.id, {
         patientId: partner.id,
         name: partner.name,
         image: partner.image,
-        hasActivePaidSubscription: partner.subscriptions.length > 0,
+        subscriptionStatus: "none",
         lastAppointment: null,
       });
     }
+  }
+
+  if (clientMap.size === 0) {
+    return [];
+  }
+
+  const patientIds = Array.from(clientMap.keys());
+  const subscriptions = await prisma.patientSubscription.findMany({
+    where: {
+      professionalId,
+      patientId: { in: patientIds },
+    },
+    select: { patientId: true, status: true, expiresAt: true },
+  });
+
+  const now = new Date();
+  for (const sub of subscriptions) {
+    const client = clientMap.get(sub.patientId);
+    if (!client) continue;
+
+    const isExpired = sub.status === "EXPIRED" || sub.expiresAt <= now;
+    client.subscriptionStatus = isExpired ? "expired" : "active";
   }
 
   return Array.from(clientMap.values()).sort((a, b) => {

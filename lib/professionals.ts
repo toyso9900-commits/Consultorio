@@ -12,5 +12,7 @@ export type Professional = {
   averageRating: number;
   reviewCount: number;
   isPremiumActive?: boolean;
+  planPrice?: number | null;
+  planDuration?: string | null;
 };
 

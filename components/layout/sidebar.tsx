@@ -16,6 +16,7 @@ import {
   Camera,
   X,
   Leaf,
+  Dumbbell,
 } from "lucide-react";
 import { useI18n } from "@/lib/i18n/client";
 import type { Dictionary } from "@/lib/i18n/server";
@@ -47,6 +48,7 @@ const navigation: Record<UserRole, NavItem[]> = {
     { label: (d) => d.nav.home, href: "/profesional/dashboard", icon: LayoutDashboard },
     { label: (d) => d.nav.profile, href: "/profesional/dashboard/perfil", icon: UserCircle },
     { label: (d) => d.nav.clients, href: "/profesional/dashboard/clientes", icon: Users, badge: 0 },
+    { label: (d) => d.nav.routines, href: "/profesional/dashboard/rutinas", icon: Dumbbell },
     { label: (d) => d.nav.subscription, href: "/profesional/dashboard/suscripcion", icon: CreditCard },
     { label: (d) => d.nav.appointments, href: "/profesional/dashboard/citas", icon: CalendarDays },
   ],
@@ -56,6 +58,8 @@ const navigation: Record<UserRole, NavItem[]> = {
     { label: (d) => d.nav.experts, href: "/paciente/dashboard/expertos", icon: Search },
     { label: (d) => d.nav.appointments, href: "/paciente/dashboard/citas", icon: CalendarDays },
     { label: (d) => d.nav.messages, href: "/paciente/dashboard/mensajes", icon: MessageSquare },
+    { label: (d) => d.nav.myRoutine, href: "/paciente/dashboard/rutina", icon: Dumbbell },
+    { label: (d) => d.nav.mySubscriptions, href: "/paciente/dashboard/suscripcion", icon: CreditCard },
     { label: (d) => d.nav.account, href: "/paciente/dashboard/perfil", icon: UserCircle },
   ],
 };

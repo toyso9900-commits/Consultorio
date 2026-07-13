@@ -74,6 +74,9 @@ export function NotificationBell({
     userChan.bind("new-message", refetch);
     userChan.bind("appointment-created", refetch);
     userChan.bind("appointment-updated", refetch);
+    userChan.bind("patient-subscribed", refetch);
+    userChan.bind("subscription-cancelled", refetch);
+    userChan.bind("routine-published", refetch);
 
     if (role === "ADMIN") {
       const adminChan = pusherClient.subscribe(ADMIN_CHANNEL);
@@ -84,6 +87,9 @@ export function NotificationBell({
       userChan.unbind("new-message", refetch);
       userChan.unbind("appointment-created", refetch);
       userChan.unbind("appointment-updated", refetch);
+      userChan.unbind("patient-subscribed", refetch);
+      userChan.unbind("subscription-cancelled", refetch);
+      userChan.unbind("routine-published", refetch);
       pusherClient.unsubscribe(userChannel(userId));
       if (role === "ADMIN") {
         pusherClient.unsubscribe(ADMIN_CHANNEL);

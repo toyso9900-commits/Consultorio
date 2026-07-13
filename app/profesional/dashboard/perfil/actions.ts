@@ -14,6 +14,8 @@ const updateSchema = z.object({
   specialty: z.enum(["NUTRITION", "TRAINING", "BOTH"]).optional(),
   price: z.number().nonnegative().optional(),
   licenseNumber: z.string().optional(),
+  planPrice: z.number().positive().nullable().optional(),
+  planDuration: z.string().max(120).nullable().optional(),
 });
 
 export interface UpdateProfessionalProfileData {
@@ -26,6 +28,8 @@ export interface UpdateProfessionalProfileData {
   specialty?: "NUTRITION" | "TRAINING" | "BOTH";
   price?: number;
   licenseNumber?: string;
+  planPrice?: number | null;
+  planDuration?: string | null;
 }
 
 export async function updateProfessionalProfile(data: UpdateProfessionalProfileData) {
@@ -34,7 +38,7 @@ export async function updateProfessionalProfile(data: UpdateProfessionalProfileD
     return { success: false, error: parsed.error.errors.map((e) => e.message).join(" ") };
   }
 
-  const { userId, name, title, bio, location, modality, specialty, price, licenseNumber } = parsed.data;
+  const { userId, name, title, bio, location, modality, specialty, price, licenseNumber, planPrice, planDuration } = parsed.data;
 
   try {
     const profile = await prisma.professionalProfile.findUnique({ where: { userId } });
@@ -57,6 +61,8 @@ export async function updateProfessionalProfile(data: UpdateProfessionalProfileD
           specialty,
           price,
           licenseNumber,
+          planPrice,
+          planDuration,
         },
       }),
     ]);
