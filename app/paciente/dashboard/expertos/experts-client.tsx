@@ -139,10 +139,7 @@ export function PatientExpertsClient({ professionals }: PatientExpertsPageProps)
                     {prof.modality}
                   </div>
                 </div>
-                <div className="mt-6 flex items-center justify-between border-t border-slate-100 pt-4 dark:border-slate-800">
-                  <span className="text-lg font-bold text-slate-900 dark:text-slate-100">
-                    ${prof.price} MXN
-                  </span>
+                <div className="mt-6 flex items-center justify-end border-t border-slate-100 pt-4 dark:border-slate-800">
                   <span className="text-sm font-medium text-indigo-600 group-hover:underline dark:text-indigo-400">
                     {dictionary.patientExperts.viewProfile}
                   </span>

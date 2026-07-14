@@ -47,6 +47,7 @@ model User {
   role          UserRole  @default(PATIENT)
   password      String?
   lastSeenAt    DateTime?
+  notificationsReadAt DateTime?
 
   accounts Account[]
   sessions Session[]
@@ -130,6 +131,8 @@ model ProfessionalProfile {
   price         Float?
   planPrice     Float?
   planDuration  String?
+  freePlanTitle   String?
+  freePlanContent String?  @db.Text
   isPremium     Boolean   @default(false)
   isValidated   Boolean   @default(false)
   rejectedAt    DateTime?

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { Calendar, Clock, FileText, User } from "lucide-react";
 import type { AppointmentWithUsers } from "@/lib/appointments";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
@@ -66,8 +67,18 @@ export function AppointmentCard({
           </div>
 
           <div className="mt-3 flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-muted">
-              <User className="h-4 w-4 text-muted-foreground" />
+            <div className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-muted">
+              {counterparty.image ? (
+                <Image
+                  src={counterparty.image}
+                  alt=""
+                  width={32}
+                  height={32}
+                  className="h-full w-full object-cover"
+                />
+              ) : (
+                <User className="h-4 w-4 text-muted-foreground" />
+              )}
             </div>
             <p className="font-medium text-card-foreground">
               {counterparty.name ||

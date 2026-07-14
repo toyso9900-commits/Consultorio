@@ -42,10 +42,11 @@ function mapProfessional(
     specialty: string;
     location: string | null;
     modality: string;
-    price: number | null;
     isPremium: boolean;
     planPrice: number | null;
     planDuration: string | null;
+    freePlanTitle: string | null;
+    freePlanContent: string | null;
   },
   averageRating: number,
   reviewCount: number,
@@ -59,7 +60,6 @@ function mapProfessional(
     specialty: mapSpecialty(profile.specialty),
     location: profile.location || "No especificada",
     modality: mapModality(profile.modality),
-    price: profile.price ?? 0,
     isPremium: profile.isPremium,
     image:
       profile.user.image ||
@@ -69,6 +69,8 @@ function mapProfessional(
     isPremiumActive,
     planPrice: profile.planPrice,
     planDuration: profile.planDuration,
+    freePlanTitle: profile.freePlanTitle,
+    freePlanContent: profile.freePlanContent,
   };
 }
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import Pusher from "pusher-js";
 import { useSession } from "next-auth/react";
 import { Send, User, Loader2 } from "lucide-react";
@@ -30,6 +31,7 @@ interface ChatPanelProps {
   professionalId: string;
   professionalName: string;
   patientId: string;
+  counterpartImage?: string | null;
 }
 
 export function ChatPanel(props: ChatPanelProps) {
@@ -75,6 +77,7 @@ function ChatPanelInner({
   professionalId,
   professionalName,
   userId,
+  counterpartImage,
 }: ChatPanelInnerProps) {
   const { data: session } = useSession();
   const [messages, setMessages] = useState<ChatMessage[]>(initialMessages);
@@ -84,6 +87,15 @@ function ChatPanelInner({
   const channelRef = useRef<ReturnType<Pusher["subscribe"]> | null>(null);
 
   const otherId = professionalId;
+
+  // Fallback: when the caller does not know the counterpart's avatar,
+  // derive it from the most recent message sent by the counterpart.
+  const lastMessageImage = messages
+    .filter((m) => m.senderId === otherId)
+    .map((m) => m.sender.image)
+    .filter((img): img is string => Boolean(img))
+    .pop();
+  const headerImage = counterpartImage ?? lastMessageImage ?? null;
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -199,8 +211,18 @@ function ChatPanelInner({
   return (
     <div className="flex h-full min-h-[16rem] flex-col rounded-2xl border border-border bg-card shadow-sm">
       <div className="flex items-center gap-3 border-b border-border px-6 py-4">
-        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-indigo-100 dark:bg-indigo-950">
-          <User className="h-5 w-5 text-indigo-600" />
+        <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-indigo-100 dark:bg-indigo-950">
+          {headerImage ? (
+            <Image
+              src={headerImage}
+              alt=""
+              width={40}
+              height={40}
+              className="h-full w-full object-cover"
+            />
+          ) : (
+            <User className="h-5 w-5 text-indigo-600" />
+          )}
         </div>
         <div>
           <p className="font-semibold text-card-foreground">{professionalName}</p>

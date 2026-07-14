@@ -86,15 +86,7 @@ export default async function ProfessionalDetailPage({
             </div>
           </div>
 
-          <div className="mt-8 flex flex-col items-start justify-between gap-6 border-t border-slate-100 pt-8 dark:border-slate-800 sm:flex-row sm:items-center">
-            <div>
-              <span className="text-sm text-slate-500 dark:text-slate-400">
-                Precio por asesoría
-              </span>
-              <p className="text-3xl font-bold text-slate-900 dark:text-slate-100">
-                ${prof.price} MXN
-              </p>
-            </div>
+          <div className="mt-8 flex flex-col items-start justify-end gap-6 border-t border-slate-100 pt-8 dark:border-slate-800 sm:flex-row sm:items-center">
             <div className="flex w-full gap-3 sm:w-auto">
               <ChatButton professionalId={prof.id} professionalName={prof.name} />
               {isPatient ? (
@@ -121,11 +113,11 @@ export default async function ProfessionalDetailPage({
               <div className="flex items-center gap-2">
                 <Leaf className="h-5 w-5 text-emerald-600" />
                 <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
-                  {t.freePlanTitle}
+                  {prof.freePlanContent ? prof.freePlanTitle || t.freePlanTitle : t.freePlanTitle}
                 </h2>
               </div>
-              <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
-                {t.freePlanBody}
+              <p className="mt-2 whitespace-pre-line text-sm text-slate-600 dark:text-slate-400">
+                {prof.freePlanContent || t.freePlanBody}
               </p>
             </div>
 

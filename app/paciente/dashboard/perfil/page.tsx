@@ -13,6 +13,11 @@ export default async function PatientProfilePage() {
     where: { userId: session!.user.id },
   });
 
+  const user = await prisma.user.findUnique({
+    where: { id: session!.user.id },
+    select: { image: true },
+  });
+
   return (
     <div className="space-y-6">
       <div className="flex flex-wrap items-center gap-3">
@@ -32,6 +37,7 @@ export default async function PatientProfilePage() {
         <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
           <PatientProfileForm
           userId={session!.user.id!}
+          image={user?.image}
           defaultValues={{
             name: session!.user.name || "",
             height: profile?.height?.toString() || "",

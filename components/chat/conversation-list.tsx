@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import Pusher from "pusher-js";
 import {
   getPusherClientConfig,
@@ -176,8 +177,18 @@ export function ConversationList({
             >
               <div className="flex items-center justify-between gap-2">
                 <div className="flex min-w-0 items-center gap-2">
-                  <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-indigo-100 text-xs font-semibold text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300">
-                    {(user.name || "U").slice(0, 1).toUpperCase()}
+                  <div className="flex h-7 w-7 shrink-0 items-center justify-center overflow-hidden rounded-full bg-indigo-100 text-xs font-semibold text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300">
+                    {user.image ? (
+                      <Image
+                        src={user.image}
+                        alt=""
+                        width={28}
+                        height={28}
+                        className="h-full w-full object-cover"
+                      />
+                    ) : (
+                      (user.name || "U").slice(0, 1).toUpperCase()
+                    )}
                   </div>
                   <div className="min-w-0">
                     <p className="truncate font-medium">

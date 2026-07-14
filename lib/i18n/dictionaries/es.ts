@@ -198,6 +198,7 @@ export const es = {
     viewProfile: "Ver perfil",
     weightHistory: "Historial de peso",
     weightEmpty: "Todavía no hay registros de peso. Agregá tu primer medición.",
+    idealWeight: "Peso ideal",
     addWeight: "Agregar peso",
     weightInvalid: "Ingresá un peso válido mayor a 0.",
     weightError: "No se pudo guardar el peso.",
@@ -304,6 +305,10 @@ export const es = {
     saving: "Guardando...",
     updated: "Perfil actualizado",
     updateError: "No se pudo actualizar el perfil",
+    photoTitle: "Foto de perfil",
+    photoHint: "JPG, PNG o WebP. Máximo 2 MB.",
+    photoUpdated: "Foto de perfil actualizada",
+    photoError: "No se pudo subir la imagen",
   },
   onboarding: {
     title: "Completá tu perfil",
@@ -461,7 +466,6 @@ export const es = {
     licenseHeader: "Cédula",
     statusHeader: "Estado",
     modalityHeader: "Modalidad",
-    priceHeader: "Precio",
     validated: "Validado",
     pending: "Pendiente",
     rejected: "Rechazado",
@@ -539,7 +543,6 @@ export const es = {
     modality: "Modalidad",
     location: "Ubicación",
     locationPlaceholder: "Ej: Ciudad de México",
-    price: "Precio por asesoría (MXN)",
     bio: "Biografía",
     bioPlaceholder: "Contá un poco sobre tu experiencia...",
     photoTitle: "Foto de perfil",
@@ -552,8 +555,14 @@ export const es = {
     updateError: "No se pudo actualizar el perfil",
     planPrice: "Precio del plan personalizado (MXN/mes)",
     planDuration: "Duración del plan (texto, ej: por mes)",
-    freePlanReadonly:
-      "El plan FREE es contenido genérico predefinido y no se puede editar.",
+    freePlanSection: "Plan FREE",
+    freePlanHelp:
+      "Este contenido gratuito es visible para todos los pacientes en tu perfil público.",
+    freePlanTitleLabel: "Título del plan FREE",
+    freePlanTitlePlaceholder: "Ej: Plan general gratuito",
+    freePlanContentLabel: "Contenido del plan FREE",
+    freePlanContentPlaceholder:
+      "Describí la rutina o contenido gratuito que ofrecés a todos los pacientes...",
   },
   professionalClients: {
     title: "Clientes",

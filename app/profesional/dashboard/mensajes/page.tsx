@@ -76,6 +76,9 @@ export default async function ProfessionalMessagesPage({ searchParams }: PagePro
             initialMessagesPromise={initialMessagesPromise}
             patientId={patientId ?? ""}
             patientName={params.nombre || dictionary.professionalMessages.defaultName}
+            patientImage={
+              conversations.find((c) => c.id === patientId)?.image ?? null
+            }
           />
         </Suspense>
       </div>

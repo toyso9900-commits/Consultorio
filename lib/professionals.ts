@@ -6,7 +6,6 @@ export type Professional = {
   specialty: string;
   location: string;
   modality: string;
-  price: number;
   isPremium: boolean;
   image: string;
   averageRating: number;
@@ -14,5 +13,7 @@ export type Professional = {
   isPremiumActive?: boolean;
   planPrice?: number | null;
   planDuration?: string | null;
+  freePlanTitle?: string | null;
+  freePlanContent?: string | null;
 };
 

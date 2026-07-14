@@ -204,9 +204,6 @@ export default async function Home() {
                     <p className="mt-2 text-sm text-muted-foreground">
                       {prof.location} • {prof.modality}
                     </p>
-                    <p className="mt-3 text-sm font-semibold text-foreground">
-                      ${prof.price} MXN
-                    </p>
                   </div>
                 </div>
               ))}

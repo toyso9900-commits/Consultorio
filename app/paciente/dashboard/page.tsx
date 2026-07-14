@@ -556,7 +556,10 @@ export default async function PatientDashboardPage() {
 
         <div className="mt-6">
           {weightChartData.length > 0 ? (
-            <WeightChart data={weightChartData} />
+            <WeightChart
+              data={weightChartData}
+              height={patientProfile?.height ?? null}
+            />
           ) : (
             <p className="rounded-xl bg-muted p-4 text-sm text-muted-foreground dark:bg-stone-700/30 dark:text-stone-400">
               {dictionary.patientHome.weightEmpty}

@@ -24,12 +24,14 @@ interface ProfessionalChatPageProps {
   initialMessagesPromise: Promise<{ success: boolean; messages?: unknown[]; error?: string }>;
   patientId: string;
   patientName: string;
+  patientImage?: string | null;
 }
 
 export default function ProfessionalChatPage({
   initialMessagesPromise,
   patientId,
   patientName,
+  patientImage,
 }: ProfessionalChatPageProps) {
   const searchParams = useSearchParams();
   const { data: session } = useSession();
@@ -68,6 +70,7 @@ export default function ProfessionalChatPage({
       professionalId={targetPatientId}
       professionalName={targetPatientName}
       patientId={session?.user?.id ?? ""}
+      counterpartImage={patientImage ?? null}
     />
   );
 }

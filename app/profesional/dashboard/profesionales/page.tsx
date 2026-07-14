@@ -66,9 +66,6 @@ export default async function AdminProfessionalsPage() {
                   <th className="px-4 py-3 font-semibold text-card-foreground">
                     {dictionary.adminProfessionals.modalityHeader}
                   </th>
-                  <th className="px-4 py-3 font-semibold text-card-foreground">
-                    {dictionary.adminProfessionals.priceHeader}
-                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
@@ -109,9 +106,6 @@ export default async function AdminProfessionalsPage() {
                       </td>
                       <td className="px-4 py-3 capitalize text-muted-foreground">
                         {profile?.modality?.toLowerCase() || "—"}
-                      </td>
-                      <td className="px-4 py-3 text-muted-foreground">
-                        {profile?.price ? `$${profile.price} MXN` : "—"}
                       </td>
                     </tr>
                   );

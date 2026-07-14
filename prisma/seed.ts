@@ -66,7 +66,6 @@ async function main() {
           licenseNumber: "MP-12345",
           location: "Buenos Aires, Argentina",
           modality: Modality.BOTH,
-          price: 15000,
           isValidated: true,
         },
       },

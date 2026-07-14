@@ -44,7 +44,18 @@ export function NotificationBell({
   const [notifications, setNotifications] = useState(initialNotifications);
   const [open, setOpen] = useState(false);
 
-  const count = notifications.length;
+  const count = notifications.filter((notification) => !notification.read).length;
+
+  const handleOpenChange = (nextOpen: boolean) => {
+    setOpen(nextOpen);
+
+    if (nextOpen && count > 0) {
+      // Optimistically clear the badge; persist the read timestamp without
+      // waiting for the response (fire-and-forget).
+      setNotifications((prev) => prev.map((notification) => ({ ...notification, read: true })));
+      fetch("/api/notifications", { method: "POST" }).catch(() => {});
+    }
+  };
 
   useEffect(() => {
     if (!isPusherClientConfigured()) {
@@ -98,7 +109,7 @@ export function NotificationBell({
   }, [userId, role]);
 
   return (
-    <DropdownMenu.Root open={open} onOpenChange={setOpen}>
+    <DropdownMenu.Root open={open} onOpenChange={handleOpenChange}>
       <DropdownMenu.Trigger asChild>
         <button
           type="button"
@@ -138,7 +149,9 @@ export function NotificationBell({
                   <Link
                     href={notification.href}
                     onClick={() => setOpen(false)}
-                    className="block rounded-lg px-3 py-2.5 transition-colors hover:bg-muted dark:hover:bg-stone-700/40"
+                    className={`block rounded-lg px-3 py-2.5 transition-colors hover:bg-muted dark:hover:bg-stone-700/40${
+                      notification.read ? " opacity-60" : ""
+                    }`}
                   >
                     <p className="text-sm font-medium text-foreground dark:text-stone-100">
                       {notification.title}

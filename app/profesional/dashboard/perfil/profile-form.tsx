@@ -21,7 +21,6 @@ interface ProfessionalProfileFormProps {
     location: string;
     modality: "ONLINE" | "IN_PERSON" | "BOTH";
     specialty: "NUTRITION" | "TRAINING" | "BOTH";
-    price: string;
     licenseNumber: string;
     planPrice: string;
     planDuration: string;
@@ -70,14 +69,12 @@ export function ProfessionalProfileForm({
     e.preventDefault();
     startTransition(async () => {
       const payload: UpdateProfessionalProfileData = {
-        userId,
         name: form.name,
         title: form.title || undefined,
         bio: form.bio || undefined,
         location: form.location || undefined,
         modality: form.modality,
         specialty: form.specialty,
-        price: form.price ? Number(form.price) : undefined,
         licenseNumber: form.licenseNumber || undefined,
         planPrice: form.planPrice ? Number(form.planPrice) : null,
         planDuration: form.planDuration || null,
@@ -216,46 +213,16 @@ export function ProfessionalProfileForm({
         </div>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2">
-        <div>
-          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
-            {dictionary.professionalProfile.location}
-          </label>
-          <input
-            type="text"
-            name="location"
-            value={form.location}
-            onChange={handleChange}
-            placeholder={dictionary.professionalProfile.locationPlaceholder}
-            className="mt-1 block w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
-            {dictionary.professionalProfile.price}
-          </label>
-          <input
-            type="number"
-            name="price"
-            value={form.price}
-            onChange={handleChange}
-            min={0}
-            step="0.01"
-            className="mt-1 block w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
-          />
-        </div>
-      </div>
-
       <div>
         <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
-          {dictionary.professionalProfile.bio}
+          {dictionary.professionalProfile.location}
         </label>
-        <textarea
-          name="bio"
-          value={form.bio}
+        <input
+          type="text"
+          name="location"
+          value={form.location}
           onChange={handleChange}
-          rows={4}
-          placeholder={dictionary.professionalProfile.bioPlaceholder}
+          placeholder={dictionary.professionalProfile.locationPlaceholder}
           className="mt-1 block w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
         />
       </div>
@@ -289,10 +256,18 @@ export function ProfessionalProfileForm({
         </div>
       </div>
 
-      <div className="rounded-lg border border-slate-200 bg-slate-50 p-4 dark:border-slate-700 dark:bg-slate-800/50">
-        <p className="text-sm text-slate-500 dark:text-slate-400">
-          {dictionary.professionalProfile.freePlanReadonly}
-        </p>
+      <div>
+        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
+          {dictionary.professionalProfile.bio}
+        </label>
+        <textarea
+          name="bio"
+          value={form.bio}
+          onChange={handleChange}
+          rows={4}
+          placeholder={dictionary.professionalProfile.bioPlaceholder}
+          className="mt-1 block w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
+        />
       </div>
 
       <button

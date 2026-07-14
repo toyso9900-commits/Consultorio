@@ -89,8 +89,18 @@ export default async function ProfessionalClientsPage({
                   className="flex flex-col gap-4 p-4 sm:flex-row sm:items-center sm:justify-between"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-indigo-100 text-sm font-semibold text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300">
-                      {(client.name || "P").slice(0, 1).toUpperCase()}
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full bg-indigo-100 text-sm font-semibold text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300">
+                      {client.image ? (
+                        <Image
+                          src={client.image}
+                          alt=""
+                          width={40}
+                          height={40}
+                          className="h-full w-full object-cover"
+                        />
+                      ) : (
+                        (client.name || "P").slice(0, 1).toUpperCase()
+                      )}
                     </div>
                     <div>
                       <p className="font-medium text-card-foreground">

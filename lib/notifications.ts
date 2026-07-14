@@ -8,12 +8,33 @@ export interface NotificationItem {
   description: string;
   href: string;
   createdAt: Date;
+  read: boolean;
 }
 
 export async function getNotifications(
   userId: string,
   role: UserRole
 ): Promise<NotificationItem[]> {
+  const [user, items] = await Promise.all([
+    prisma.user.findUnique({
+      where: { id: userId },
+      select: { notificationsReadAt: true },
+    }),
+    getRoleNotifications(userId, role),
+  ]);
+
+  const readAt = user?.notificationsReadAt ?? null;
+
+  return items.map((item) => ({
+    ...item,
+    read: readAt !== null && item.createdAt <= readAt,
+  }));
+}
+
+async function getRoleNotifications(
+  userId: string,
+  role: UserRole
+): Promise<Omit<NotificationItem, "read">[]> {
   switch (role) {
     case "ADMIN":
       return getAdminNotifications();
@@ -25,7 +46,7 @@ export async function getNotifications(
   }
 }
 
-async function getPatientNotifications(userId: string): Promise<NotificationItem[]> {
+async function getPatientNotifications(userId: string): Promise<Omit<NotificationItem, "read">[]> {
   const [unreadMessages, upcomingAppointments, pendingReviews, recentRoutines] = await Promise.all([
     prisma.message.findMany({
       where: { receiverId: userId, readAt: null },
@@ -61,7 +82,7 @@ async function getPatientNotifications(userId: string): Promise<NotificationItem
     }),
   ]);
 
-  const notifications: NotificationItem[] = [];
+  const notifications: Omit<NotificationItem, "read">[] = [];
 
   for (const message of unreadMessages) {
     notifications.push({
@@ -81,7 +102,7 @@ async function getPatientNotifications(userId: string): Promise<NotificationItem
       title: appointment.status === "CONFIRMED" ? "Cita confirmada" : "Solicitud de cita",
       description: `Con ${appointment.professional.name || "tu especialista"}`,
       href: "/paciente/dashboard/citas",
-      createdAt: appointment.scheduledAt,
+      createdAt: appointment.createdAt,
     });
   }
 
@@ -112,7 +133,7 @@ async function getPatientNotifications(userId: string): Promise<NotificationItem
     .slice(0, 10);
 }
 
-async function getProfessionalNotifications(userId: string): Promise<NotificationItem[]> {
+async function getProfessionalNotifications(userId: string): Promise<Omit<NotificationItem, "read">[]> {
   const [unreadMessages, requestedAppointments, clients, recentPatientSubs] = await Promise.all([
     prisma.message.findMany({
       where: { receiverId: userId, readAt: null },
@@ -138,7 +159,7 @@ async function getProfessionalNotifications(userId: string): Promise<Notificatio
     }),
   ]);
 
-  const notifications: NotificationItem[] = [];
+  const notifications: Omit<NotificationItem, "read">[] = [];
 
   for (const message of unreadMessages) {
     notifications.push({
@@ -170,7 +191,7 @@ async function getProfessionalNotifications(userId: string): Promise<Notificatio
         title: "Foto de progreso pendiente",
         description: `Paciente: ${client.name || "Paciente"}`,
         href: `/profesional/dashboard/mensajes?paciente=${encodeURIComponent(client.patientId)}&nombre=${encodeURIComponent(client.name || "Paciente")}`,
-        createdAt: new Date(),
+        createdAt: client.latestPhotoAt ?? client.patientCreatedAt,
       });
     }
     if (client.missingMeal) {
@@ -180,7 +201,7 @@ async function getProfessionalNotifications(userId: string): Promise<Notificatio
         title: "Registro de comida pendiente",
         description: `Paciente: ${client.name || "Paciente"}`,
         href: `/profesional/dashboard/mensajes?paciente=${encodeURIComponent(client.patientId)}&nombre=${encodeURIComponent(client.name || "Paciente")}`,
-        createdAt: new Date(),
+        createdAt: client.latestMealAt ?? client.patientCreatedAt,
       });
     }
   }
@@ -202,7 +223,7 @@ async function getProfessionalNotifications(userId: string): Promise<Notificatio
     .slice(0, 10);
 }
 
-async function getAdminNotifications(): Promise<NotificationItem[]> {
+async function getAdminNotifications(): Promise<Omit<NotificationItem, "read">[]> {
   const [
     pendingValidations,
     recentProfessionals,
@@ -237,7 +258,7 @@ async function getAdminNotifications(): Promise<NotificationItem[]> {
     }),
   ]);
 
-  const notifications: NotificationItem[] = [];
+  const notifications: Omit<NotificationItem, "read">[] = [];
 
   for (const validation of pendingValidations) {
     notifications.push({
@@ -291,6 +312,9 @@ async function getAdminNotifications(): Promise<NotificationItem[]> {
 interface ClientWithMissingActivity {
   patientId: string;
   name: string | null;
+  patientCreatedAt: Date;
+  latestPhotoAt: Date | null;
+  latestMealAt: Date | null;
   missingPhoto: boolean;
   missingMeal: boolean;
 }
@@ -326,21 +350,25 @@ async function getProfessionalClientsWithMissingActivity(
     }),
     prisma.user.findMany({
       where: { id: { in: patientIds } },
-      select: { id: true, name: true },
+      select: { id: true, name: true, createdAt: true },
     }),
   ]);
 
   const photoMap = new Map(latestPhotos.map((p) => [p.patientId, p._max.createdAt]));
   const mealMap = new Map(latestMeals.map((m) => [m.userId, m._max.consumedAt]));
-  const patientMap = new Map(patients.map((p) => [p.id, p.name]));
+  const patientMap = new Map(patients.map((p) => [p.id, p]));
 
   return patientIds.map((patientId) => {
     const latestPhoto = photoMap.get(patientId);
     const latestMeal = mealMap.get(patientId);
+    const patient = patientMap.get(patientId);
 
     return {
       patientId,
-      name: patientMap.get(patientId) || null,
+      name: patient?.name || null,
+      patientCreatedAt: patient?.createdAt ?? new Date(0),
+      latestPhotoAt: latestPhoto ?? null,
+      latestMealAt: latestMeal ?? null,
       missingPhoto: !latestPhoto || latestPhoto < photoCutoff,
       missingMeal: !latestMeal || latestMeal < mealCutoff,
     };

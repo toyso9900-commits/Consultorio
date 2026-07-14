@@ -198,6 +198,7 @@ export const en = {
     viewProfile: "View profile",
     weightHistory: "Weight history",
     weightEmpty: "No weight records yet. Add your first measurement.",
+    idealWeight: "Ideal weight",
     addWeight: "Add weight",
     weightInvalid: "Please enter a valid weight greater than 0.",
     weightError: "Could not save weight.",
@@ -304,6 +305,10 @@ export const en = {
     saving: "Saving...",
     updated: "Profile updated",
     updateError: "Could not update profile",
+    photoTitle: "Profile photo",
+    photoHint: "JPG, PNG or WebP. Max 2 MB.",
+    photoUpdated: "Profile photo updated",
+    photoError: "Could not upload the image",
   },
   onboarding: {
     title: "Complete your profile",
@@ -462,7 +467,6 @@ export const en = {
     licenseHeader: "License",
     statusHeader: "Status",
     modalityHeader: "Modality",
-    priceHeader: "Price",
     validated: "Validated",
     pending: "Pending",
     rejected: "Rejected",
@@ -537,7 +541,6 @@ export const en = {
     modality: "Modality",
     location: "Location",
     locationPlaceholder: "E.g. Mexico City",
-    price: "Price per consultation (MXN)",
     bio: "Biography",
     bioPlaceholder: "Tell us a bit about your experience...",
     photoTitle: "Profile photo",
@@ -550,8 +553,14 @@ export const en = {
     updateError: "Could not update profile",
     planPrice: "Personalized plan price (MXN/month)",
     planDuration: "Plan duration (text, e.g. per month)",
-    freePlanReadonly:
-      "The FREE plan is predefined generic content and cannot be edited.",
+    freePlanSection: "Free plan",
+    freePlanHelp:
+      "This free content is visible to all patients on your public profile.",
+    freePlanTitleLabel: "Free plan title",
+    freePlanTitlePlaceholder: "E.g. General free plan",
+    freePlanContentLabel: "Free plan content",
+    freePlanContentPlaceholder:
+      "Describe the free routine or content you offer to all patients...",
   },
   professionalClients: {
     title: "Clients",

@@ -1,7 +1,8 @@
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { UserCircle, Briefcase } from "lucide-react";
+import { UserCircle, Briefcase, Leaf } from "lucide-react";
 import { ProfessionalProfileForm } from "./profile-form";
+import { FreePlanForm } from "./free-plan-form";
 import { getLocale, getDictionary } from "@/lib/i18n/server";
 
 export default async function ProfessionalProfilePage() {
@@ -50,7 +51,6 @@ export default async function ProfessionalProfilePage() {
               location: professional?.location || "",
               modality: professional?.modality || "ONLINE",
               specialty: professional?.specialty || "NUTRITION",
-              price: professional?.price?.toString() || "",
               licenseNumber: professional?.licenseNumber || "",
               planPrice: professional?.planPrice?.toString() || "",
               planDuration: professional?.planDuration || "",
@@ -59,12 +59,20 @@ export default async function ProfessionalProfilePage() {
         </div>
 
         <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
-          <h2 className="text-lg font-semibold text-card-foreground">
-            {dictionary.professionalProfile.tipsTitle}
-          </h2>
-          <p className="mt-2 text-sm text-muted-foreground">
-            {dictionary.professionalProfile.tipsDescription}
-          </p>
+          <div className="mb-6 flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-950">
+              <Leaf className="h-5 w-5 text-emerald-600" />
+            </div>
+            <h2 className="text-lg font-semibold text-card-foreground">
+              {dictionary.professionalProfile.freePlanSection}
+            </h2>
+          </div>
+          <FreePlanForm
+            defaultValues={{
+              freePlanTitle: professional?.freePlanTitle || "",
+              freePlanContent: professional?.freePlanContent || "",
+            }}
+          />
         </div>
       </div>
     </div>

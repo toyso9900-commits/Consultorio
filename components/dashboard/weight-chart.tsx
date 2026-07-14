@@ -8,6 +8,7 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
+  ReferenceLine,
   ResponsiveContainer,
   ComposedChart,
 } from "recharts";
@@ -21,9 +22,10 @@ interface WeightChartDataPoint {
 
 interface WeightChartProps {
   data: WeightChartDataPoint[];
+  height?: number | null;
 }
 
-export function WeightChart({ data }: WeightChartProps) {
+export function WeightChart({ data, height }: WeightChartProps) {
   const { dictionary, locale } = useI18n();
   const resolvedTheme = useResolvedTheme();
   const gradientId = useId();
@@ -35,6 +37,20 @@ export function WeightChart({ data }: WeightChartProps) {
       day: "numeric",
     }),
   }));
+
+  // BMI 22 midpoint reference: ideal weight (kg) = 22 * (height in meters)^2
+  const idealWeight =
+    height != null && height > 0
+      ? Math.round(22 * (height / 100) ** 2 * 10) / 10
+      : null;
+
+  const yDomain: [string | ((dataMin: number) => number), string | ((dataMax: number) => number)] =
+    idealWeight != null
+      ? [
+          (dataMin: number) => Math.min(dataMin - 1, idealWeight),
+          (dataMax: number) => Math.max(dataMax + 1, idealWeight),
+        ]
+      : ["dataMin - 1", "dataMax + 1"];
 
   return (
     <div key={resolvedTheme} className="h-64 w-full">
@@ -78,7 +94,7 @@ export function WeightChart({ data }: WeightChartProps) {
               fill: "var(--muted-foreground)",
               fontSize: 12,
             }}
-            domain={["dataMin - 1", "dataMax + 1"]}
+            domain={yDomain}
           />
           <Tooltip
             contentStyle={{
@@ -109,6 +125,19 @@ export function WeightChart({ data }: WeightChartProps) {
             activeDot={{ r: 5 }}
             name={dictionary.patientHome.currentWeight}
           />
+          {idealWeight != null && (
+            <ReferenceLine
+              y={idealWeight}
+              stroke="var(--muted-foreground)"
+              strokeDasharray="4 4"
+              label={{
+                value: `${dictionary.patientHome.idealWeight} (${idealWeight} kg)`,
+                position: "insideTopRight",
+                fill: "var(--muted-foreground)",
+                fontSize: 11,
+              }}
+            />
+          )}
         </ComposedChart>
       </ResponsiveContainer>
     </div>

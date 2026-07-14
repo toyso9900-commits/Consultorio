@@ -78,6 +78,9 @@ export default async function PatientMessagesPage({ searchParams }: PageProps) {
             professionalId={professionalId}
             professionalName={professionalName}
             patientId={session!.user.id ?? ""}
+            counterpartImage={
+              conversations.find((c) => c.id === professionalId)?.image ?? null
+            }
           />
         ) : (
           <div className="flex h-full flex-col items-center justify-center rounded-2xl border border-border bg-card p-12 text-center shadow-sm">
