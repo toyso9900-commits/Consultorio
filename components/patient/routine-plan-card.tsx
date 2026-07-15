@@ -63,9 +63,6 @@ export interface PlanItemView {
 }
 
 type RoutinePlanCardLabels = {
-  markCompleted: string;
-  completed: string;
-  completedToast: string;
   planGeneralTitle: string;
   noItemsYet: string;
   waterProgress: string;
@@ -132,24 +129,10 @@ export function RoutinePlanCard({
   week,
   labels,
 }: RoutinePlanCardProps) {
-  // Presentational only: the whole-routine pill is legacy local state and
-  // is never persisted — real completion is tracked per item below.
-  const [completed, setCompleted] = useState(false);
-  const [items, setItems] = useState(initialItems);
-  const [isPending, startTransition] = useTransition();
-
-  const toggleCompleted = () => {
-    setCompleted((prev) => {
-      const next = !prev;
-      if (next) {
-        toast.success(labels.completedToast);
-      }
-      return next;
-    });
-  };
-
   // Server state is the source of truth: the card adopts the count the
   // action returns instead of guessing, so rapid taps can never desync.
+  const [items, setItems] = useState(initialItems);
+  const [isPending, startTransition] = useTransition();
   const handleToggleCheck = (item: PlanItemView) => {
     startTransition(async () => {
       const result = await toggleCheckItem(item.id);
@@ -249,20 +232,6 @@ export function RoutinePlanCard({
         <p className="mt-4 whitespace-pre-line text-sm leading-relaxed text-foreground">
           {content}
         </p>
-
-        <button
-          type="button"
-          onClick={toggleCompleted}
-          aria-pressed={completed}
-          className={`mt-6 inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold shadow-sm transition-colors ${
-            completed
-              ? "bg-stone-100 text-stone-600 hover:bg-stone-200 dark:bg-stone-800 dark:text-stone-300 dark:hover:bg-stone-700"
-              : "bg-emerald-600 text-white hover:bg-emerald-700 dark:hover:bg-emerald-500"
-          }`}
-        >
-          {completed && <Check className="h-4 w-4 text-emerald-600" />}
-          {completed ? labels.completed : labels.markCompleted}
-        </button>
 
         <div className="mt-8 border-t border-border pt-6">
           <h3 className="text-sm font-semibold text-card-foreground">

@@ -109,9 +109,6 @@ export default async function PatientRoutinePage() {
                 streak={plansByRoutineId.get(routine.id)?.streak ?? 0}
                 week={plansByRoutineId.get(routine.id)?.week ?? []}
                 labels={{
-                  markCompleted: t.markCompleted,
-                  completed: t.completed,
-                  completedToast: t.completedToast,
                   planGeneralTitle: t.planGeneralTitle,
                   noItemsYet: t.noItemsYet,
                   waterProgress: t.waterProgress,
