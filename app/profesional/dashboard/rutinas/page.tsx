@@ -4,7 +4,27 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { getProfessionalClients } from "@/lib/appointments";
 import { getLocale, getDictionary } from "@/lib/i18n/server";
-import { RoutineEditor } from "./routine-editor";
+import { ROUTINE_ITEM_ICONS, type RoutineItemIcon } from "@/lib/routine-items";
+import { RoutineEditor, type RoutineEditorItem } from "./routine-editor";
+
+/** Narrows DB rows to the editor shape; unknown icons fall back safely. */
+function toEditorItem(item: {
+  id: string;
+  type: RoutineEditorItem["type"];
+  title: string;
+  icon: string;
+  goal: number | null;
+}): RoutineEditorItem {
+  return {
+    id: item.id,
+    type: item.type,
+    title: item.title,
+    icon: (ROUTINE_ITEM_ICONS as readonly string[]).includes(item.icon)
+      ? (item.icon as RoutineItemIcon)
+      : "footprints",
+    goal: item.goal,
+  };
+}
 
 export default async function ProfessionalRoutinesPage() {
   const session = await auth();
@@ -22,7 +42,15 @@ export default async function ProfessionalRoutinesPage() {
     getProfessionalClients(professionalId),
     prisma.routine.findMany({
       where: { professionalId },
-      select: { patientId: true, title: true, content: true },
+      select: {
+        patientId: true,
+        title: true,
+        content: true,
+        items: {
+          orderBy: { sortOrder: "asc" },
+          select: { id: true, type: true, title: true, icon: true, goal: true },
+        },
+      },
     }),
   ]);
 
@@ -71,6 +99,7 @@ export default async function ProfessionalRoutinesPage() {
                     patientId={client.patientId}
                     initialTitle={routine?.title ?? ""}
                     initialContent={routine?.content ?? ""}
+                    initialItems={routine?.items.map(toEditorItem) ?? []}
                   />
                 ) : (
                   <div className="mt-4 flex items-center gap-2 rounded-xl bg-muted px-4 py-3 text-sm text-muted-foreground">

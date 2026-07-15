@@ -32,7 +32,7 @@ Chain strategy: pending
 - [x] 1.3 Create `lib/routine-items.ts`: icon allowlist, Zod item schema, `WATER_STEP_ML = 250`. (DPT-003)
 - [x] 1.4 Create `lib/daily-plan.ts`: `getDailyPlanForPatient` — items + today's completions. (DPT-001, DPT-002, DPT-005)
 - [x] 1.5 Extend `publishRoutineForPatient` (`profesional/dashboard/rutinas/actions.ts`): items[] reconcile-by-id in `$transaction`; reject non-subscriber/cross-professional. (REQ-006, REQ-002 MOD, DPT-009)
-- [ ] 1.6 Add item editor subsection to `routine-editor.tsx` (add/remove/reorder, type/icon/goal). (REQ-006)
+- [x] 1.6 Add item editor subsection to `routine-editor.tsx` (add/remove/reorder, type/icon/goal). (REQ-006)
 - [ ] 1.7 Create patient `rutina/actions.ts`: `toggleCheckItem`, `adjustWaterItem` (±250, clamp [0, goal]), `saveDetectedTimezone` (write-if-null, Intl-validated); ownership + subscription guards. (DPT-002/003/004)
 - [ ] 1.8 Update patient `rutina/page.tsx`: fetch view model, mount `TimezoneAutoDetect` island; REQ-004 gating unchanged. (REQ-007)
 - [ ] 1.9 Rework `components/patient/routine-plan-card.tsx`: CHECK toggle + WATER stepper rows, empty state; drop placeholder rows. (REQ-007, DPT-002/003)

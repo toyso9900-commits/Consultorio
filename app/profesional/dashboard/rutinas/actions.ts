@@ -81,7 +81,7 @@ export async function publishRoutineForPatient(
     // this pair — the (patientId, professionalId) key is the ownership
     // check, so another professional's routine is never touched — then
     // reconcile its items by id.
-    const routine = await prisma.$transaction(async (tx) => {
+    const { routine, savedItems } = await prisma.$transaction(async (tx) => {
       const upserted = await tx.routine.upsert({
         where: { patientId_professionalId: { patientId, professionalId } },
         create: {
@@ -96,11 +96,20 @@ export async function publishRoutineForPatient(
         },
       });
 
+      let reconciledItems;
       if (parsedItems !== undefined) {
         await reconcileRoutineItems(tx, upserted.id, parsedItems);
+        // Return the post-reconcile rows so the editor can swap optimistic
+        // id-less state for real ids (re-saving without them would delete +
+        // recreate items and lose completion history, REQ-002 MOD).
+        reconciledItems = await tx.routineItem.findMany({
+          where: { routineId: upserted.id },
+          orderBy: { sortOrder: "asc" },
+          select: { id: true, type: true, title: true, icon: true, goal: true },
+        });
       }
 
-      return upserted;
+      return { routine: upserted, savedItems: reconciledItems };
     });
 
     revalidatePath("/profesional/dashboard/rutinas");
@@ -113,7 +122,7 @@ export async function publishRoutineForPatient(
       title: routine.title,
     });
 
-    return { success: true };
+    return { success: true, items: savedItems };
   } catch {
     return { success: false, error: "Could not save the routine." };
   }
