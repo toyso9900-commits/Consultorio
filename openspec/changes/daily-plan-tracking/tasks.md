@@ -48,8 +48,8 @@ Chain strategy: pending
 
 ## Slice 3: Streaks + Weekly
 
-- [ ] 3.1 Extend `lib/daily-plan.ts`: streak walk-back (cap 365; in-progress today never breaks) + Mon–Sun week. (DPT-007, DPT-008)
-- [ ] 3.2 Card: streak badge + 7-day strip; es+en keys. (DPT-007, DPT-008)
+- [x] 3.1 Extend `lib/daily-plan.ts`: streak walk-back (cap 365; in-progress today never breaks) + Mon–Sun week. (DPT-007, DPT-008)
+- [x] 3.2 Card: streak badge + 7-day strip; es+en keys. (DPT-007, DPT-008)
 - [ ] 3.3 Verify S3: gates; smoke — streak increments, missed day ⇒ 0, tz change rebases boundaries.
 
 All schema changes in 1.1; S2/S3 code-only. Non-blocking PO question: Mon–Sun week vs trailing 7 days.
