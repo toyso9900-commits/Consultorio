@@ -115,7 +115,7 @@ export default async function PatientRoutinePage() {
                   waterProgress: t.waterProgress,
                   waterAdd: t.waterAdd,
                   waterRemove: t.waterRemove,
-                  mealsGoal: t.mealsGoal,
+                  mealsProgress: t.mealsProgress,
                   autoBadge: t.autoBadge,
                   trackError: t.trackError,
                 }}

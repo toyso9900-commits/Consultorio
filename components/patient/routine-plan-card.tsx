@@ -40,7 +40,7 @@ export interface PlanItemView {
   icon: string;
   /** ml for WATER, meal count for AUTO_MEALS; always null for CHECK. */
   goal: number | null;
-  /** CHECK: 0/1 · WATER: ml today · AUTO_MEALS: 0 until S2 derives it. */
+  /** CHECK: 0/1 · WATER: ml today · AUTO_MEALS: meals logged today. */
   count: number;
   satisfied: boolean;
   readOnly: boolean;
@@ -55,7 +55,7 @@ type RoutinePlanCardLabels = {
   waterProgress: string;
   waterAdd: string;
   waterRemove: string;
-  mealsGoal: string;
+  mealsProgress: string;
   autoBadge: string;
   trackError: string;
 };
@@ -248,9 +248,8 @@ export function RoutinePlanCard({
                   );
                 }
 
-                // AUTO_MEALS: read-only row. The MealEntry derivation lands
-                // in S2 — for now the count is intentionally not wired and
-                // the row shows only the goal plus a neutral "auto" badge.
+                // AUTO_MEALS: read-only row (DPT-006) — the count is
+                // derived server-side from MealEntry; no manual control.
                 if (item.type === "AUTO_MEALS") {
                   return (
                     <li key={item.id} className="flex items-center gap-3">
@@ -261,11 +260,20 @@ export function RoutinePlanCard({
                         <p className="text-sm text-foreground">{item.title}</p>
                         {item.goal != null && (
                           <p className="text-xs text-muted-foreground">
-                            {fill(labels.mealsGoal, { goal: item.goal })}
+                            {fill(labels.mealsProgress, {
+                              count: item.count,
+                              goal: item.goal,
+                            })}
                           </p>
                         )}
                       </div>
-                      <span className="shrink-0 rounded-full bg-stone-100 px-3 py-1 text-xs font-medium text-stone-500 dark:bg-stone-800 dark:text-stone-400">
+                      <span
+                        className={`shrink-0 rounded-full px-3 py-1 text-xs font-medium ${
+                          item.satisfied
+                            ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300"
+                            : "bg-stone-100 text-stone-500 dark:bg-stone-800 dark:text-stone-400"
+                        }`}
+                      >
                         {labels.autoBadge}
                       </span>
                     </li>

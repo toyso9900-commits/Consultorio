@@ -691,7 +691,7 @@ export const en = {
     waterProgress: "{count} / {goal} ml",
     waterAdd: "Add 250 ml of water",
     waterRemove: "Remove 250 ml of water",
-    mealsGoal: "{goal} meals a day",
+    mealsProgress: "{count}/{goal} meals logged today",
     autoBadge: "Automatic",
     trackError: "Could not save your progress. Please try again.",
   },

@@ -43,7 +43,7 @@ Chain strategy: pending
 ## Slice 2: AUTO_MEALS
 
 - [x] 2.1 Extend `lib/daily-plan.ts`: read-time `MealEntry` count in local-day window, `satisfied`/`readOnly` flags. (DPT-006)
-- [ ] 2.2 Card: read-only AUTO_MEALS row "X/Y" + `autoBadge`; es+en keys. (DPT-006)
+- [x] 2.2 Card: read-only AUTO_MEALS row "X/Y" + `autoBadge`; es+en keys. (DPT-006)
 - [ ] 2.3 Verify S2: gates; smoke — 2/3 renders without toggle; meal delete recomputes next load.
 
 ## Slice 3: Streaks + Weekly

@@ -695,7 +695,7 @@ export const es = {
     waterProgress: "{count} / {goal} ml",
     waterAdd: "Sumar 250 ml de agua",
     waterRemove: "Restar 250 ml de agua",
-    mealsGoal: "{goal} comidas al día",
+    mealsProgress: "{count}/{goal} comidas registradas hoy",
     autoBadge: "Automático",
     trackError: "No se pudo guardar tu progreso. Intentá de nuevo.",
   },
