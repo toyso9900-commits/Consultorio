@@ -694,6 +694,13 @@ export const es = {
     planWalk: "Caminata diaria",
     planWater: "Tomar agua",
     planMeals: "Comidas del día",
+    noItemsYet: "Tu profesional todavía no agregó ítems a tu plan.",
+    waterProgress: "{count} / {goal} ml",
+    waterAdd: "Sumar 250 ml de agua",
+    waterRemove: "Restar 250 ml de agua",
+    mealsGoal: "{goal} comidas al día",
+    autoBadge: "Automático",
+    trackError: "No se pudo guardar tu progreso. Intentá de nuevo.",
   },
   professionalRoutines: {
     title: "Rutinas",

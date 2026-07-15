@@ -690,6 +690,13 @@ export const en = {
     planWalk: "Daily walk",
     planWater: "Drink water",
     planMeals: "Meals of the day",
+    noItemsYet: "Your professional has not added items to your plan yet.",
+    waterProgress: "{count} / {goal} ml",
+    waterAdd: "Add 250 ml of water",
+    waterRemove: "Remove 250 ml of water",
+    mealsGoal: "{goal} meals a day",
+    autoBadge: "Automatic",
+    trackError: "Could not save your progress. Please try again.",
   },
   professionalRoutines: {
     title: "Routines",
