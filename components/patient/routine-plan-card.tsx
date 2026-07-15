@@ -6,6 +6,7 @@ import {
   Check,
   Droplets,
   Dumbbell,
+  Flame,
   Footprints,
   Heart,
   Leaf,
@@ -27,6 +28,21 @@ import type { RoutineItemIcon } from "@/lib/routine-items";
 const WATER_STEP_ML = 250;
 
 export type PlanItemType = "CHECK" | "WATER" | "AUTO_MEALS";
+
+/** Mirror of WeekDayState in lib/daily-plan.ts (server read model). */
+export type WeekDayState = "complete" | "partial" | "empty" | "future";
+
+/**
+ * One day of the Monday–Sunday strip (DPT-008), derived server-side in the
+ * user's timezone. Local type so the client bundle never imports the
+ * server read model.
+ */
+export interface WeekDayView {
+  /** User-local calendar date, "YYYY-MM-DD". */
+  date: string;
+  state: WeekDayState;
+  isToday: boolean;
+}
 
 /**
  * Server-assembled view model for one plan item (lib/daily-plan.ts).
@@ -58,6 +74,14 @@ type RoutinePlanCardLabels = {
   mealsProgress: string;
   autoBadge: string;
   trackError: string;
+  streakLabel: string;
+  weekStripLabel: string;
+  /** Comma-separated weekday initials, Monday first (7 entries). */
+  weekDaysShort: string;
+  dayStateComplete: string;
+  dayStatePartial: string;
+  dayStateEmpty: string;
+  dayStateFuture: string;
 };
 
 type RoutinePlanCardProps = {
@@ -65,6 +89,10 @@ type RoutinePlanCardProps = {
   secondaryLine: string;
   content: string;
   items: PlanItemView[];
+  /** Consecutive complete days per DPT-007 (server-derived). */
+  streak: number;
+  /** Monday–Sunday completion states per DPT-008 (server-derived). */
+  week: WeekDayView[];
   labels: RoutinePlanCardLabels;
 };
 
@@ -100,6 +128,8 @@ export function RoutinePlanCard({
   secondaryLine,
   content,
   items: initialItems,
+  streak,
+  week,
   labels,
 }: RoutinePlanCardProps) {
   // Presentational only: the whole-routine pill is legacy local state and
@@ -158,6 +188,21 @@ export function RoutinePlanCard({
     });
   };
 
+  const dayInitials = labels.weekDaysShort.split(",").map((day) => day.trim());
+
+  const dayStateLabel = (state: WeekDayState): string => {
+    switch (state) {
+      case "complete":
+        return labels.dayStateComplete;
+      case "partial":
+        return labels.dayStatePartial;
+      case "empty":
+        return labels.dayStateEmpty;
+      case "future":
+        return labels.dayStateFuture;
+    }
+  };
+
   return (
     <div className="relative overflow-hidden rounded-2xl border border-border bg-card p-6 shadow-sm sm:p-8">
       {/* Decorative corner leaves — purely ornamental. */}
@@ -171,10 +216,36 @@ export function RoutinePlanCard({
       />
 
       <div className="relative">
-        <h2 className="text-xl font-bold text-card-foreground sm:text-2xl">
-          {title}
-        </h2>
-        <p className="mt-1 text-sm text-muted-foreground">{secondaryLine}</p>
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <h2 className="text-xl font-bold text-card-foreground sm:text-2xl">
+              {title}
+            </h2>
+            <p className="mt-1 text-sm text-muted-foreground">{secondaryLine}</p>
+          </div>
+          {/* Streak badge (DPT-007): consecutive complete days. A streak of
+              zero renders muted — the day is still in progress. */}
+          {initialItems.length > 0 && (
+            <span
+              aria-label={fill(labels.streakLabel, { count: streak })}
+              className={`inline-flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold ${
+                streak > 0
+                  ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300"
+                  : "bg-stone-100 text-stone-500 dark:bg-stone-800 dark:text-stone-400"
+              }`}
+            >
+              <Flame
+                aria-hidden="true"
+                className={`h-4 w-4 ${
+                  streak > 0
+                    ? "text-emerald-600 dark:text-emerald-400"
+                    : "text-stone-400 dark:text-stone-500"
+                }`}
+              />
+              {fill(labels.streakLabel, { count: streak })}
+            </span>
+          )}
+        </div>
         <p className="mt-4 whitespace-pre-line text-sm leading-relaxed text-foreground">
           {content}
         </p>
@@ -307,6 +378,51 @@ export function RoutinePlanCard({
                 );
               })}
             </ul>
+          )}
+
+          {/* Weekly strip (DPT-008): Monday–Sunday completion states,
+              derived server-side in the user's timezone. Read-only. */}
+          {initialItems.length > 0 && week.length === 7 && (
+            <div
+              className="mt-6 border-t border-border pt-4"
+              role="group"
+              aria-label={labels.weekStripLabel}
+            >
+              <ol className="grid grid-cols-7 gap-2">
+                {week.map((day, index) => (
+                  <li
+                    key={day.date}
+                    className="flex flex-col items-center gap-1.5"
+                  >
+                    <span className="text-xs text-muted-foreground">
+                      {dayInitials[index] ?? ""}
+                    </span>
+                    <span
+                      aria-label={`${dayInitials[index] ?? day.date}: ${dayStateLabel(day.state)}`}
+                      className={`flex h-7 w-7 items-center justify-center rounded-full ${
+                        day.state === "complete"
+                          ? "bg-emerald-600 text-white"
+                          : day.state === "partial"
+                            ? "bg-emerald-100 text-emerald-600 dark:bg-emerald-950 dark:text-emerald-400"
+                            : day.state === "empty"
+                              ? "border border-stone-300 dark:border-stone-600"
+                              : "border border-dashed border-stone-200 dark:border-stone-700"
+                      } ${day.isToday ? "ring-2 ring-emerald-600 dark:ring-emerald-500" : ""}`}
+                    >
+                      {day.state === "complete" && (
+                        <Check aria-hidden="true" className="h-3.5 w-3.5" />
+                      )}
+                      {day.state === "partial" && (
+                        <span
+                          aria-hidden="true"
+                          className="h-1.5 w-1.5 rounded-full bg-current"
+                        />
+                      )}
+                    </span>
+                  </li>
+                ))}
+              </ol>
+            </div>
           )}
         </div>
       </div>

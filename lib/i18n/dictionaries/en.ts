@@ -697,6 +697,13 @@ export const en = {
     mealsProgress: "{count}/{goal} meals logged today",
     autoBadge: "Automatic",
     trackError: "Could not save your progress. Please try again.",
+    streakLabel: "{count}-day streak",
+    weekStripLabel: "Your week",
+    weekDaysShort: "M,T,W,T,F,S,S",
+    dayStateComplete: "Complete day",
+    dayStatePartial: "Partially completed day",
+    dayStateEmpty: "No activity",
+    dayStateFuture: "Upcoming day",
   },
   professionalRoutines: {
     title: "Routines",

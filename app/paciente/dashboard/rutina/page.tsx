@@ -54,8 +54,8 @@ export default async function PatientRoutinePage() {
     routines.map((routine) => routine.id),
     user?.timezone ?? null
   );
-  const itemsByRoutineId = new Map(
-    dailyPlans.map((plan) => [plan.routineId, plan.items])
+  const plansByRoutineId = new Map(
+    dailyPlans.map((plan) => [plan.routineId, plan])
   );
 
   return (
@@ -105,7 +105,9 @@ export default async function PatientRoutinePage() {
                   routine.updatedAt.toLocaleDateString(locale)
                 )}`}
                 content={routine.content}
-                items={itemsByRoutineId.get(routine.id) ?? []}
+                items={plansByRoutineId.get(routine.id)?.items ?? []}
+                streak={plansByRoutineId.get(routine.id)?.streak ?? 0}
+                week={plansByRoutineId.get(routine.id)?.week ?? []}
                 labels={{
                   markCompleted: t.markCompleted,
                   completed: t.completed,
@@ -118,6 +120,13 @@ export default async function PatientRoutinePage() {
                   mealsProgress: t.mealsProgress,
                   autoBadge: t.autoBadge,
                   trackError: t.trackError,
+                  streakLabel: t.streakLabel,
+                  weekStripLabel: t.weekStripLabel,
+                  weekDaysShort: t.weekDaysShort,
+                  dayStateComplete: t.dayStateComplete,
+                  dayStatePartial: t.dayStatePartial,
+                  dayStateEmpty: t.dayStateEmpty,
+                  dayStateFuture: t.dayStateFuture,
                 }}
               />
             </li>
