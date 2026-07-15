@@ -683,6 +683,13 @@ export const en = {
       "Your professional has not published your personalized routine yet. We will let you know when it is ready.",
     publishedBy: "Published by {name}",
     updatedAt: "Updated on {date}",
+    markCompleted: "Mark as completed",
+    completed: "Completed",
+    completedToast: "Routine marked as completed!",
+    planGeneralTitle: "General plan",
+    planWalk: "Daily walk",
+    planWater: "Drink water",
+    planMeals: "Meals of the day",
   },
   professionalRoutines: {
     title: "Routines",
