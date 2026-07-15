@@ -48,6 +48,8 @@ model User {
   password      String?
   lastSeenAt    DateTime?
   notificationsReadAt DateTime?
+  // IANA timezone for day-boundary logic; null falls back to server-local.
+  timezone      String?
 
   accounts Account[]
   sessions Session[]
@@ -73,6 +75,7 @@ model User {
   patientSubscriptionsAsProfessional PatientSubscription[] @relation("PatientSubsAsProfessional")
   routinesAsPatient                  Routine[]             @relation("RoutinesAsPatient")
   routinesAsProfessional             Routine[]             @relation("RoutinesAsProfessional")
+  routineItemCompletions             RoutineItemCompletion[]
   paymentsAsPayer                    Payment[]             @relation("PaymentsAsPayer")
   paymentsAsPayee                    Payment[]             @relation("PaymentsAsPayee")
 
@@ -401,10 +404,59 @@ model Routine {
   title   String
   content String @db.Text
 
+  items RoutineItem[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@unique([patientId, professionalId])
+}
+
+enum RoutineItemType {
+  CHECK
+  WATER
+  AUTO_MEALS
+}
+
+// Trackable plan item authored by the professional on a routine (DPT-001).
+model RoutineItem {
+  id        String          @id @default(cuid())
+  routineId String
+  routine   Routine         @relation(fields: [routineId], references: [id], onDelete: Cascade)
+  type      RoutineItemType @default(CHECK)
+  title     String
+  // lucide key, validated server-side against an allowlist.
+  icon      String
+  // ml (WATER) / meal count (AUTO_MEALS); null for CHECK.
+  goal      Int?
+  sortOrder Int             @default(0)
+
+  completions RoutineItemCompletion[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([routineId, sortOrder])
+}
+
+// Per-day completion state for a plan item; lazy reset = new local day has no
+// rows. `date` is the user's local date stored as UTC midnight (@db.Date is
+// DST-safe). Deleting an item cascade-deletes its history (DPT-009).
+model RoutineItemCompletion {
+  id        String      @id @default(cuid())
+  itemId    String
+  item      RoutineItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  patientId String
+  patient   User        @relation(fields: [patientId], references: [id], onDelete: Cascade)
+
+  // CHECK: 0/1 · WATER: ml accumulated · AUTO_MEALS is derived read-time and
+  // never persisted.
+  date        DateTime  @db.Date
+  count       Int       @default(0)
+  completedAt DateTime?
+
+  @@unique([itemId, patientId, date])
+  @@index([patientId, date])
 }
 
 // Audit trail for simulated (V1) or real (future) payments
