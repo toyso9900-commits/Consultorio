@@ -261,15 +261,23 @@ export const es = {
   },
   patientExperts: {
     backToDashboard: "← Volver al panel",
-    title: "Guía de Expertos",
+    title: "Guía de Expertos NutriBalance",
     description:
       "Encontrá nutriólogos y entrenadores verificados. Compará perfiles, precios y modalidades antes de contratar.",
-    searchPlaceholder: "Buscar por nombre...",
-    allSpecialties: "Todas las especialidades",
+    searchPlaceholder: "Buscar experto por nombre...",
+    typeFilterLabel: "Ver tipo de profesional:",
+    typeOptions: {
+      all: "Nutriólogo y Entrenador",
+      nutritionist: "Solo Nutriólogo",
+      trainer: "Solo Entrenador",
+    },
+    clearFilters: "Limpiar filtros",
     noResults: "No se encontraron expertos con esos criterios.",
     featured: "Destacado",
     ratingCount: "{count} valoraciones",
     viewProfile: "Ver perfil",
+    contact: "Contactar",
+    sendMessage: "Enviar mensaje",
     specialties: {
       nutrition: "Nutrición",
       training: "Entrenamiento",

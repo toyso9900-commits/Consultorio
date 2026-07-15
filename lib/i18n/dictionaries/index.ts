@@ -50,11 +50,14 @@ export interface Dictionary {
     title: string;
     description: string;
     searchPlaceholder: string;
-    allSpecialties: string;
+    typeFilterLabel: string;
+    typeOptions: Record<keyof typeof es.patientExperts.typeOptions, string>;
+    clearFilters: string;
     noResults: string;
     featured: string;
     ratingCount: string;
     viewProfile: string;
+    sendMessage: string;
     specialties: Record<keyof typeof es.patientExperts.specialties, string>;
   };
   patientDocuments: Record<keyof typeof es.patientDocuments, string>;

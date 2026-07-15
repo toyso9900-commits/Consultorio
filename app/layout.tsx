@@ -107,12 +107,14 @@ export default async function RootLayout({
           )}
           {children}
           <Toaster position="top-right" richColors />
-          <footer className="mt-auto border-t border-border bg-card py-10 text-center text-sm text-muted-foreground">
-            <div className="mx-auto max-w-6xl px-6">
-              <p>{dictionary.footer.copyright.replace("{year}", String(currentYear))}</p>
-              <p className="mt-1">{dictionary.footer.tagline}</p>
-            </div>
-          </footer>
+          {!session?.user && (
+            <footer className="mt-auto border-t border-border bg-card py-10 text-center text-sm text-muted-foreground">
+              <div className="mx-auto max-w-6xl px-6">
+                <p>{dictionary.footer.copyright.replace("{year}", String(currentYear))}</p>
+                <p className="mt-1">{dictionary.footer.tagline}</p>
+              </div>
+            </footer>
+          )}
         </Providers>
       </body>
     </html>

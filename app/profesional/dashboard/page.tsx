@@ -1,6 +1,10 @@
 import { getSession } from "@/lib/session";
 import { prisma } from "@/lib/prisma";
-import { getAppointmentDashboardCounts, startOfToday, endOfToday } from "@/lib/appointments";
+import {
+  getAppointmentDashboardCounts,
+  startOfToday,
+  endOfToday,
+} from "@/lib/appointments";
 import {
   CalendarDays,
   Crown,
@@ -46,7 +50,9 @@ export default async function ProfessionalDashboardPage() {
   const pendingProfessionals = isAdmin
     ? await prisma.professionalProfile.findMany({
         where: { isValidated: false, rejectedAt: null },
-        include: { user: { select: { id: true, email: true, name: true, image: true } } },
+        include: {
+          user: { select: { id: true, email: true, name: true, image: true } },
+        },
         orderBy: { createdAt: "desc" },
       })
     : [];
@@ -76,7 +82,9 @@ export default async function ProfessionalDashboardPage() {
 
   const now = new Date();
   const currentPeriodStart = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
-  const previousPeriodStart = new Date(now.getTime() - 60 * 24 * 60 * 60 * 1000);
+  const previousPeriodStart = new Date(
+    now.getTime() - 60 * 24 * 60 * 60 * 1000,
+  );
 
   const [
     currentUsers,
@@ -132,7 +140,7 @@ export default async function ProfessionalDashboardPage() {
 
   const notifications = await getNotifications(
     session!.user.id!,
-    (role as "ADMIN" | "PROFESSIONAL" | "PATIENT") ?? "PATIENT"
+    (role as "ADMIN" | "PROFESSIONAL" | "PATIENT") ?? "PATIENT",
   );
 
   if (isAdmin) {
@@ -251,14 +259,29 @@ export default async function ProfessionalDashboardPage() {
               <MetricItem
                 label={dictionary.adminDashboard.professionals}
                 value={professionalCount}
-                trend={formatTrend(currentProfessionals, previousProfessionals).trend}
-                positive={formatTrend(currentProfessionals, previousProfessionals).positive}
+                trend={
+                  formatTrend(currentProfessionals, previousProfessionals).trend
+                }
+                positive={
+                  formatTrend(currentProfessionals, previousProfessionals)
+                    .positive
+                }
               />
               <MetricItem
                 label={dictionary.adminDashboard.revenue}
                 value={`$${premiumSubscriptions * 299 + proSubscriptions * 2499}`}
-                trend={formatTrend(currentPaidSubscriptions, previousPaidSubscriptions).trend}
-                positive={formatTrend(currentPaidSubscriptions, previousPaidSubscriptions).positive}
+                trend={
+                  formatTrend(
+                    currentPaidSubscriptions,
+                    previousPaidSubscriptions,
+                  ).trend
+                }
+                positive={
+                  formatTrend(
+                    currentPaidSubscriptions,
+                    previousPaidSubscriptions,
+                  ).positive
+                }
               />
               <MetricItem
                 label={dictionary.adminDashboard.reviews}
@@ -300,7 +323,8 @@ export default async function ProfessionalDashboardPage() {
                         ))}
                       </div>
                       <span className="text-xs text-muted-foreground dark:text-stone-400">
-                        {review.patient.name || dictionary.adminDashboard.noName}
+                        {review.patient.name ||
+                          dictionary.adminDashboard.noName}
                       </span>
                     </div>
                     <p className="mb-3 text-sm text-foreground dark:text-stone-200">
@@ -370,7 +394,8 @@ export default async function ProfessionalDashboardPage() {
               <div className="flex items-center gap-1.5">
                 <span className="h-3 w-3 rounded-full bg-accent-blue dark:bg-emerald-500" />
                 <span className="text-muted-foreground dark:text-stone-400">
-                  {dictionary.adminDashboard.premiumPlan} ({premiumSubscriptions})
+                  {dictionary.adminDashboard.premiumPlan} (
+                  {premiumSubscriptions})
                 </span>
               </div>
               <div className="flex items-center gap-1.5">
@@ -390,8 +415,10 @@ export default async function ProfessionalDashboardPage() {
     where: { userId: session!.user.id },
   });
 
-  const { upcoming: upcomingAppointmentsCount, activePatients: activePatientsCount } =
-    await getAppointmentDashboardCounts(session!.user.id!, "PROFESSIONAL");
+  const {
+    upcoming: upcomingAppointmentsCount,
+    activePatients: activePatientsCount,
+  } = await getAppointmentDashboardCounts(session!.user.id!, "PROFESSIONAL");
 
   const activeSubscription = await prisma.subscription.findFirst({
     where: {
@@ -464,7 +491,10 @@ export default async function ProfessionalDashboardPage() {
       <header className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-foreground dark:text-stone-100 sm:text-3xl">
-            {dictionary.professionalDashboard.greeting.replace("{name}", firstName)}
+            {dictionary.professionalDashboard.greeting.replace(
+              "{name}",
+              firstName,
+            )}
           </h1>
           <p className="mt-1 text-emerald-600 dark:text-emerald-400">
             {dictionary.professionalDashboard.businessSubtitle}
@@ -495,7 +525,9 @@ export default async function ProfessionalDashboardPage() {
 
       {!professional?.isValidated && (
         <div className="rounded-2xl border border-amber-200 bg-amber-50 p-5 text-amber-800 dark:border-amber-900 dark:bg-amber-950 dark:text-amber-200">
-          <p className="text-sm">{dictionary.professionalDashboard.pendingValidation}</p>
+          <p className="text-sm">
+            {dictionary.professionalDashboard.pendingValidation}
+          </p>
         </div>
       )}
 
@@ -574,7 +606,8 @@ export default async function ProfessionalDashboardPage() {
                     </div>
                     <div>
                       <p className="font-semibold text-foreground dark:text-stone-100">
-                        {appointment.patient.name || dictionary.adminDashboard.noName}
+                        {appointment.patient.name ||
+                          dictionary.adminDashboard.noName}
                       </p>
                       <p className="text-xs text-muted-foreground dark:text-stone-400">
                         {appointment.scheduledAt.toLocaleTimeString(locale, {
@@ -786,7 +819,7 @@ export default async function ProfessionalDashboardPage() {
         <div className="rounded-2xl bg-card p-6 shadow-sm dark:bg-stone-800/80">
           <div className="mb-4 flex items-center justify-between">
             <h2 className="text-lg font-semibold text-foreground dark:text-stone-100">
-            {dictionary.professionalDashboard.subscriptionStatusTitle}
+              {dictionary.professionalDashboard.subscriptionStatusTitle}
             </h2>
             <span
               className={`rounded-full px-2.5 py-1 text-xs font-semibold ${
@@ -801,11 +834,15 @@ export default async function ProfessionalDashboardPage() {
             </span>
           </div>
           <p className="text-sm text-muted-foreground dark:text-stone-300">
-            {dictionary.professionalDashboard.plan} {latestSubscription?.plan ?? "Free"} -{" "}
+            {dictionary.professionalDashboard.plan}{" "}
+            {latestSubscription?.plan ?? "Free"} -{" "}
             {hasActiveSubscription
               ? dictionary.professionalDashboard.subscriptionStatus
                   .replace("{status}", "active")
-                  .replace("{plan}", latestSubscription?.plan.toLowerCase() ?? "free")
+                  .replace(
+                    "{plan}",
+                    latestSubscription?.plan.toLowerCase() ?? "free",
+                  )
               : dictionary.professionalDashboard.noSubscription}
           </p>
           <Link
@@ -832,8 +869,12 @@ export default async function ProfessionalDashboardPage() {
                 const d = new Date(a.scheduledAt);
                 return isSameLocalDate(d, dayDate);
               });
-              const confirmed = dayAppointments.some((a) => a.status === "CONFIRMED");
-              const pending = dayAppointments.some((a) => a.status === "REQUESTED");
+              const confirmed = dayAppointments.some(
+                (a) => a.status === "CONFIRMED",
+              );
+              const pending = dayAppointments.some(
+                (a) => a.status === "REQUESTED",
+              );
               return (
                 <div
                   key={i}
@@ -841,8 +882,8 @@ export default async function ProfessionalDashboardPage() {
                     confirmed
                       ? "bg-emerald-500 text-white"
                       : pending
-                      ? "bg-amber-400 text-white"
-                      : "bg-muted text-muted-foreground dark:bg-stone-700/30 dark:text-stone-400"
+                        ? "bg-amber-400 text-white"
+                        : "bg-muted text-muted-foreground dark:bg-stone-700/30 dark:text-stone-400"
                   }`}
                 >
                   {dayDate.getDate()}
@@ -870,7 +911,10 @@ export default async function ProfessionalDashboardPage() {
   );
 }
 
-function formatTrend(current: number, previous: number): { trend: string; positive: boolean } {
+function formatTrend(
+  current: number,
+  previous: number,
+): { trend: string; positive: boolean } {
   if (previous === 0) {
     return { trend: current > 0 ? "+100%" : "0%", positive: current > 0 };
   }
@@ -888,10 +932,16 @@ function formatRelativeTime(date: Date, dictionary: Dictionary): string {
 
   if (diffMinutes < 1) return "Ahora";
   if (diffMinutes < 60) {
-    return dictionary.adminDashboard.minutesAgo.replace("{count}", String(diffMinutes));
+    return dictionary.adminDashboard.minutesAgo.replace(
+      "{count}",
+      String(diffMinutes),
+    );
   }
   if (diffHours < 24) {
-    return dictionary.adminDashboard.hoursAgo.replace("{count}", String(diffHours));
+    return dictionary.adminDashboard.hoursAgo.replace(
+      "{count}",
+      String(diffHours),
+    );
   }
   return `${diffDays} d`;
 }
@@ -903,8 +953,15 @@ interface SystemActivityEvent {
   createdAt: Date;
 }
 
-async function getAdminSystemActivity(dictionary: Dictionary): Promise<SystemActivityEvent[]> {
-  const [recentProfessionals, recentValidated, recentSubscriptions, recentReviews] = await Promise.all([
+async function getAdminSystemActivity(
+  dictionary: Dictionary,
+): Promise<SystemActivityEvent[]> {
+  const [
+    recentProfessionals,
+    recentValidated,
+    recentSubscriptions,
+    recentReviews,
+  ] = await Promise.all([
     prisma.professionalProfile.findMany({
       include: { user: { select: { name: true } } },
       orderBy: { createdAt: "desc" },
@@ -956,7 +1013,9 @@ async function getAdminSystemActivity(dictionary: Dictionary): Promise<SystemAct
     events.push({
       id: `sub-${sub.id}`,
       label: `${
-        sub.plan === "PRO" ? "Suscripción Pro activada" : dictionary.adminDashboard.activityPremiumActivated
+        sub.plan === "PRO"
+          ? "Suscripción Pro activada"
+          : dictionary.adminDashboard.activityPremiumActivated
       }: ${sub.user.name || dictionary.adminDashboard.noName}`,
       relativeTime: formatRelativeTime(sub.startedAt, dictionary),
       createdAt: sub.startedAt,
@@ -986,7 +1045,9 @@ interface PracticeMetrics {
   retentionTrend: number;
 }
 
-async function getProfessionalPracticeMetrics(professionalId: string): Promise<PracticeMetrics> {
+async function getProfessionalPracticeMetrics(
+  professionalId: string,
+): Promise<PracticeMetrics> {
   const now = new Date();
   const currentStart = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
   const previousStart = new Date(now.getTime() - 60 * 24 * 60 * 60 * 1000);
@@ -1011,13 +1072,19 @@ async function getProfessionalPracticeMetrics(professionalId: string): Promise<P
       ? currentActivePatients > 0
         ? 100
         : 0
-      : Math.round(((currentActivePatients - previousActivePatients) / previousActivePatients) * 100);
+      : Math.round(
+          ((currentActivePatients - previousActivePatients) /
+            previousActivePatients) *
+            100,
+        );
   const upcomingAppointmentsTrend =
     previousUpcoming === 0
       ? currentUpcoming > 0
         ? 100
         : 0
-      : Math.round(((currentUpcoming - previousUpcoming) / previousUpcoming) * 100);
+      : Math.round(
+          ((currentUpcoming - previousUpcoming) / previousUpcoming) * 100,
+        );
   const retentionTrend =
     previousRetention === 0
       ? currentRetention > 0
@@ -1033,7 +1100,10 @@ async function getProfessionalPracticeMetrics(professionalId: string): Promise<P
   };
 }
 
-async function getActivePatientsAt(professionalId: string, asOfDate: Date): Promise<number> {
+async function getActivePatientsAt(
+  professionalId: string,
+  asOfDate: Date,
+): Promise<number> {
   const groups = await prisma.appointment.groupBy({
     by: ["patientId"],
     where: {
@@ -1045,7 +1115,10 @@ async function getActivePatientsAt(professionalId: string, asOfDate: Date): Prom
   return groups.length;
 }
 
-async function getUpcomingAppointmentsAt(professionalId: string, asOfDate: Date): Promise<number> {
+async function getUpcomingAppointmentsAt(
+  professionalId: string,
+  asOfDate: Date,
+): Promise<number> {
   return prisma.appointment.count({
     where: {
       professionalId,
@@ -1055,7 +1128,10 @@ async function getUpcomingAppointmentsAt(professionalId: string, asOfDate: Date)
   });
 }
 
-async function getRetentionRateAt(professionalId: string, asOfDate: Date): Promise<number> {
+async function getRetentionRateAt(
+  professionalId: string,
+  asOfDate: Date,
+): Promise<number> {
   const [allPatients, returningPatients] = await Promise.all([
     prisma.appointment.groupBy({
       by: ["patientId"],
@@ -1079,7 +1155,9 @@ async function getRetentionRateAt(professionalId: string, asOfDate: Date): Promi
   const returningIds = returningPatients.map((p) => p.patientId);
   const returningCount = returningIds.filter((id) => allIds.has(id)).length;
 
-  return allIds.size === 0 ? 0 : Math.round((returningCount / allIds.size) * 100);
+  return allIds.size === 0
+    ? 0
+    : Math.round((returningCount / allIds.size) * 100);
 }
 
 interface PendingAction {
@@ -1093,7 +1171,7 @@ interface ProfessionalPendingActions {
 }
 
 async function getProfessionalPendingActions(
-  professionalId: string
+  professionalId: string,
 ): Promise<ProfessionalPendingActions> {
   const photoCutoff = new Date();
   photoCutoff.setDate(photoCutoff.getDate() - 14);
@@ -1125,8 +1203,12 @@ async function getProfessionalPendingActions(
     }),
   ]);
 
-  const photoMap = new Map(latestPhotos.map((p) => [p.patientId, p._max.createdAt]));
-  const mealMap = new Map(latestMeals.map((m) => [m.userId, m._max.consumedAt]));
+  const photoMap = new Map(
+    latestPhotos.map((p) => [p.patientId, p._max.createdAt]),
+  );
+  const mealMap = new Map(
+    latestMeals.map((m) => [m.userId, m._max.consumedAt]),
+  );
   const patientMap = new Map(patients.map((p) => [p.id, p.name]));
 
   const photoPending = patientIds.find((id) => {
@@ -1162,8 +1244,12 @@ function MetricItem({
   return (
     <div className="flex items-center justify-between rounded-xl border border-border bg-muted p-4 dark:border-stone-700/50 dark:bg-stone-700/30">
       <div>
-        <p className="text-sm text-muted-foreground dark:text-stone-400">{label}</p>
-        <p className="text-2xl font-bold text-foreground dark:text-stone-100">{value}</p>
+        <p className="text-sm text-muted-foreground dark:text-stone-400">
+          {label}
+        </p>
+        <p className="text-2xl font-bold text-foreground dark:text-stone-100">
+          {value}
+        </p>
       </div>
       <span
         className={`flex items-center rounded-full px-2 py-1 text-xs font-semibold ${
@@ -1182,4 +1268,3 @@ function MetricItem({
     </div>
   );
 }
-

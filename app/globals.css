@@ -1,82 +1,93 @@
 @import "tailwindcss";
 
+/* Map the `dark:` variant to the `.dark` class toggled by our ThemeProvider
+   instead of Tailwind v4's default `prefers-color-scheme` media query, so the
+   in-app light/dark toggle (not the OS setting) drives every dark: utility. */
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root,
 .light {
-  --background: #F5F5EC;
-  --foreground: #1C1917;
+  color-scheme: light;
 
-  --card: #FFFFFF;
-  --card-foreground: #1C1917;
+  --background: #F4F1E9;
+  --foreground: #292524;
 
-  --muted: #E8E8DE;
+  --card: #FCFBF6;
+  --card-foreground: #292524;
+
+  --muted: #EAE7DD;
   --muted-foreground: #78716C;
 
-  --border: #DCDACA;
+  --border: #E0DCCC;
 
   --primary: #7C907E;
   --primary-foreground: #FFFFFF;
 
   --secondary: #C4D1C3;
-  --secondary-foreground: #1C1917;
+  --secondary-foreground: #292524;
 
-  --accent: #E8B89C;
-  --accent-foreground: #1C1917;
+  --accent: #E9C4A8;
+  --accent-foreground: #292524;
 
-  --destructive: #E11D48;
+  --destructive: #D64545;
   --destructive-foreground: #FFFFFF;
 
   --sidebar: #C4D1C3;
   --sidebar-active: #7C907E;
   --sidebar-active-foreground: #FFFFFF;
-  --sidebar-foreground: #1C1917;
+  --sidebar-foreground: #292524;
 
-  --accent-blue: #5C7C89;
+  --accent-blue: #6C8A97;
 
-  --role-patient-primary: #10b981;
-  --role-patient-secondary: #0d9488;
+  --role-patient-primary: #6B9B7E;
+  --role-patient-secondary: #6FA89E;
   --role-patient-primary-foreground: #ffffff;
-  --role-professional-primary: #4f46e5;
-  --role-professional-secondary: #2563eb;
+  --role-professional-primary: #7C7FAD;
+  --role-professional-secondary: #7A9BB8;
   --role-professional-primary-foreground: #ffffff;
 }
 
+/* Warm stone/sage dark palette — matches the light "melo" theme so dark mode
+   no longer reads purple (previously slate-950 #020617 + indigo #818cf8). */
 .dark {
-  --background: #020617;
-  --foreground: #f8fafc;
+  color-scheme: dark;
 
-  --card: #0f172a;
-  --card-foreground: #f8fafc;
+  --background: #1C1917;
+  --foreground: #F5F5F4;
 
-  --muted: #1e293b;
-  --muted-foreground: #94a3b8;
+  --card: #292524;
+  --card-foreground: #F5F5F4;
 
-  --border: #1e293b;
+  --muted: #44403C;
+  --muted-foreground: #A8A29E;
 
-  --primary: #818cf8;
-  --primary-foreground: #020617;
+  --border: #44403C;
 
-  --secondary: #1e293b;
-  --secondary-foreground: #f8fafc;
+  --primary: #9AAF9C;
+  --primary-foreground: #1C1917;
 
-  --accent: #2dd4bf;
-  --accent-foreground: #020617;
+  --secondary: #3A3633;
+  --secondary-foreground: #F5F5F4;
 
-  --destructive: #fb7185;
-  --destructive-foreground: #020617;
+  --accent: #D3A180;
+  --accent-foreground: #1C1917;
 
-  --sidebar: #0f172a;
-  --sidebar-active: #334155;
-  --sidebar-active-foreground: #f8fafc;
-  --sidebar-foreground: #f8fafc;
+  --destructive: #F87171;
+  --destructive-foreground: #1C1917;
+
+  --sidebar: #221F1D;
+  --sidebar-active: #42544A;
+  --sidebar-active-foreground: #F5F5F4;
+  --sidebar-foreground: #F5F5F4;
 
   --accent-blue: #7C9DAA;
 
   --role-patient-primary: #34d399;
   --role-patient-secondary: #2dd4bf;
-  --role-patient-primary-foreground: #020617;
-  --role-professional-primary: #818cf8;
-  --role-professional-secondary: #60a5fa;
-  --role-professional-primary-foreground: #020617;
+  --role-patient-primary-foreground: #1C1917;
+  --role-professional-primary: #8BA6BE;
+  --role-professional-secondary: #7CA8CC;
+  --role-professional-primary-foreground: #1C1917;
 }
 
 @theme inline {
@@ -111,6 +122,12 @@
 
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+}
+
+/* Paint the root canvas with the theme background so overscroll (rubber-band
+   scrolling past the page end) never flashes the browser default color. */
+html {
+  background: var(--background);
 }
 
 body {

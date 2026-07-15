@@ -261,15 +261,22 @@ export const en = {
   },
   patientExperts: {
     backToDashboard: "← Back to dashboard",
-    title: "Expert Guide",
+    title: "NutriBalance Expert Guide",
     description:
       "Find verified nutritionists and trainers. Compare profiles, prices, and modalities before hiring.",
-    searchPlaceholder: "Search by name...",
-    allSpecialties: "All specialties",
+    searchPlaceholder: "Search for an expert by name...",
+    typeFilterLabel: "View professional type:",
+    typeOptions: {
+      all: "Nutritionist and Trainer",
+      nutritionist: "Nutritionist Only",
+      trainer: "Trainer Only",
+    },
+    clearFilters: "Clear filters",
     noResults: "No experts found with those criteria.",
     featured: "Featured",
     ratingCount: "{count} reviews",
     viewProfile: "View profile",
+    sendMessage: "Send message",
     specialties: {
       nutrition: "Nutrition",
       training: "Training",

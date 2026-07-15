@@ -67,7 +67,25 @@ const navigation: Record<UserRole, NavItem[]> = {
 const sidebarBgByRole: Record<UserRole, string> = {
   ADMIN: "bg-sidebar dark:bg-emerald-950/40",
   PROFESSIONAL: "bg-sidebar dark:bg-emerald-900/40",
-  PATIENT: "bg-sidebar dark:bg-emerald-900/20",
+  PATIENT: "bg-[#C4D1C3] dark:bg-emerald-900/20",
+};
+
+const activeClassByRole: Record<UserRole, string> = {
+  ADMIN:
+    "bg-sidebar-active text-sidebar-active-foreground dark:bg-emerald-800/40 dark:text-emerald-100",
+  PROFESSIONAL:
+    "bg-sidebar-active text-sidebar-active-foreground dark:bg-emerald-800/40 dark:text-emerald-100",
+  PATIENT:
+    "bg-[#7C907E] text-white dark:bg-emerald-800/40 dark:text-emerald-100",
+};
+
+const inactiveClassByRole: Record<UserRole, string> = {
+  ADMIN:
+    "text-muted-foreground hover:bg-muted hover:text-foreground dark:text-stone-400 dark:hover:bg-stone-800/40 dark:hover:text-stone-100",
+  PROFESSIONAL:
+    "text-muted-foreground hover:bg-muted hover:text-foreground dark:text-stone-400 dark:hover:bg-stone-800/40 dark:hover:text-stone-100",
+  PATIENT:
+    "text-stone-700 hover:bg-[#7C907E]/25 hover:text-stone-900 dark:text-stone-400 dark:hover:bg-stone-800/40 dark:hover:text-stone-100",
 };
 
 const homeHrefByRole: Record<UserRole, string> = {
@@ -91,10 +109,12 @@ function Logo({ className }: { className?: string }) {
 
 function NavLink({
   item,
+  role,
   isActive,
   onClick,
 }: {
   item: NavItem;
+  role: UserRole;
   isActive: boolean;
   onClick?: () => void;
 }) {
@@ -104,9 +124,7 @@ function NavLink({
       href={item.href}
       onClick={onClick}
       className={`flex items-center justify-between rounded-xl px-3 py-2.5 text-sm font-medium transition-colors ${
-        isActive
-          ? "bg-sidebar-active text-sidebar-active-foreground dark:bg-emerald-800/40 dark:text-emerald-100"
-          : "text-muted-foreground hover:bg-muted hover:text-foreground dark:text-stone-400 dark:hover:bg-stone-800/40 dark:hover:text-stone-100"
+        isActive ? activeClassByRole[role] : inactiveClassByRole[role]
       }`}
     >
       <span className="flex items-center gap-3">
@@ -124,10 +142,12 @@ function NavLink({
 
 function NavItems({
   items,
+  role,
   badge,
   onItemClick,
 }: {
   items: NavItem[];
+  role: UserRole;
   badge?: number;
   onItemClick?: () => void;
 }) {
@@ -144,7 +164,12 @@ function NavItems({
         const isActive = pathname === item.href;
         return (
           <li key={item.href}>
-            <NavLink item={item} isActive={isActive} onClick={onItemClick} />
+            <NavLink
+              item={item}
+              role={role}
+              isActive={isActive}
+              onClick={onItemClick}
+            />
           </li>
         );
       })}
@@ -173,11 +198,11 @@ export function Sidebar({ role, badge }: SidebarProps) {
       </div>
 
       <nav className="flex-1 overflow-y-auto px-4 py-6">
-        <NavItems items={topItems} badge={badge} />
+        <NavItems items={topItems} role={role} badge={badge} />
       </nav>
 
       <div className="border-t border-stone-200/60 p-4 dark:border-stone-800/40">
-        <NavItems items={bottomItems} badge={badge} />
+        <NavItems items={bottomItems} role={role} badge={badge} />
       </div>
     </aside>
   );
@@ -225,11 +250,11 @@ export function MobileSidebar({ role, badge, open, onClose }: MobileSidebarProps
         </div>
 
         <nav className="flex-1 overflow-y-auto px-4 py-6">
-          <NavItems items={topItems} badge={badge} onItemClick={onClose} />
+          <NavItems items={topItems} role={role} badge={badge} onItemClick={onClose} />
         </nav>
 
         <div className="border-t border-stone-200/60 p-4 dark:border-stone-800/40">
-          <NavItems items={bottomItems} badge={badge} onItemClick={onClose} />
+          <NavItems items={bottomItems} role={role} badge={badge} onItemClick={onClose} />
         </div>
       </div>
     </>
