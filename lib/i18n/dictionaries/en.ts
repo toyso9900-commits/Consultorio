@@ -316,6 +316,9 @@ export const en = {
     photoHint: "JPG, PNG or WebP. Max 2 MB.",
     photoUpdated: "Profile photo updated",
     photoError: "Could not upload the image",
+    timezoneLabel: "Timezone",
+    timezoneHint: "Used to compute your tracking days.",
+    timezoneAuto: "Auto-detect",
   },
   onboarding: {
     title: "Complete your profile",

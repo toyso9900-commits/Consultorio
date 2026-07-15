@@ -36,7 +36,7 @@ Chain strategy: pending
 - [x] 1.7 Create patient `rutina/actions.ts`: `toggleCheckItem`, `adjustWaterItem` (±250, clamp [0, goal]), `saveDetectedTimezone` (write-if-null, Intl-validated); ownership + subscription guards. (DPT-002/003/004)
 - [x] 1.8 Update patient `rutina/page.tsx`: fetch view model, mount `TimezoneAutoDetect` island; REQ-004 gating unchanged. (REQ-007)
 - [x] 1.9 Rework `components/patient/routine-plan-card.tsx`: CHECK toggle + WATER stepper rows, empty state; drop placeholder rows. (REQ-007, DPT-002/003)
-- [ ] 1.10 Add timezone select to `perfil/` form + action. (DPT-004)
+- [x] 1.10 Add timezone select to `perfil/` form + action. (DPT-004)
 - [x] 1.11 i18n: new `patientRoutine`/`professionalRoutines` keys in `es.ts` + `en.ts` mirror + Dictionary interface; drop `planWalk/planWater/planMeals`. (REQ-006, REQ-007)
 - [ ] 1.12 Verify S1: typecheck, lint, build; smoke — toggle persists on reload, water clamps, fresh state next local day, cross-patient rejected, FREE unchanged.
 

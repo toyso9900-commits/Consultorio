@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useTransition } from "react";
+import { useMemo, useRef, useState, useTransition } from "react";
 import Image from "next/image";
 import { updatePatientProfile } from "./actions";
 import { uploadPatientAvatar } from "./upload-actions";
@@ -16,6 +16,8 @@ interface PatientProfileFormProps {
     height: string;
     weight: string;
     gender: string;
+    /** IANA zone; empty string = auto-detect (DPT-004). */
+    timezone: string;
   };
 }
 
@@ -26,6 +28,9 @@ export function PatientProfileForm({ userId, image, defaultValues }: PatientProf
   const [preview, setPreview] = useState(image || "");
   const [form, setForm] = useState(defaultValues);
   const fileRef = useRef<HTMLInputElement>(null);
+
+  // Full IANA zone list from the runtime — zero dependencies.
+  const timezones = useMemo(() => Intl.supportedValuesOf("timeZone"), []);
 
   function handleChange(
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -61,6 +66,7 @@ export function PatientProfileForm({ userId, image, defaultValues }: PatientProf
         height: Number(form.height),
         weight: Number(form.weight),
         gender: form.gender,
+        timezone: form.timezone || null,
       });
 
       if (result.success) {
@@ -183,6 +189,28 @@ export function PatientProfileForm({ userId, image, defaultValues }: PatientProf
           <option value="non-binary">{dictionary.gender.nonBinary}</option>
           <option value="prefer-not-to-say">{dictionary.gender.preferNotToSay}</option>
         </select>
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
+          {dictionary.patientProfile.timezoneLabel}
+        </label>
+        <select
+          name="timezone"
+          value={form.timezone}
+          onChange={handleChange}
+          className="mt-1 block w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
+        >
+          <option value="">{dictionary.patientProfile.timezoneAuto}</option>
+          {timezones.map((zone) => (
+            <option key={zone} value={zone}>
+              {zone}
+            </option>
+          ))}
+        </select>
+        <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
+          {dictionary.patientProfile.timezoneHint}
+        </p>
       </div>
 
       <button

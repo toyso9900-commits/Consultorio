@@ -15,7 +15,7 @@ export default async function PatientProfilePage() {
 
   const user = await prisma.user.findUnique({
     where: { id: session!.user.id },
-    select: { image: true },
+    select: { image: true, timezone: true },
   });
 
   return (
@@ -43,6 +43,7 @@ export default async function PatientProfilePage() {
             height: profile?.height?.toString() || "",
             weight: profile?.weight?.toString() || "",
             gender: profile?.gender || "male",
+            timezone: user?.timezone ?? "",
           }}
         />
       </div>

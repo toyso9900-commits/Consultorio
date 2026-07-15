@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
 import { recordWeight } from "@/lib/weight";
@@ -13,6 +14,8 @@ const updateSchema = z.object({
   gender: z.enum(["male", "female", "non-binary", "prefer-not-to-say"], {
     errorMap: () => ({ message: "Seleccioná un género válido." }),
   }),
+  // IANA zone; null reverts to auto-detect / server-local (DPT-004).
+  timezone: z.string().nullable(),
 });
 
 export interface UpdatePatientProfileData {
@@ -21,6 +24,7 @@ export interface UpdatePatientProfileData {
   height: number;
   weight: number;
   gender: string;
+  timezone: string | null;
 }
 
 export async function updatePatientProfile(data: UpdatePatientProfileData) {
@@ -29,13 +33,28 @@ export async function updatePatientProfile(data: UpdatePatientProfileData) {
     return { success: false, error: parsed.error.errors.map((e) => e.message).join(" ") };
   }
 
-  const { userId, name, height, weight, gender } = parsed.data;
+  const { userId, name, height, weight, gender, timezone } = parsed.data;
+
+  // Ownership guard: a patient can only update their own profile.
+  const session = await auth();
+  if (!session?.user?.id || session.user.id !== userId) {
+    return { success: false, error: "No autorizado." };
+  }
+
+  if (timezone !== null) {
+    try {
+      // Intl throws RangeError for non-IANA zones.
+      new Intl.DateTimeFormat("en-US", { timeZone: timezone });
+    } catch {
+      return { success: false, error: "Seleccioná una zona horaria válida." };
+    }
+  }
 
   try {
     await prisma.$transaction(async (tx) => {
       await tx.user.update({
         where: { id: userId },
-        data: { name },
+        data: { name, timezone },
       });
       await tx.patientProfile.upsert({
         where: { userId },

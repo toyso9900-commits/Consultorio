@@ -317,6 +317,9 @@ export const es = {
     photoHint: "JPG, PNG o WebP. Máximo 2 MB.",
     photoUpdated: "Foto de perfil actualizada",
     photoError: "No se pudo subir la imagen",
+    timezoneLabel: "Zona horaria",
+    timezoneHint: "Se usa para calcular tus días de seguimiento.",
+    timezoneAuto: "Detectar automáticamente",
   },
   onboarding: {
     title: "Completá tu perfil",
