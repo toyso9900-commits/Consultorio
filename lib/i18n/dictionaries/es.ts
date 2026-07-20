@@ -858,6 +858,7 @@ export const es = {
       viewDetails: "Ver detalles",
       waitingForLink: "Esperando enlace",
       waitingForMeetingLink: "Esperando enlace de videollamada",
+      meetingEnded: "Reunión finalizada",
       requestSent: "Solicitud enviada",
       cancelled: "Cita cancelada",
     },

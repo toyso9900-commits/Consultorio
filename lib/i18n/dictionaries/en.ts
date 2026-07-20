@@ -853,6 +853,7 @@ export const en = {
       viewDetails: "View details",
       waitingForLink: "Waiting for link",
       waitingForMeetingLink: "Waiting for video call link",
+      meetingEnded: "Meeting ended",
       requestSent: "Request sent",
       cancelled: "Appointment cancelled",
     },

@@ -196,7 +196,7 @@ export function PatientAppointmentCard({
               <Video className="h-4 w-4" />
               {dictionary.appointments.card.virtual}
             </div>
-            {appointment.meetingUrl ? (
+            {status === "CONFIRMED" && appointment.meetingUrl ? (
               <a
                 href={appointment.meetingUrl}
                 target="_blank"
@@ -205,6 +205,14 @@ export function PatientAppointmentCard({
               >
                 {dictionary.appointments.card.viewDetails}
               </a>
+            ) : status === "COMPLETED" ? (
+              <p className="text-sm text-white/50">
+                {dictionary.appointments.card.meetingEnded}
+              </p>
+            ) : status === "CANCELLED" ? (
+              <p className="text-sm text-white/50">
+                {dictionary.appointments.card.cancelled}
+              </p>
             ) : (
               <p className="text-sm text-white/50">
                 {dictionary.appointments.card.waitingForMeetingLink}
