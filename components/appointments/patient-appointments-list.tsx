@@ -33,8 +33,9 @@ export function PatientAppointmentsList({
   const filteredAppointments = useMemo(() => {
     const today = startOfToday();
     const query = searchQuery.trim().toLowerCase();
+    const isPast = filter === "past";
 
-    return appointments.filter((appointment) => {
+    const result = appointments.filter((appointment) => {
       const status = appointment.status;
       const scheduledAt = appointment.scheduledAt;
 
@@ -60,6 +61,12 @@ export function PatientAppointmentsList({
         professionalName.toLowerCase().includes(query) ||
         notes.toLowerCase().includes(query)
       );
+    });
+
+    return [...result].sort((a, b) => {
+      const aTime = new Date(a.scheduledAt).getTime();
+      const bTime = new Date(b.scheduledAt).getTime();
+      return isPast ? bTime - aTime : aTime - bTime;
     });
   }, [appointments, filter, searchQuery]);
 
