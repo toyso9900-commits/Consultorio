@@ -56,6 +56,7 @@ export interface Dictionary {
     noResults: string;
     featured: string;
     ratingCount: string;
+    noRating: string;
     viewProfile: string;
     sendMessage: string;
     specialties: Record<keyof typeof es.patientExperts.specialties, string>;

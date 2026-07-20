@@ -71,14 +71,14 @@ const homeHrefByRole: Record<UserRole, string> = {
   PATIENT: "/paciente/dashboard",
 };
 
-const sidebarBg = "bg-[#0a0a0a]";
-const activeClass = "bg-[#22c55e] text-white border-l-4 border-[#4ade22]";
-const inactiveClass = "text-white/80 hover:bg-white/10 hover:text-white";
+const sidebarBg = "bg-[#1a1a1a]";
+const activeClass = "relative rounded-r-xl border-l-4 border-[#55eb55] bg-[#1f1f1f] text-[#55eb55] shadow-[0_0_12px_rgba(85,235,85,0.25)]";
+const inactiveClass = "text-white/80 hover:bg-[#252525] hover:text-[#55eb55]";
 
 function Logo({ className }: { className?: string }) {
   return (
     <div className={`flex items-center gap-2 ${className ?? ""}`}>
-      <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-white/10 text-[#4ade22]">
+      <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-white/10 text-[#55eb55]">
         <Leaf className="h-5 w-5" strokeWidth={2} />
       </div>
       <span className="text-lg font-bold tracking-tight text-white">
@@ -102,7 +102,7 @@ function NavLink({
     <Link
       href={item.href}
       onClick={onClick}
-      className={`flex items-center justify-between rounded-xl px-3 py-2.5 text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-[#4ade22] focus:ring-offset-2 focus:ring-offset-[#0a0a0a] ${
+      className={`flex items-center justify-between rounded-xl px-3 py-2.5 text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-[#55eb55] focus:ring-offset-2 focus:ring-offset-[#1a1a1a] ${
         isActive ? activeClass : inactiveClass
       }`}
     >
@@ -133,7 +133,7 @@ function AccountLink({
     <Link
       href={item.href}
       onClick={onClick}
-      className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-[#4ade22] focus:ring-offset-2 focus:ring-offset-[#0a0a0a] ${
+      className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-[#55eb55] focus:ring-offset-2 focus:ring-offset-[#1a1a1a] ${
         isActive ? activeClass : inactiveClass
       }`}
     >
