@@ -3,21 +3,21 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  Home,
-  Leaf,
-  BookOpen,
+  LayoutGrid,
+  Camera,
+  Search,
   CalendarDays,
-  Mail,
+  MessageCircle,
   Dumbbell,
   CreditCard,
   UserCircle,
-  LayoutDashboard,
   Users,
   BadgeCheck,
   Crown,
   MessageSquare,
   Briefcase,
   X,
+  Leaf,
 } from "lucide-react";
 import { useI18n } from "@/lib/i18n/client";
 import type { Dictionary } from "@/lib/i18n/server";
@@ -38,7 +38,7 @@ interface NavItem {
 
 const navigation: Record<UserRole, NavItem[]> = {
   ADMIN: [
-    { label: (d) => d.nav.home, href: "/profesional/dashboard", icon: LayoutDashboard },
+    { label: (d) => d.nav.home, href: "/profesional/dashboard", icon: LayoutGrid },
     { label: (d) => d.nav.users, href: "/profesional/dashboard/usuarios", icon: Users },
     { label: (d) => d.nav.professionals, href: "/profesional/dashboard/profesionales", icon: Briefcase },
     { label: (d) => d.nav.validations, href: "/profesional/dashboard/validaciones", icon: BadgeCheck },
@@ -46,7 +46,7 @@ const navigation: Record<UserRole, NavItem[]> = {
     { label: (d) => d.nav.reviews, href: "/profesional/dashboard/resenas", icon: MessageSquare },
   ],
   PROFESSIONAL: [
-    { label: (d) => d.nav.home, href: "/profesional/dashboard", icon: LayoutDashboard },
+    { label: (d) => d.nav.home, href: "/profesional/dashboard", icon: LayoutGrid },
     { label: (d) => d.nav.profile, href: "/profesional/dashboard/perfil", icon: UserCircle },
     { label: (d) => d.nav.clients, href: "/profesional/dashboard/clientes", icon: Users, badge: 0 },
     { label: (d) => d.nav.routines, href: "/profesional/dashboard/rutinas", icon: Dumbbell },
@@ -54,11 +54,11 @@ const navigation: Record<UserRole, NavItem[]> = {
     { label: (d) => d.nav.appointments, href: "/profesional/dashboard/citas", icon: CalendarDays },
   ],
   PATIENT: [
-    { label: (d) => d.nav.home, href: "/paciente/dashboard", icon: Home },
-    { label: (d) => d.nav.photos, href: "/paciente/dashboard/nutricion", icon: Leaf },
-    { label: (d) => d.nav.experts, href: "/paciente/dashboard/expertos", icon: BookOpen },
+    { label: (d) => d.nav.home, href: "/paciente/dashboard", icon: LayoutGrid },
+    { label: (d) => d.nav.photos, href: "/paciente/dashboard/nutricion", icon: Camera },
+    { label: (d) => d.nav.experts, href: "/paciente/dashboard/expertos", icon: Search },
     { label: (d) => d.nav.appointments, href: "/paciente/dashboard/citas", icon: CalendarDays },
-    { label: (d) => d.nav.messages, href: "/paciente/dashboard/mensajes", icon: Mail },
+    { label: (d) => d.nav.messages, href: "/paciente/dashboard/mensajes", icon: MessageCircle },
     { label: (d) => d.nav.myRoutine, href: "/paciente/dashboard/rutina", icon: Dumbbell },
     { label: (d) => d.nav.mySubscriptions, href: "/paciente/dashboard/suscripcion", icon: CreditCard },
     { label: (d) => d.nav.account, href: "/paciente/dashboard/perfil", icon: UserCircle },
@@ -71,7 +71,11 @@ const homeHrefByRole: Record<UserRole, string> = {
   PATIENT: "/paciente/dashboard",
 };
 
-const sidebarBg = "bg-[#1a1a1a]";
+const sidebarBgByRole: Record<UserRole, string> = {
+  ADMIN: "bg-[#1a1a1a]",
+  PROFESSIONAL: "bg-[#1a1a1a]",
+  PATIENT: "bg-[#0d1f0d]",
+};
 const activeClass = "relative rounded-r-xl border-l-4 border-[#55eb55] bg-[#1f1f1f] text-[#55eb55] shadow-[0_0_12px_rgba(85,235,85,0.25)]";
 const inactiveClass = "text-white/80 hover:bg-[#252525] hover:text-[#55eb55]";
 
@@ -184,7 +188,7 @@ export function Sidebar({ role, badge }: SidebarProps) {
 
   return (
     <aside
-      className={`fixed left-0 top-0 z-30 hidden h-screen w-64 flex-col ${sidebarBg} lg:flex`}
+      className={`fixed left-0 top-0 z-30 hidden h-screen w-64 flex-col ${sidebarBgByRole[role]} lg:flex`}
     >
       <div className="flex h-16 items-center gap-2 px-6">
         <Link
@@ -253,7 +257,7 @@ export function MobileSidebar({ role, badge, open, onClose }: MobileSidebarProps
         onClick={onClose}
         aria-hidden="true"
       />
-      <div className={`fixed inset-y-0 left-0 z-[60] flex w-64 flex-col ${sidebarBg} lg:hidden`}>
+      <div className={`fixed inset-y-0 left-0 z-[60] flex w-64 flex-col ${sidebarBgByRole[role]} lg:hidden`}>
         <div className="flex h-16 items-center justify-between px-6">
           <Link
             href={homeHref}
