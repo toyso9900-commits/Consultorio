@@ -5,12 +5,6 @@ import { Sidebar, UserRole, MobileSidebar } from "./sidebar";
 import { DashboardHeader } from "./dashboard-header";
 import { AppointmentsRealtimeListener } from "@/components/appointments/appointments-realtime-listener";
 
-const shellBgByRole: Record<UserRole, string> = {
-  ADMIN: "bg-background dark:bg-[#1C251F]",
-  PROFESSIONAL: "bg-background dark:bg-stone-900",
-  PATIENT: "bg-background dark:bg-stone-900",
-};
-
 interface DashboardShellProps {
   children: ReactNode;
   role: UserRole;
@@ -30,10 +24,8 @@ export function DashboardShell({
 }: DashboardShellProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  const bgClass = shellBgByRole[role];
-
   return (
-    <div className={`min-h-screen lg:pl-64 ${bgClass}`}>
+    <div className="min-h-screen bg-[#212121] lg:pl-64">
       {userId && <AppointmentsRealtimeListener userId={userId} />}
       <Sidebar role={role} badge={badge} />
       <MobileSidebar

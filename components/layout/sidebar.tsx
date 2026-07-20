@@ -3,20 +3,21 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
+  Home,
+  Leaf,
+  BookOpen,
+  CalendarDays,
+  Mail,
+  Dumbbell,
+  CreditCard,
+  UserCircle,
   LayoutDashboard,
   Users,
   BadgeCheck,
   Crown,
-  CalendarDays,
   MessageSquare,
-  UserCircle,
-  CreditCard,
-  Search,
   Briefcase,
-  Camera,
   X,
-  Leaf,
-  Dumbbell,
 } from "lucide-react";
 import { useI18n } from "@/lib/i18n/client";
 import type { Dictionary } from "@/lib/i18n/server";
@@ -53,39 +54,15 @@ const navigation: Record<UserRole, NavItem[]> = {
     { label: (d) => d.nav.appointments, href: "/profesional/dashboard/citas", icon: CalendarDays },
   ],
   PATIENT: [
-    { label: (d) => d.nav.home, href: "/paciente/dashboard", icon: LayoutDashboard },
-    { label: (d) => d.nav.photos, href: "/paciente/dashboard/nutricion", icon: Camera },
-    { label: (d) => d.nav.experts, href: "/paciente/dashboard/expertos", icon: Search },
+    { label: (d) => d.nav.home, href: "/paciente/dashboard", icon: Home },
+    { label: (d) => d.nav.photos, href: "/paciente/dashboard/nutricion", icon: Leaf },
+    { label: (d) => d.nav.experts, href: "/paciente/dashboard/expertos", icon: BookOpen },
     { label: (d) => d.nav.appointments, href: "/paciente/dashboard/citas", icon: CalendarDays },
-    { label: (d) => d.nav.messages, href: "/paciente/dashboard/mensajes", icon: MessageSquare },
+    { label: (d) => d.nav.messages, href: "/paciente/dashboard/mensajes", icon: Mail },
     { label: (d) => d.nav.myRoutine, href: "/paciente/dashboard/rutina", icon: Dumbbell },
     { label: (d) => d.nav.mySubscriptions, href: "/paciente/dashboard/suscripcion", icon: CreditCard },
     { label: (d) => d.nav.account, href: "/paciente/dashboard/perfil", icon: UserCircle },
   ],
-};
-
-const sidebarBgByRole: Record<UserRole, string> = {
-  ADMIN: "bg-sidebar dark:bg-emerald-950/40",
-  PROFESSIONAL: "bg-sidebar dark:bg-emerald-900/40",
-  PATIENT: "bg-[#C4D1C3] dark:bg-emerald-900/20",
-};
-
-const activeClassByRole: Record<UserRole, string> = {
-  ADMIN:
-    "bg-sidebar-active text-sidebar-active-foreground dark:bg-emerald-800/40 dark:text-emerald-100",
-  PROFESSIONAL:
-    "bg-sidebar-active text-sidebar-active-foreground dark:bg-emerald-800/40 dark:text-emerald-100",
-  PATIENT:
-    "bg-[#7C907E] text-white dark:bg-emerald-800/40 dark:text-emerald-100",
-};
-
-const inactiveClassByRole: Record<UserRole, string> = {
-  ADMIN:
-    "text-muted-foreground hover:bg-muted hover:text-foreground dark:text-stone-400 dark:hover:bg-stone-800/40 dark:hover:text-stone-100",
-  PROFESSIONAL:
-    "text-muted-foreground hover:bg-muted hover:text-foreground dark:text-stone-400 dark:hover:bg-stone-800/40 dark:hover:text-stone-100",
-  PATIENT:
-    "text-stone-700 hover:bg-[#7C907E]/25 hover:text-stone-900 dark:text-stone-400 dark:hover:bg-stone-800/40 dark:hover:text-stone-100",
 };
 
 const homeHrefByRole: Record<UserRole, string> = {
@@ -94,13 +71,17 @@ const homeHrefByRole: Record<UserRole, string> = {
   PATIENT: "/paciente/dashboard",
 };
 
+const sidebarBg = "bg-[#0a0a0a]";
+const activeClass = "bg-[#22c55e] text-white border-l-4 border-[#4ade22]";
+const inactiveClass = "text-white/80 hover:bg-white/10 hover:text-white";
+
 function Logo({ className }: { className?: string }) {
   return (
     <div className={`flex items-center gap-2 ${className ?? ""}`}>
-      <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-emerald-500 text-white">
-        <Leaf className="h-5 w-5" />
+      <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-white/10 text-[#4ade22]">
+        <Leaf className="h-5 w-5" strokeWidth={2} />
       </div>
-      <span className="text-lg font-bold tracking-tight text-foreground">
+      <span className="text-lg font-bold tracking-tight text-white">
         Consultorio
       </span>
     </div>
@@ -109,12 +90,10 @@ function Logo({ className }: { className?: string }) {
 
 function NavLink({
   item,
-  role,
   isActive,
   onClick,
 }: {
   item: NavItem;
-  role: UserRole;
   isActive: boolean;
   onClick?: () => void;
 }) {
@@ -123,8 +102,8 @@ function NavLink({
     <Link
       href={item.href}
       onClick={onClick}
-      className={`flex items-center justify-between rounded-xl px-3 py-2.5 text-sm font-medium transition-colors ${
-        isActive ? activeClassByRole[role] : inactiveClassByRole[role]
+      className={`flex items-center justify-between rounded-xl px-3 py-2.5 text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-[#4ade22] focus:ring-offset-2 focus:ring-offset-[#0a0a0a] ${
+        isActive ? activeClass : inactiveClass
       }`}
     >
       <span className="flex items-center gap-3">
@@ -140,14 +119,38 @@ function NavLink({
   );
 }
 
+function AccountLink({
+  item,
+  isActive,
+  onClick,
+}: {
+  item: NavItem;
+  isActive: boolean;
+  onClick?: () => void;
+}) {
+  const { dictionary } = useI18n();
+  return (
+    <Link
+      href={item.href}
+      onClick={onClick}
+      className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-[#4ade22] focus:ring-offset-2 focus:ring-offset-[#0a0a0a] ${
+        isActive ? activeClass : inactiveClass
+      }`}
+    >
+      <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white/20 text-sm font-semibold text-white">
+        N
+      </span>
+      {item.label(dictionary)}
+    </Link>
+  );
+}
+
 function NavItems({
   items,
-  role,
   badge,
   onItemClick,
 }: {
   items: NavItem[];
-  role: UserRole;
   badge?: number;
   onItemClick?: () => void;
 }) {
@@ -164,12 +167,7 @@ function NavItems({
         const isActive = pathname === item.href;
         return (
           <li key={item.href}>
-            <NavLink
-              item={item}
-              role={role}
-              isActive={isActive}
-              onClick={onItemClick}
-            />
+            <NavLink item={item} isActive={isActive} onClick={onItemClick} />
           </li>
         );
       })}
@@ -179,32 +177,57 @@ function NavItems({
 
 export function Sidebar({ role, badge }: SidebarProps) {
   const homeHref = homeHrefByRole[role];
-  const bgClass = sidebarBgByRole[role];
   const allItems = navigation[role];
   const topItems = allItems.slice(0, -1);
-  const bottomItems = allItems.slice(-1);
+  const bottomItem = allItems[allItems.length - 1];
+  const isPatientAccount = role === "PATIENT";
 
   return (
     <aside
-      className={`fixed left-0 top-0 z-30 hidden h-screen w-64 flex-col border-r border-stone-200/60 dark:border-stone-800/40 lg:flex ${bgClass}`}
+      className={`fixed left-0 top-0 z-30 hidden h-screen w-64 flex-col ${sidebarBg} lg:flex`}
     >
       <div className="flex h-16 items-center gap-2 px-6">
         <Link
           href={homeHref}
-          className="flex items-center gap-2 transition-colors hover:opacity-80"
+          className="flex items-center gap-2 transition-opacity hover:opacity-80"
         >
           <Logo />
         </Link>
       </div>
 
       <nav className="flex-1 overflow-y-auto px-4 py-6">
-        <NavItems items={topItems} role={role} badge={badge} />
+        <NavItems items={topItems} badge={badge} />
       </nav>
 
-      <div className="border-t border-stone-200/60 p-4 dark:border-stone-800/40">
-        <NavItems items={bottomItems} role={role} badge={badge} />
+      <div className="border-t border-white/10 p-4">
+        {isPatientAccount ? (
+          <AccountItem item={bottomItem} badge={badge} onItemClick={undefined} />
+        ) : (
+          <NavItems items={[bottomItem]} badge={badge} />
+        )}
       </div>
     </aside>
+  );
+}
+
+function AccountItem({
+  item,
+  badge,
+  onItemClick,
+}: {
+  item: NavItem;
+  badge?: number;
+  onItemClick?: () => void;
+}) {
+  const pathname = usePathname();
+  const mapped =
+    item.badge !== undefined && badge !== undefined && badge > 0
+      ? { ...item, badge }
+      : item;
+  const isActive = pathname === mapped.href;
+
+  return (
+    <AccountLink item={mapped} isActive={isActive} onClick={onItemClick} />
   );
 }
 
@@ -216,10 +239,10 @@ interface MobileSidebarProps extends SidebarProps {
 export function MobileSidebar({ role, badge, open, onClose }: MobileSidebarProps) {
   const { dictionary } = useI18n();
   const homeHref = homeHrefByRole[role];
-  const bgClass = sidebarBgByRole[role];
   const allItems = navigation[role];
   const topItems = allItems.slice(0, -1);
-  const bottomItems = allItems.slice(-1);
+  const bottomItem = allItems[allItems.length - 1];
+  const isPatientAccount = role === "PATIENT";
 
   if (!open) return null;
 
@@ -230,19 +253,19 @@ export function MobileSidebar({ role, badge, open, onClose }: MobileSidebarProps
         onClick={onClose}
         aria-hidden="true"
       />
-      <div className={`fixed inset-y-0 left-0 z-[60] flex w-64 flex-col border-r border-stone-200/60 dark:border-stone-800/40 lg:hidden ${bgClass}`}>
+      <div className={`fixed inset-y-0 left-0 z-[60] flex w-64 flex-col ${sidebarBg} lg:hidden`}>
         <div className="flex h-16 items-center justify-between px-6">
           <Link
             href={homeHref}
             onClick={onClose}
-            className="transition-colors hover:opacity-80"
+            className="transition-opacity hover:opacity-80"
           >
             <Logo />
           </Link>
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg p-2 text-muted-foreground hover:bg-muted hover:text-foreground dark:text-stone-400 dark:hover:bg-stone-800/40 dark:hover:text-stone-100"
+            className="rounded-lg p-2 text-white/80 hover:bg-white/10 hover:text-white"
             aria-label={dictionary.common.closeMenu}
           >
             <X className="h-5 w-5" />
@@ -250,11 +273,15 @@ export function MobileSidebar({ role, badge, open, onClose }: MobileSidebarProps
         </div>
 
         <nav className="flex-1 overflow-y-auto px-4 py-6">
-          <NavItems items={topItems} role={role} badge={badge} onItemClick={onClose} />
+          <NavItems items={topItems} badge={badge} onItemClick={onClose} />
         </nav>
 
-        <div className="border-t border-stone-200/60 p-4 dark:border-stone-800/40">
-          <NavItems items={bottomItems} role={role} badge={badge} onItemClick={onClose} />
+        <div className="border-t border-white/10 p-4">
+          {isPatientAccount ? (
+            <AccountItem item={bottomItem} badge={badge} onItemClick={onClose} />
+          ) : (
+            <NavItems items={[bottomItem]} badge={badge} onItemClick={onClose} />
+          )}
         </div>
       </div>
     </>

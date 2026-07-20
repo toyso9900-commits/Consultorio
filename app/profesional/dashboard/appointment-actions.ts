@@ -1,5 +1,6 @@
 "use server";
 
+import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
@@ -162,4 +163,77 @@ export async function completeAppointment(
     AppointmentStatus.CONFIRMED,
     AppointmentStatus.COMPLETED
   );
+}
+
+const meetingUrlSchema = z.object({
+  appointmentId: z.string().min(1),
+  meetingUrl: z
+    .string()
+    .trim()
+    .max(500, "El link no puede superar los 500 caracteres.")
+    .url("Ingresá una URL válida.")
+    .or(z.literal("")),
+});
+
+export async function updateMeetingUrl(data: {
+  appointmentId: string;
+  meetingUrl: string;
+}): Promise<AppointmentActionResult> {
+  try {
+    const { userId } = await requireProfessional();
+
+    const parsed = meetingUrlSchema.safeParse(data);
+    if (!parsed.success) {
+      return {
+        success: false,
+        error: parsed.error.issues[0]?.message || "Datos inválidos.",
+      };
+    }
+
+    // Empty string clears the link (stored as null).
+    const meetingUrl =
+      parsed.data.meetingUrl === "" ? null : parsed.data.meetingUrl;
+
+    // Editable only while the appointment is upcoming (REQUESTED/CONFIRMED).
+    const updated = await prisma.appointment.updateMany({
+      where: {
+        id: parsed.data.appointmentId,
+        professionalId: userId,
+        status: {
+          in: [AppointmentStatus.REQUESTED, AppointmentStatus.CONFIRMED],
+        },
+      },
+      data: { meetingUrl },
+    });
+
+    if (updated.count === 0) {
+      return { success: false, error: "unauthorized" };
+    }
+
+    revalidatePath("/profesional/dashboard/citas");
+    revalidatePath("/profesional/dashboard");
+    revalidatePath("/paciente/dashboard/citas");
+    revalidatePath("/paciente/dashboard");
+
+    const appointment = await prisma.appointment.findUnique({
+      where: { id: parsed.data.appointmentId },
+    });
+
+    if (appointment) {
+      triggerAppointmentUpdated({
+        appointmentId: appointment.id,
+        patientId: appointment.patientId,
+        professionalId: appointment.professionalId,
+        status: appointment.status,
+        scheduledAt: appointment.scheduledAt.toISOString(),
+      }).catch(() => {});
+    }
+
+    return { success: true };
+  } catch {
+    return {
+      success: false,
+      error: "No se pudo guardar el link de la reunión. Intentá de nuevo.",
+    };
+  }
 }

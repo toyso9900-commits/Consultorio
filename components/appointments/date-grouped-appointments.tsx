@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { AppointmentCard } from "./appointment-card";
+import { MeetingUrlForm } from "./meeting-url-form";
 import {
   cancelAppointment,
   completeAppointment,
@@ -118,7 +119,13 @@ export function DateGroupedAppointments({
                     />
                     {role === "professional" &&
                       appointment.status === "CONFIRMED" && (
-                        <div className="flex flex-wrap gap-3">
+                        <div className="space-y-3">
+                          <MeetingUrlForm
+                            appointmentId={appointment.id}
+                            initialUrl={appointment.meetingUrl}
+                            dictionary={dictionary}
+                          />
+                          <div className="flex flex-wrap gap-3">
                           <button
                             type="button"
                             disabled={isPending}
@@ -139,6 +146,7 @@ export function DateGroupedAppointments({
                           >
                             {dictionary.appointments.actions.cancel}
                           </button>
+                          </div>
                         </div>
                       )}
                     {feedback?.id === appointment.id && (

@@ -133,7 +133,11 @@ export interface Dictionary {
     confirmations: Record<keyof typeof es.appointments.confirmations, string>;
     empty: Record<keyof typeof es.appointments.empty, string>;
     errors: Record<keyof typeof es.appointments.errors, string>;
+    filters: Record<keyof typeof es.appointments.filters, string>;
+    search: Record<keyof typeof es.appointments.search, string>;
+    card: Record<keyof typeof es.appointments.card, string>;
     sections: Record<keyof typeof es.appointments.sections, string>;
+    meeting: Record<keyof typeof es.appointments.meeting, string>;
   };
 }
 

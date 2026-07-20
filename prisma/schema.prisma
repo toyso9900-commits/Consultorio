@@ -235,6 +235,9 @@ model Appointment {
   scheduledAt DateTime
   status      AppointmentStatus @default(REQUESTED)
   notes       String?           @db.Text
+  // External video call link (Meet/Zoom/etc.) set by the professional;
+  // visible to the patient once the appointment is CONFIRMED.
+  meetingUrl  String?
   review      Review?
 
   createdAt DateTime @default(now())

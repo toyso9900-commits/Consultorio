@@ -20,11 +20,11 @@ export function MealHistoryList({ dictionary, entries }: MealHistoryListProps) {
 
   if (entries.length === 0) {
     return (
-      <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
-        <h3 className="text-lg font-semibold text-card-foreground">
+      <div className="rounded-2xl bg-[#2c2c2c] p-6">
+        <h3 className="text-lg font-semibold text-white">
           {dictionary.nutrition.historyTitle}
         </h3>
-        <p className="mt-2 text-muted-foreground">
+        <p className="mt-2 text-white/60">
           {dictionary.nutrition.emptyHistory}
         </p>
       </div>
@@ -32,8 +32,8 @@ export function MealHistoryList({ dictionary, entries }: MealHistoryListProps) {
   }
 
   return (
-    <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
-      <h3 className="text-lg font-semibold text-card-foreground">
+    <div className="rounded-2xl bg-[#2c2c2c] p-6">
+      <h3 className="text-lg font-semibold text-white">
         {dictionary.nutrition.historyTitle}
       </h3>
 
@@ -41,22 +41,22 @@ export function MealHistoryList({ dictionary, entries }: MealHistoryListProps) {
         {entries.map((entry) => (
           <li
             key={entry.id}
-            className="flex items-center justify-between rounded-xl border border-border bg-muted p-4"
+            className="flex items-center justify-between rounded-xl bg-[#212121] p-4"
           >
             <div className="min-w-0">
-              <p className="truncate font-medium text-card-foreground">
+              <p className="truncate font-medium text-white">
                 {entry.description}
               </p>
-              <p className="mt-0.5 flex items-center gap-1 text-xs text-muted-foreground">
+              <p className="mt-0.5 flex items-center gap-1 text-xs text-white/50">
                 <Clock className="h-3 w-3" />
                 {mealTypeLabels[entry.mealType]} ·{" "}
-                {entry.consumedAt.toLocaleTimeString([], {
+                {new Date(entry.consumedAt).toLocaleTimeString([], {
                   hour: "2-digit",
                   minute: "2-digit",
                 })}
               </p>
             </div>
-            <span className="shrink-0 rounded-full bg-emerald-100 px-3 py-1 text-sm font-semibold text-emerald-700 dark:bg-emerald-950 dark:text-emerald-400">
+            <span className="shrink-0 rounded-full bg-[#55eb55] px-3 py-1 text-sm font-semibold text-black">
               {entry.calories} kcal
             </span>
           </li>

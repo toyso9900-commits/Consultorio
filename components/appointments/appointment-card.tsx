@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { Calendar, Clock, FileText, User } from "lucide-react";
+import { Calendar, Clock, FileText, User, Video } from "lucide-react";
 import type { AppointmentWithUsers } from "@/lib/appointments";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
 
@@ -94,6 +94,26 @@ export function AppointmentCard({
         <div className="mt-4 flex items-start gap-2 rounded-xl bg-muted p-3">
           <FileText className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
           <p className="text-sm text-muted-foreground">{appointment.notes}</p>
+        </div>
+      )}
+
+      {role === "patient" && appointment.status === "CONFIRMED" && (
+        <div className="mt-4">
+          {appointment.meetingUrl ? (
+            <a
+              href={appointment.meetingUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-emerald-700"
+            >
+              <Video className="h-4 w-4" />
+              {dictionary.appointments.meeting.join}
+            </a>
+          ) : (
+            <p className="text-sm text-muted-foreground">
+              {dictionary.appointments.meeting.pending}
+            </p>
+          )}
         </div>
       )}
     </div>

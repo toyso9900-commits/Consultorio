@@ -7,6 +7,7 @@ import {
   rejectAppointment,
 } from "@/app/profesional/dashboard/appointment-actions";
 import { AppointmentCard } from "./appointment-card";
+import { MeetingUrlForm } from "./meeting-url-form";
 import type { AppointmentWithUsers } from "@/lib/appointments";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
 
@@ -70,6 +71,11 @@ export function AppointmentRequestList({
             appointment={appointment}
             role="professional"
             locale={locale}
+            dictionary={dictionary}
+          />
+          <MeetingUrlForm
+            appointmentId={appointment.id}
+            initialUrl={appointment.meetingUrl}
             dictionary={dictionary}
           />
           <div className="flex gap-3">

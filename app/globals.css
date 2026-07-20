@@ -124,8 +124,22 @@
   --font-mono: var(--font-geist-mono);
 }
 
-/* Paint the root canvas with the theme background so overscroll (rubber-band
-   scrolling past the page end) never flashes the browser default color. */
+/* Utility for truncating text to a fixed number of lines. Tailwind v4 does not
+   include the legacy line-clamp plugin by default, so we define the core set
+   used by the appointment cards here. */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
 html {
   background: var(--background);
 }

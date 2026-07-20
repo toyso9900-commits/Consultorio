@@ -14,6 +14,14 @@ const appointmentWithUsers = {
       id: true,
       name: true,
       image: true,
+      professionalProfile: {
+        select: {
+          title: true,
+          specialty: true,
+          location: true,
+          modality: true,
+        },
+      },
     },
   },
 } as const;
