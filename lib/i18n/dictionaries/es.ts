@@ -263,6 +263,7 @@ export const es = {
     totalEstimated: "Total Estimado",
     todaySummary: "Resumen de Hoy: {count} plato(s) registrado(s) ({totalKcal} kcal)",
     saved: "Comida guardada",
+    back: "Volver",
   },
   patientExperts: {
     backToDashboard: "← Volver al panel",

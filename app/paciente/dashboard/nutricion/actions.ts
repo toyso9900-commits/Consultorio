@@ -73,6 +73,14 @@ export type MealEntryListItem = {
   aiConfidence: number | null;
   source: MealSource;
   consumedAt: Date;
+  ingredients: {
+    name: string;
+    weightG: number | null;
+    calories: number;
+    proteinG: number | null;
+    carbsG: number | null;
+    fatG: number | null;
+  }[];
 };
 
 export type GetMealEntriesResult =
@@ -425,6 +433,7 @@ export async function getMealEntries(
       },
       orderBy: { consumedAt: "desc" },
       take: 50,
+      include: { ingredients: true },
     });
 
     return { success: true, entries };

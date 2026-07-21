@@ -6,6 +6,7 @@ import type { AnalyzeFoodImageResult } from "./actions";
 import { FoodPhotoUpload } from "@/components/food/food-photo-upload";
 import { FoodAnalysisResult } from "@/components/food/food-analysis-result";
 import { MealHistoryList } from "@/components/food/meal-history-list";
+import { MealEntryDetail } from "@/components/food/meal-entry-detail";
 import type { Dictionary } from "@/lib/i18n/server";
 import type { MealEntryListItem } from "./actions";
 
@@ -21,6 +22,8 @@ export function NutritionPageClient({
   const [analysis, setAnalysis] = useState<
     Extract<AnalyzeFoodImageResult, { success: true }> | null
   >(null);
+  const [selectedHistoryEntry, setSelectedHistoryEntry] =
+    useState<MealEntryListItem | null>(null);
 
   const { count, totalKcal } = useMemo(() => {
     return initialEntries.reduce(
@@ -47,7 +50,13 @@ export function NutritionPageClient({
         </p>
       </div>
 
-      {analysis ? (
+      {selectedHistoryEntry ? (
+        <MealEntryDetail
+          entry={selectedHistoryEntry}
+          dictionary={dictionary}
+          onClose={() => setSelectedHistoryEntry(null)}
+        />
+      ) : analysis ? (
         <FoodAnalysisResult
           dictionary={dictionary}
           initialData={analysis.data}
@@ -71,7 +80,11 @@ export function NutritionPageClient({
         </div>
       </div>
 
-      <MealHistoryList dictionary={dictionary} entries={initialEntries} />
+      <MealHistoryList
+        dictionary={dictionary}
+        entries={initialEntries}
+        onSelectEntry={setSelectedHistoryEntry}
+      />
     </div>
   );
 }

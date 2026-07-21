@@ -263,6 +263,7 @@ export const en = {
     totalEstimated: "Total Estimated",
     todaySummary: "Today's Summary: {count} meal(s) logged ({totalKcal} kcal)",
     saved: "Meal saved",
+    back: "Back",
   },
   patientExperts: {
     backToDashboard: "← Back to dashboard",
