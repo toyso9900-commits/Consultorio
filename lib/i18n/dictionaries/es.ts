@@ -595,6 +595,7 @@ export const es = {
   },
   professionalClients: {
     title: "Clientes",
+    titleWithName: "Pacientes: {name}",
     description: "Lista de pacientes que han agendado o se han comunicado con vos.",
     conversations: "Conversaciones",
     empty:

@@ -1,18 +1,12 @@
 import { auth } from "@/lib/auth";
-import {
-  Users,
-  MessageSquare,
-  CalendarDays,
-  Crown,
-  Camera,
-  Utensils,
-} from "lucide-react";
+import { Camera, Utensils } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { prisma } from "@/lib/prisma";
 import { getProfessionalClients } from "@/lib/appointments";
 import { getProgressPhotos } from "@/lib/progress-photos";
 import { getLocale, getDictionary } from "@/lib/i18n/server";
+import { PatientListCard } from "@/components/professional/patient-list-card";
 
 type ClientMealEntry = {
   id: string;
@@ -51,19 +45,19 @@ export default async function ProfessionalClientsPage({
   ]);
 
   return (
-    <div className="space-y-6" data-role="professional">
-      <div className="flex flex-wrap items-center gap-3">
-        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-indigo-100 dark:bg-indigo-950">
-          <Users className="h-5 w-5 text-indigo-600" />
-        </div>
-        <div>
-          <h1 className="text-2xl font-bold text-card-foreground">
-            {dictionary.professionalClients.title}
-          </h1>
-          <p className="text-muted-foreground">
-            {dictionary.professionalClients.description}
-          </p>
-        </div>
+    <div className="space-y-8" data-role="professional">
+      <div className="space-y-1">
+        <h1 className="text-2xl font-bold tracking-tight text-card-foreground">
+          {selectedClient
+            ? dictionary.professionalClients.titleWithName.replace(
+                "{name}",
+                selectedClient.name || dictionary.professionalClients.noName
+              )
+            : dictionary.professionalClients.title}
+        </h1>
+        <p className="text-muted-foreground">
+          {dictionary.professionalClients.description}
+        </p>
       </div>
 
       {clients.length === 0 ? (
@@ -73,90 +67,28 @@ export default async function ProfessionalClientsPage({
           </p>
         </div>
       ) : (
-        <div className="rounded-2xl border border-border bg-card shadow-sm">
-          <ul className="divide-y divide-border">
-            {clients.map((client) => {
-              const messageHref = `/profesional/dashboard/mensajes?paciente=${encodeURIComponent(
-                client.patientId
-              )}&nombre=${encodeURIComponent(client.name || "Paciente")}`;
-              const recordsHref = `/profesional/dashboard/clientes?patient=${encodeURIComponent(
-                client.patientId
-              )}`;
+        <div className="grid gap-4">
+          {clients.map((client) => {
+            const isSelected = selectedClient?.patientId === client.patientId;
+            const messageHref = `/profesional/dashboard/mensajes?paciente=${encodeURIComponent(
+              client.patientId
+            )}&nombre=${encodeURIComponent(client.name || "Paciente")}`;
+            const recordsHref = `/profesional/dashboard/clientes?patient=${encodeURIComponent(
+              client.patientId
+            )}`;
 
-              return (
-                <li
-                  key={client.patientId}
-                  className="flex flex-col gap-4 p-4 sm:flex-row sm:items-center sm:justify-between"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full bg-indigo-100 text-sm font-semibold text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300">
-                      {client.image ? (
-                        <Image
-                          src={client.image}
-                          alt=""
-                          width={40}
-                          height={40}
-                          className="h-full w-full object-cover"
-                        />
-                      ) : (
-                        (client.name || "P").slice(0, 1).toUpperCase()
-                      )}
-                    </div>
-                    <div>
-                      <p className="font-medium text-card-foreground">
-                        {client.name || dictionary.professionalClients.noName}
-                      </p>
-                      <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground">
-                        <span className="flex items-center gap-1">
-                          <CalendarDays className="h-3.5 w-3.5" />
-                          {client.lastAppointment
-                            ? client.lastAppointment.toLocaleDateString(locale, {
-                                year: "numeric",
-                                month: "short",
-                                day: "numeric",
-                              })
-                            : dictionary.professionalClients.noAppointment}
-                        </span>
-                        <span
-                          className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium ${
-                            client.subscriptionStatus === "active"
-                              ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300"
-                              : client.subscriptionStatus === "expired"
-                                ? "bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300"
-                                : "bg-muted text-muted-foreground"
-                          }`}
-                        >
-                          <Crown className="h-3 w-3" />
-                          {client.subscriptionStatus === "active"
-                            ? dictionary.professionalClients.activeSubscription
-                            : client.subscriptionStatus === "expired"
-                              ? dictionary.professionalClients.expiredSubscription
-                              : dictionary.professionalClients.noActiveSubscription}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-wrap items-center gap-2">
-                    <Link
-                      href={recordsHref}
-                      className="inline-flex items-center justify-center gap-2 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-emerald-700"
-                    >
-                      <Camera className="h-4 w-4" />
-                      {dictionary.professionalClients.viewData}
-                    </Link>
-                    <Link
-                      href={messageHref}
-                      className="inline-flex items-center justify-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-indigo-700"
-                    >
-                      <MessageSquare className="h-4 w-4" />
-                      {dictionary.professionalClients.message}
-                    </Link>
-                  </div>
-                </li>
-              );
-            })}
-          </ul>
+            return (
+              <PatientListCard
+                key={client.patientId}
+                client={client}
+                locale={locale}
+                dictionary={dictionary.professionalClients}
+                isSelected={isSelected}
+                recordsHref={recordsHref}
+                messageHref={messageHref}
+              />
+            );
+          })}
         </div>
       )}
 

@@ -146,7 +146,7 @@ function computeStats(
   const progressPercent = Math.round((completedDays / 7) * 100);
 
   let streakDays = 0;
-  let cursor = new Date(today);
+  const cursor = new Date(today);
   while (true) {
     const key = cursor.toISOString().split("T")[0];
     if ((byDate.get(key) || 0) > 0) {
