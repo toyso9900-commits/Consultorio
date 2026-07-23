@@ -881,6 +881,8 @@ export const es = {
     empty: {
       patient: "No tenés citas agendadas todavía.",
       professional: "No tenés turnos pendientes.",
+      requests: "No tenés solicitudes pendientes.",
+      upcoming: "No tenés próximos turnos confirmados.",
     },
     errors: {
       pastDate: "La fecha y hora deben ser futuras.",
@@ -899,6 +901,7 @@ export const es = {
       notes: "Notas",
       inPerson: "Presencial",
       virtual: "Virtual",
+      online: "Online",
       viewDirections: "Ver dirección",
       viewDetails: "Ver detalles",
       waitingForLink: "Esperando enlace",
@@ -906,6 +909,11 @@ export const es = {
       meetingEnded: "Reunión finalizada",
       requestSent: "Solicitud enviada",
       cancelled: "Cita cancelada",
+      assignNewLink: "Asignar nuevo link",
+      location: "Ubicación",
+      copy: "Copiar",
+      copied: "Copiado",
+      editLink: "Editar link",
     },
     sections: {
       requests: "Solicitudes pendientes",

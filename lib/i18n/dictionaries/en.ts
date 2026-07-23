@@ -876,6 +876,8 @@ export const en = {
     empty: {
       patient: "You don't have any appointments yet.",
       professional: "You don't have any pending appointments.",
+      requests: "You don't have any pending requests.",
+      upcoming: "You don't have any confirmed upcoming appointments.",
     },
     errors: {
       pastDate: "The date and time must be in the future.",
@@ -894,6 +896,7 @@ export const en = {
       notes: "Notes",
       inPerson: "In person",
       virtual: "Virtual",
+      online: "Online",
       viewDirections: "View directions",
       viewDetails: "View details",
       waitingForLink: "Waiting for link",
@@ -901,6 +904,11 @@ export const en = {
       meetingEnded: "Meeting ended",
       requestSent: "Request sent",
       cancelled: "Appointment cancelled",
+      assignNewLink: "Assign new link",
+      location: "Location",
+      copy: "Copy",
+      copied: "Copied",
+      editLink: "Edit link",
     },
     sections: {
       requests: "Pending requests",

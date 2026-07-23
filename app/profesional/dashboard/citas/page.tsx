@@ -2,10 +2,13 @@ import { CalendarDays } from "lucide-react";
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { getLocale, getDictionary } from "@/lib/i18n/server";
-import { getAppointmentsForProfessional, startOfToday } from "@/lib/appointments";
+import {
+  getAppointmentsForProfessional,
+  startOfToday,
+} from "@/lib/appointments";
 import { AppointmentStatus } from "@prisma/client";
 import { AppointmentRequestList } from "@/components/appointments/appointment-request-list";
-import { DateGroupedAppointments } from "@/components/appointments/date-grouped-appointments";
+import { ProfessionalUpcomingAppointments } from "@/components/appointments/professional-upcoming-appointments";
 
 export default async function ProfessionalAppointmentsPage() {
   const session = await auth();
@@ -35,22 +38,22 @@ export default async function ProfessionalAppointmentsPage() {
 
   return (
     <div className="space-y-8">
-      <div className="flex flex-wrap items-center gap-3">
-        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-rose-100 dark:bg-rose-950">
-          <CalendarDays className="h-5 w-5 text-rose-600" />
+      <div className="flex flex-wrap items-center gap-4 rounded-2xl border border-[#2f2c28] bg-[#23201d] p-5 shadow-sm">
+        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#55eb55]/10">
+          <CalendarDays className="h-6 w-6 text-[#55eb55]" />
         </div>
         <div>
-          <h1 className="text-2xl font-bold text-card-foreground">
+          <h1 className="text-2xl font-bold text-white">
             {dictionary.professionalAppointments.title}
           </h1>
-          <p className="text-muted-foreground">
+          <p className="text-white/60">
             {dictionary.professionalAppointments.description}
           </p>
         </div>
       </div>
 
       <section className="space-y-4">
-        <h2 className="text-lg font-semibold text-card-foreground">
+        <h2 className="text-lg font-semibold text-white">
           {dictionary.appointments.sections.requests}
         </h2>
         <AppointmentRequestList
@@ -61,12 +64,11 @@ export default async function ProfessionalAppointmentsPage() {
       </section>
 
       <section className="space-y-4">
-        <h2 className="text-lg font-semibold text-card-foreground">
+        <h2 className="text-lg font-semibold text-white">
           {dictionary.appointments.sections.upcoming}
         </h2>
-        <DateGroupedAppointments
+        <ProfessionalUpcomingAppointments
           appointments={upcoming}
-          role="professional"
           locale={locale}
           dictionary={dictionary}
         />
