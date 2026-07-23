@@ -624,7 +624,7 @@ export const en = {
     healthMetaGender: "Gender",
     healthMetaSleep: "Sleep",
     healthMetaWater: "Water",
-    placeholderMealComment: "Lorem ipsum dolor sit amet...",
+    placeholderMealComment: "No coach notes",
     placeholderMeal1: "Breakfast: Eggs with avocado",
     placeholderMeal2: "Lunch: Baked salmon",
     placeholderMeal3: "Dinner: Grilled chicken",
