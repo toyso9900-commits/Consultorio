@@ -44,14 +44,15 @@ const navigation: Record<UserRole, NavItem[]> = {
     { label: (d) => d.nav.validations, href: "/profesional/dashboard/validaciones", icon: BadgeCheck },
     { label: (d) => d.nav.subscription, href: "/profesional/dashboard/suscripciones", icon: Crown },
     { label: (d) => d.nav.reviews, href: "/profesional/dashboard/resenas", icon: MessageSquare },
+    { label: (d) => d.nav.profile, href: "/configuracion", icon: UserCircle },
   ],
   PROFESSIONAL: [
     { label: (d) => d.nav.home, href: "/profesional/dashboard", icon: LayoutGrid },
-    { label: (d) => d.nav.profile, href: "/profesional/dashboard/perfil", icon: UserCircle },
     { label: (d) => d.nav.clients, href: "/profesional/dashboard/clientes", icon: Users, badge: 0 },
     { label: (d) => d.nav.routines, href: "/profesional/dashboard/rutinas", icon: Dumbbell },
     { label: (d) => d.nav.subscription, href: "/profesional/dashboard/suscripcion", icon: CreditCard },
     { label: (d) => d.nav.appointments, href: "/profesional/dashboard/citas", icon: CalendarDays },
+    { label: (d) => d.nav.profile, href: "/profesional/dashboard/perfil", icon: UserCircle },
   ],
   PATIENT: [
     { label: (d) => d.nav.home, href: "/paciente/dashboard", icon: LayoutGrid },
@@ -184,7 +185,6 @@ export function Sidebar({ role, badge }: SidebarProps) {
   const allItems = navigation[role];
   const topItems = allItems.slice(0, -1);
   const bottomItem = allItems[allItems.length - 1];
-  const isPatientAccount = role === "PATIENT";
 
   return (
     <aside
@@ -204,11 +204,7 @@ export function Sidebar({ role, badge }: SidebarProps) {
       </nav>
 
       <div className="border-t border-white/10 p-4">
-        {isPatientAccount ? (
-          <AccountItem item={bottomItem} badge={badge} onItemClick={undefined} />
-        ) : (
-          <NavItems items={[bottomItem]} badge={badge} />
-        )}
+        <AccountItem item={bottomItem} badge={badge} onItemClick={undefined} />
       </div>
     </aside>
   );
@@ -246,7 +242,6 @@ export function MobileSidebar({ role, badge, open, onClose }: MobileSidebarProps
   const allItems = navigation[role];
   const topItems = allItems.slice(0, -1);
   const bottomItem = allItems[allItems.length - 1];
-  const isPatientAccount = role === "PATIENT";
 
   if (!open) return null;
 
@@ -280,13 +275,9 @@ export function MobileSidebar({ role, badge, open, onClose }: MobileSidebarProps
           <NavItems items={topItems} badge={badge} onItemClick={onClose} />
         </nav>
 
-        <div className="border-t border-white/10 p-4">
-          {isPatientAccount ? (
-            <AccountItem item={bottomItem} badge={badge} onItemClick={onClose} />
-          ) : (
-            <NavItems items={[bottomItem]} badge={badge} onItemClick={onClose} />
-          )}
-        </div>
+      <div className="border-t border-white/10 p-4">
+        <AccountItem item={bottomItem} badge={badge} onItemClick={onClose} />
+      </div>
       </div>
     </>
   );
