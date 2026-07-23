@@ -31,7 +31,19 @@ export async function listActiveSubscriptionsForPatient(patientId: string) {
       expiresAt: { gt: now },
     },
     include: {
-      professional: { select: { id: true, name: true, image: true } },
+      professional: {
+        select: {
+          id: true,
+          name: true,
+          image: true,
+          professionalProfile: {
+            select: {
+              specialty: true,
+              title: true,
+            },
+          },
+        },
+      },
     },
     orderBy: { createdAt: "desc" },
   });
