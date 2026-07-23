@@ -11,12 +11,16 @@ interface AppointmentRequestModalProps {
   professionalName: string;
   locale: string;
   dictionary: Dictionary;
+  triggerLabel?: string;
+  triggerClassName?: string;
 }
 
 export function AppointmentRequestModal({
   professionalId,
   professionalName,
   dictionary,
+  triggerLabel,
+  triggerClassName,
 }: AppointmentRequestModalProps) {
   const [open, setOpen] = useState(false);
   const [result, setResult] = useState<RequestAppointmentResult | null>(null);
@@ -66,10 +70,13 @@ export function AppointmentRequestModal({
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="inline-flex flex-1 items-center justify-center gap-2 rounded-full bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-indigo-700 sm:flex-none"
+        className={[
+          "inline-flex flex-1 items-center justify-center gap-2 rounded-full bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-indigo-700 sm:flex-none",
+          triggerClassName,
+        ].join(" ")}
       >
         <Calendar className="h-4 w-4" />
-        {dictionary.appointments.request.submit}
+        {triggerLabel ?? dictionary.appointments.request.submit}
       </button>
 
       {open && (

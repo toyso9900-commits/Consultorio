@@ -1,7 +1,7 @@
 "use client";
 
 import { useTransition } from "react";
-import { Loader2 } from "lucide-react";
+import { Loader2, ShoppingCart } from "lucide-react";
 import { toast } from "sonner";
 import { subscribePatientToProfessional } from "@/app/paciente/dashboard/suscripcion/actions";
 import { useI18n } from "@/lib/i18n/client";
@@ -34,9 +34,13 @@ export function SubscribeButton({ professionalId }: SubscribeButtonProps) {
       type="button"
       onClick={handleClick}
       disabled={isPending}
-      className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-60"
+      className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-purple-500/25 transition-all hover:from-blue-500 hover:to-purple-500 disabled:cursor-not-allowed disabled:opacity-60"
     >
-      {isPending && <Loader2 className="h-4 w-4 animate-spin" />}
+      {isPending ? (
+        <Loader2 className="h-4 w-4 animate-spin" />
+      ) : (
+        <ShoppingCart className="h-4 w-4" />
+      )}
       {isPending
         ? dictionary.patientSubscription.subscribing
         : dictionary.patientSubscription.subscribeCta}

@@ -1,7 +1,16 @@
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { ArrowLeft, Calendar, Shield, Sparkles, Leaf } from "lucide-react";
+import {
+  ArrowLeft,
+  Calendar,
+  Leaf,
+  MapPin,
+  Shield,
+  Sparkles,
+  Star,
+  Users,
+} from "lucide-react";
 import { auth } from "@/lib/auth";
 import { getApprovedProfessionalById } from "@/lib/professionals-db";
 import { hasActivePatientSubscription } from "@/lib/patient-subscriptions";
@@ -9,6 +18,14 @@ import { getLocale, getDictionary } from "@/lib/i18n/server";
 import { ChatButton } from "@/components/chat/chat-button";
 import { AppointmentRequestModal } from "@/components/appointments/appointment-request-modal";
 import { SubscribeButton } from "./subscribe-button";
+
+function parseFreePlanContent(content: string | null | undefined): string[] {
+  if (!content) return [];
+  return content
+    .split(/\n+/)
+    .map((line) => line.trim().replace(/^[-•*]\s*/, ""))
+    .filter(Boolean);
+}
 
 export default async function ProfessionalDetailPage({
   params,
@@ -33,120 +50,188 @@ export default async function ProfessionalDetailPage({
       : false;
   const t = dictionary.patientSubscription;
 
-  return (
-    <main className="mx-auto max-w-4xl flex-1 px-6 py-12">
-      <Link
-        href="/paciente/dashboard/expertos"
-        className="inline-flex items-center gap-2 text-sm font-medium text-slate-600 hover:text-indigo-600 dark:text-slate-400"
-      >
-        <ArrowLeft className="h-4 w-4" />
-        Volver a la Guía de Expertos
-      </Link>
+  const freePlanTitle = prof.freePlanTitle || t.freePlanTitle;
+  const freePlanItems = parseFreePlanContent(
+    prof.freePlanContent || t.freePlanBody
+  );
 
-      <div className="mt-6 overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
-        <div className="relative h-64 w-full bg-slate-100 dark:bg-slate-800">
+  return (
+    <main className="min-h-screen bg-[#1c1917] text-white">
+      <div className="mx-auto max-w-5xl px-4 pb-16 sm:px-6 lg:px-8">
+        <Link
+          href="/paciente/dashboard/expertos"
+          className="inline-flex items-center gap-2 pt-6 text-sm font-medium text-white/70 transition-colors hover:text-[#55eb55]"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          {t.backToExperts}
+        </Link>
+
+        {/* Banner */}
+        <div className="relative mt-6 h-56 w-full overflow-hidden rounded-3xl sm:h-72">
           <Image
             src={prof.image}
             alt={prof.name}
             fill
+            priority
             className="object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-          <div className="absolute bottom-6 left-6 right-6 text-white">
-            <span className="inline-flex items-center gap-1 rounded-full bg-indigo-500/90 px-3 py-1 text-xs font-semibold">
-              <Shield className="h-3 w-3" />
-              {prof.specialty}
-            </span>
-            <h1 className="mt-2 text-3xl font-bold">{prof.name}</h1>
-            <p className="text-white/90">{prof.title}</p>
+          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-amber-900/50" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#1c1917] via-transparent to-transparent" />
+        </div>
+
+        {/* Profile header */}
+        <div className="relative -mt-16 flex flex-col items-center px-4">
+          <div className="relative h-32 w-32 overflow-hidden rounded-full border-4 border-[#1c1917] bg-[#23201d] shadow-xl">
+            <Image
+              src={prof.image}
+              alt={prof.name}
+              fill
+              className="object-cover"
+            />
+          </div>
+
+          <h1 className="mt-4 text-center text-3xl font-bold text-white">
+            {prof.name}
+          </h1>
+          <p className="text-center text-white/70">{prof.title}</p>
+
+          <span className="mt-3 inline-flex items-center gap-1.5 rounded-full border border-purple-500/30 bg-purple-500/15 px-3 py-1.5 text-sm font-medium text-purple-300">
+            <Shield className="h-4 w-4" />
+            {prof.specialty}
+          </span>
+
+          <p className="mt-5 max-w-2xl text-left text-base leading-relaxed text-white/70">
+            {prof.bio || "Sin biografía disponible."}
+          </p>
+        </div>
+
+        {/* Info cards */}
+        <div className="mt-8 grid gap-4 sm:grid-cols-2">
+          <div className="rounded-2xl bg-[#23201d] p-5">
+            <div className="flex items-start gap-3">
+              <div className="rounded-xl bg-[#55eb55]/10 p-2.5">
+                <MapPin className="h-5 w-5 text-[#55eb55]" />
+              </div>
+              <div>
+                <p className="text-sm text-white/50">{t.locationLabel}</p>
+                <p className="font-semibold text-white">{prof.location}</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="rounded-2xl bg-[#23201d] p-5">
+            <div className="flex items-start gap-3">
+              <div className="rounded-xl bg-[#55eb55]/10 p-2.5">
+                <Users className="h-5 w-5 text-[#55eb55]" />
+              </div>
+              <div>
+                <p className="text-sm text-white/50">{t.modalityLabel}</p>
+                <p className="font-semibold text-white">{prof.modality}</p>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div className="p-8">
-          <p className="text-lg leading-relaxed text-slate-700 dark:text-slate-300">
-            {prof.bio || "Sin biografía disponible."}
-          </p>
+        {/* Actions */}
+        <div className="mt-4 flex flex-col gap-3">
+          <ChatButton
+            professionalId={prof.id}
+            professionalName={prof.name}
+            label={t.messageCta}
+            className="w-full rounded-2xl border border-white/10 bg-transparent py-3 text-white hover:border-white/20 hover:bg-white/5 hover:text-white dark:border-white/10 dark:hover:border-white/20 dark:hover:bg-white/5 dark:hover:text-white sm:flex-1"
+          />
+          {isPatient ? (
+            <AppointmentRequestModal
+              professionalId={prof.id}
+              professionalName={prof.name}
+              locale={locale}
+              dictionary={dictionary}
+              triggerLabel={t.appointmentCta}
+              triggerClassName="w-full rounded-2xl bg-purple-600 py-3 shadow-lg shadow-purple-500/25 hover:bg-purple-700 sm:flex-1"
+            />
+          ) : (
+            <button
+              disabled
+              className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-purple-600 px-5 py-3 text-sm font-semibold text-white opacity-60"
+            >
+              <Calendar className="h-4 w-4" />
+              {t.appointmentCta}
+            </button>
+          )}
+        </div>
 
-          <div className="mt-8 grid gap-4 sm:grid-cols-2">
-            <div className="rounded-xl bg-slate-50 p-5 dark:bg-slate-800">
-              <span className="text-sm font-medium text-slate-500 dark:text-slate-400">
-                Ubicación
-              </span>
-              <p className="mt-1 text-lg font-semibold text-slate-900 dark:text-slate-100">
-                {prof.location}
-              </p>
-            </div>
-            <div className="rounded-xl bg-slate-50 p-5 dark:bg-slate-800">
-              <span className="text-sm font-medium text-slate-500 dark:text-slate-400">
-                Modalidad
-              </span>
-              <p className="mt-1 text-lg font-semibold text-slate-900 dark:text-slate-100">
-                {prof.modality}
-              </p>
-            </div>
-          </div>
+        {/* Plans */}
+        <section className="mt-14">
+          <h2 className="text-center text-2xl font-bold text-white sm:text-3xl">
+            {t.plansTitle}
+          </h2>
 
-          <div className="mt-8 flex flex-col items-start justify-end gap-6 border-t border-slate-100 pt-8 dark:border-slate-800 sm:flex-row sm:items-center">
-            <div className="flex w-full gap-3 sm:w-auto">
-              <ChatButton professionalId={prof.id} professionalName={prof.name} />
-              {isPatient ? (
-                <AppointmentRequestModal
-                  professionalId={prof.id}
-                  professionalName={prof.name}
-                  locale={locale}
-                  dictionary={dictionary}
-                />
+          <div className="mt-8 grid gap-6 sm:grid-cols-2">
+            {/* Free plan */}
+            <div className="rounded-2xl bg-[#23201d] p-6">
+              <div className="flex items-center gap-2">
+                <div className="rounded-xl bg-[#55eb55]/10 p-2">
+                  <Leaf className="h-5 w-5 text-[#55eb55]" />
+                </div>
+                <h3 className="text-lg font-semibold text-white">
+                  {freePlanTitle}
+                </h3>
+              </div>
+
+              {freePlanItems.length > 0 ? (
+                <ul className="mt-5 space-y-3">
+                  {freePlanItems.map((item, index) => (
+                    <li
+                      key={index}
+                      className="flex items-start gap-3 text-sm text-white/70"
+                    >
+                      <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[#55eb55]" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
               ) : (
-                <button
-                  disabled
-                  className="inline-flex flex-1 items-center justify-center gap-2 rounded-full bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white opacity-60 sm:flex-none"
-                >
-                  <Calendar className="h-4 w-4" />
-                  Agendar (próximamente)
-                </button>
+                <p className="mt-5 text-sm text-white/50">{t.freePlanBody}</p>
               )}
             </div>
-          </div>
 
-          <div className="mt-8 grid gap-4 sm:grid-cols-2">
-            <div className="rounded-2xl border border-slate-200 bg-slate-50 p-6 dark:border-slate-800 dark:bg-slate-800/50">
-              <div className="flex items-center gap-2">
-                <Leaf className="h-5 w-5 text-emerald-600" />
-                <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
-                  {prof.freePlanContent ? prof.freePlanTitle || t.freePlanTitle : t.freePlanTitle}
-                </h2>
-              </div>
-              <p className="mt-2 whitespace-pre-line text-sm text-slate-600 dark:text-slate-400">
-                {prof.freePlanContent || t.freePlanBody}
-              </p>
-            </div>
-
-            {hasPaidPlan && (
-              <div className="rounded-2xl border border-indigo-300 bg-indigo-50/50 p-6 dark:border-indigo-800 dark:bg-indigo-950/20">
-                <div className="flex items-center justify-between gap-2">
-                  <div className="flex items-center gap-2">
-                    <Sparkles className="h-5 w-5 text-indigo-600" />
-                    <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
-                      {t.paidPlanTitle}
-                    </h2>
-                  </div>
-                  <span className="inline-flex items-center rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-semibold text-amber-700 dark:bg-amber-950 dark:text-amber-300">
+            {/* Paid plan */}
+            {hasPaidPlan ? (
+              <div className="relative overflow-hidden rounded-2xl border border-purple-500/20 bg-gradient-to-br from-[#23201d] to-[#2a1f3d] p-6">
+                <div className="absolute right-4 top-4">
+                  <span className="inline-flex items-center rounded-full bg-amber-500/15 px-2.5 py-0.5 text-xs font-semibold text-amber-300">
                     {t.testModeBadge}
                   </span>
                 </div>
-                <p className="mt-3 text-3xl font-bold text-slate-900 dark:text-slate-100">
-                  ${prof.planPrice}{" "}
-                  <span className="text-base font-medium text-slate-500 dark:text-slate-400">
-                    {prof.planDuration ?? ""}
-                  </span>
+
+                <div className="pointer-events-none absolute -right-4 -top-4 text-purple-400/20">
+                  <Star className="h-16 w-16 fill-current" />
+                </div>
+                <div className="pointer-events-none absolute bottom-4 left-4 text-purple-400/10">
+                  <Sparkles className="h-12 w-12" />
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <div className="rounded-xl bg-purple-500/15 p-2">
+                    <Sparkles className="h-5 w-5 text-purple-300" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-white">
+                    {t.paidPlanTitle}
+                  </h3>
+                </div>
+
+                <p className="mt-6 text-4xl font-bold text-white">
+                  ${prof.planPrice}
                 </p>
-                <div className="mt-4">
+                <p className="text-white/60">{prof.planDuration}</p>
+
+                <div className="mt-6">
                   {!isPatient ? (
-                    <p className="text-sm text-slate-500 dark:text-slate-400">
+                    <p className="text-sm text-white/50">
                       {t.loginToSubscribe}
                     </p>
                   ) : alreadySubscribed ? (
-                    <div className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-emerald-300 bg-emerald-50 px-5 py-2.5 text-sm font-semibold text-emerald-700 dark:border-emerald-800 dark:bg-emerald-950/30 dark:text-emerald-300">
+                    <div className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-[#55eb55]/30 bg-[#55eb55]/10 px-5 py-2.5 text-sm font-semibold text-[#55eb55]">
                       {t.alreadySubscribedBadge}
                     </div>
                   ) : (
@@ -154,9 +239,15 @@ export default async function ProfessionalDetailPage({
                   )}
                 </div>
               </div>
+            ) : (
+              <div className="flex items-center justify-center rounded-2xl bg-[#23201d] p-6">
+                <p className="text-center text-sm text-white/50">
+                  {dictionary.subscription.planPriceMissing}
+                </p>
+              </div>
             )}
           </div>
-        </div>
+        </section>
       </div>
     </main>
   );
